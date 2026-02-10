@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "stitch": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "GOOGLE_CLOUD_PROJECT=sabeh-importers npx -y stitch-mcp"
+      ]
+    }
+  }
+}
