@@ -22,6 +22,8 @@ const config = {
         sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
         montserrat: ["var(--font-montserrat)", "sans-serif"],
         cormorant: ["var(--font-cormorant-garamond)", "serif"],
+        display: ["'Playfair Display'", "serif"],
+        body: ["'Lato'", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -57,13 +59,7 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Ethiopian-inspired accent colors
-        ethiopian: {
-          green: "#078930",
-          yellow: "#FCDD09",
-          red: "#DA121A",
-          blue: "#0F47AF",
-        },
+        // Brand colors (use CSS vars: primary/accent instead)
         // Proposal specific colors
         proposal: {
           navy: {
@@ -72,7 +68,7 @@ const config = {
             light: "#2d4a6f",
           },
           gold: {
-            primary: "#c9a962",
+            primary: "#FCDD09",
             light: "#e8d5a3",
             dark: "#a08339",
           },
@@ -84,6 +80,15 @@ const config = {
             dark: "#1a1a1a",
             muted: "#5a5a5a",
           },
+        },
+        // Sabeh Hybrid premium palette
+        "navy-deep": "#1a2d4a",
+        "dark-blue": "#0f1a2a",
+        cream: "#faf8f5",
+        gold: {
+          DEFAULT: "#FCDD09",
+          light: "#FDE968",
+          dark: "#C4AB00",
         },
       },
       borderRadius: {

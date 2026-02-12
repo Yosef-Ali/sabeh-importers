@@ -12,6 +12,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,7 +33,13 @@ interface HeaderProps {
 
 export function Header({ isCollapsed }: HeaderProps) {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
   const [language, setLanguage] = React.useState<"en" | "am">("en");
+
+  function handleLogout() {
+    document.cookie = "sabeh-auth-token=; path=/; max-age=0";
+    router.push("/login");
+  }
 
   return (
     <header
@@ -160,7 +167,7 @@ export function Header({ isCollapsed }: HeaderProps) {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage src="/images/avatar.png" alt="User" />
-                <AvatarFallback className="bg-ethiopian-green text-white">
+                <AvatarFallback className="bg-primary text-primary-foreground">
                   AD
                 </AvatarFallback>
               </Avatar>
@@ -185,7 +192,7 @@ export function Header({ isCollapsed }: HeaderProps) {
               <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem className="text-destructive" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>

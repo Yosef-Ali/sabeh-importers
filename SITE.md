@@ -1,41 +1,28 @@
-# Site: Sabeh Importers Proposal
-
+# Site: Sabeh Importers
 **Stitch Project ID:** 15993632048680359095
 
 ## 1. Vision
-A premium, digital business proposal website for Sabeh Importers, expanded to include a fully functional **E-commerce Store**. The site serves two purposes:
-1.  **Proposal:** Convey professionalism and trust for stakeholders.
-2.  **Store:** Allow customers to browse and purchase imported goods (BYD vehicles, etc.).
+Ethiopia's Premier Classifieds Marketplace. A digital platform connecting buyers and sellers for Cars, Property, Electronics, and Jobs. Trusted, Localized (Amharic/English), and Professional.
 
-## 2. Target Audience
-- Sabeh Importers Stakeholders
-- Potential Customers (Retail & Wholesale)
+## 2. Architecture (Zones)
+- **Zone A: Marketplace `/(marketplace)`:** Public browsing, search, listings. (Dubizzle-style)
+- **Zone B: Dashboard `/(dashboard)`:** User area, my listings, messages.
+- **Zone C: Admin `/(admin)`:** System management.
+- **Proposal `/(proposal)`:** Investment/Business proposal.
 
-## 3. Design Philosophy
-- **Atmosphere:** Professional, Trusted, Ethiopian Heritage, Premium.
-- **Design System:** See `DESIGN.md`.
+## 3. Sitemap (Current Focus: Zone A)
+- [ ] `src/app/(marketplace)/layout.tsx` - Main Wrapper (Navbar, Footer)
+- [ ] `src/app/(marketplace)/page.tsx` - Homepage (Search, Categories, Featured)
+- [x] `src/app/(marketplace)/search/page.tsx` - Search Results & Filters
+- [ ] `src/app/(marketplace)/listings/[id]/page.tsx` - Listing Details
+- [ ] `src/app/(marketplace)/category/[slug]/page.tsx` - Category Landing
 
-## 4. Sitemap
-### Proposal (Completed)
-- [x] `src/app/proposal/page.tsx` - Full Proposal Refactor
-- [x] `index.html` - Proposal Cover & Exec Summary
-- [x] `deliverables.html` - Project Deliverables
-- [x] `investment.html` - Investment Plan
-- [ ] `terms.html` - Terms & Signatures
+## 4. Roadmap
+1. [x] Search & Discovery Implementation.
+2. [Next] Redesign Marketplace Layout & Homepage (Stitch/Elegant UI).
+3. Build Listing Detail Page.
+4. Build Dashboard "My Listings".
+5. Integrate Admin Panel.
 
-### E-commerce Store (New)
-- [x] `shop/page.tsx` - Main Catalogue
-- [ ] `product/[id]/page.tsx` - Product Details
-- [ ] `cart/page.tsx` - Shopping Cart
-- [ ] `checkout/page.tsx` - Checkout Flow
-
-## 5. Roadmap
-1. [x] Build Proposal Pages (Index, Deliverables, Investment).
-2. [Next] Build `terms.html` to finish Proposal.
-3. Build `shop` (E-commerce Home).
-4. Build `product` detail page.
-5. Integration with Mock Data.
-
-## 6. Creative Freedom
-- Use the content from `proposal.html` (or `src/app/proposal/page.tsx`) as the source of truth for text.
-- Be creative with layout to make it feel like a "website" rather than just a document.
+## 5. Design System
+Refers to `DESIGN.md` for visual tokens (Ethiopian Colors, Clean Typography).

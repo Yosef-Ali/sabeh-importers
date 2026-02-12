@@ -4,48 +4,55 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 40 25% 97%;
+    /* Warm Cream */
+    --foreground: 217 48% 22%;
+    /* Deep Navy */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 217 48% 22%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 142 76% 36%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 217 48% 22%;
+    --primary: 52 97% 51%;
+    /* Burnished Gold */
+    --primary-foreground: 217 48% 22%;
+    --secondary: 217 48% 28%;
+    /* Lighter Navy */
+    --secondary-foreground: 40 25% 97%;
+    --muted: 217 10% 90%;
+    --muted-foreground: 217 20% 40%;
+    --accent: 52 97% 51%;
+    --accent-foreground: 217 48% 22%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142 76% 36%;
-    --radius: 0.5rem;
+    --border: 217 20% 90%;
+    --input: 217 20% 90%;
+    --ring: 52 97% 51%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 142 76% 36%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 45 93% 47%;
-    --accent-foreground: 210 40% 98%;
+    --background: 217 48% 15%;
+    /* Ink Navy */
+    --foreground: 40 25% 97%;
+    /* Warm Cream */
+    --card: 217 48% 18%;
+    --card-foreground: 40 25% 97%;
+    --popover: 217 48% 18%;
+    --popover-foreground: 40 25% 97%;
+    --primary: 52 97% 51%;
+    /* Burnished Gold */
+    --primary-foreground: 217 48% 22%;
+    --secondary: 217 48% 25%;
+    --secondary-foreground: 40 25% 97%;
+    --muted: 217 30% 25%;
+    --muted-foreground: 217 20% 70%;
+    --accent: 52 97% 51%;
+    --accent-foreground: 217 48% 22%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142 76% 36%;
+    --destructive-foreground: 40 25% 97%;
+    --border: 217 30% 25%;
+    --input: 217 30% 25%;
+    --ring: 52 97% 51%;
   }
 }
 
@@ -53,40 +60,305 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+
+  .container {
+    @apply mx-auto px-4 md:px-6 max-w-[1400px];
   }
 }
 
-/* Custom scrollbar */
+/* ─── Custom Scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-muted;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full;
+  @apply bg-muted-foreground/20 rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/50;
+  @apply bg-muted-foreground/40;
 }
 
-/* Ethiopian pattern background (optional) */
-.ethiopian-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23078930' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+/* ─── Subtle Background Pattern ─── */
+.subtle-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-/* Amharic font support */
-@font-face {
-  font-family: 'Noto Sans Ethiopic';
-  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap');
-}
-
+/* ─── Amharic Font ─── */
 .font-amharic {
   font-family: 'Noto Sans Ethiopic', sans-serif;
+}
+
+/* ─── Premium Animations ─── */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-soft {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.4s ease-out forwards;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 33%, rgba(255, 255, 255, 0.1) 50%, transparent 66%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ─── Stagger Children ─── */
+.stagger-children>* {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+.stagger-children>*:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.stagger-children>*:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.stagger-children>*:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.stagger-children>*:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.stagger-children>*:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.stagger-children>*:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+.stagger-children>*:nth-child(7) {
+  animation-delay: 0.35s;
+}
+
+.stagger-children>*:nth-child(8) {
+  animation-delay: 0.4s;
+}
+
+.stagger-children>*:nth-child(9) {
+  animation-delay: 0.45s;
+}
+
+.stagger-children>*:nth-child(10) {
+  animation-delay: 0.5s;
+}
+
+/* ─── Glass Effect ─── */
+.glass {
+  @apply bg-background/80 backdrop-blur-xl;
+}
+
+.glass-dark {
+  @apply bg-background/90 backdrop-blur-xl;
+}
+
+/* ─── Hero Gradient Mesh ─── */
+.hero-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, hsl(217 91% 60% / 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(217 91% 40% / 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, hsl(38 92% 50% / 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, hsl(224 71% 4%) 0%, hsl(222 47% 8%) 50%, hsl(224 71% 4%) 100%);
+}
+
+/* ─── Category Card Hover Glow ─── */
+.category-glow {
+  position: relative;
+}
+
+.category-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 0 0 1px hsl(217 91% 60% / 0.3), 0 8px 24px -8px hsl(217 91% 60% / 0.15);
+}
+
+.category-glow:hover::after {
+  opacity: 1;
+}
+
+/* ─── Accent Line ─── */
+.accent-line {
+  height: 3px;
+  background: linear-gradient(90deg, hsl(217 91% 60%) 0%, hsl(217 91% 50%) 100%);
+}
+
+/* ─── Hide scrollbar for carousel ─── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ─── Listing Card Image Overlay ─── */
+.listing-image-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%);
+}
+
+/* ─── Sabeh Hybrid Premium Styles ─── */
+.glass-nav {
+  backdrop-filter: blur(12px);
+  background: hsl(var(--foreground) / 0.85);
+  /* Adapts to background color */
+}
+
+/* Light mode override for nav if background is too dark */
+:root .glass-nav {
+  background: rgba(26, 45, 74, 0.85);
+}
+
+.dark .glass-nav {
+  background: hsl(var(--background) / 0.8);
+}
+
+.glass-search {
+  backdrop-filter: blur(20px);
+  background: hsl(var(--foreground) / 0.05);
+  border: 1px solid hsl(var(--primary) / 0.3);
+}
+
+.glass-card {
+  @apply bg-background/60 backdrop-blur-md border border-border/50;
+}
+
+.category-chip:hover {
+  color: #FCDD09;
+  border-bottom: 2px solid #FCDD09;
+}
+
+.listing-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.serif-font {
+  font-family: 'Playfair Display', serif;
+}
+
+/* ─── Hero Premium Gradient ─── */
+.hero-premium {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(252, 221, 9, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(26, 45, 74, 0.15) 0%, transparent 50%),
+    linear-gradient(180deg, #1a2d4a 0%, #0f1a2a 100%);
 }

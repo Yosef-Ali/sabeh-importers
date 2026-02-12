@@ -16,13 +16,12 @@ import {
   LogOut,
   ChevronLeft,
   Menu,
-  BookOpen,
+  Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 
 interface NavItem {
   title: string;
@@ -38,6 +37,37 @@ const navItems: NavItem[] = [
     titleAmharic: "ዳሽቦርድ",
     href: "/dashboard",
     icon: <LayoutDashboard className="h-5 w-5" />,
+  },
+  {
+    title: "Marketplace",
+    titleAmharic: "ገበያ",
+    href: "/marketplace",
+    icon: <ShoppingCart className="h-5 w-5" />,
+  },
+  {
+    title: "My Listings",
+    titleAmharic: "የእኔ ማስታወቂያዎች",
+    href: "/my-listings",
+    icon: <Package className="h-5 w-5" />,
+  },
+  {
+    title: "Messages",
+    titleAmharic: "መልዕክቶች",
+    href: "/messages",
+    icon: <MessageCircle className="h-5 w-5" />,
+    badge: 12,
+  },
+  {
+    title: "Wishlist",
+    titleAmharic: "ተወዳጆች",
+    href: "/wishlist",
+    icon: <Heart className="h-5 w-5" />,
+  },
+  {
+    title: "Saved Searches",
+    titleAmharic: "የተቀመጡ ፍለጋዎች",
+    href: "/saved-searches",
+    icon: <Heart className="h-5 w-5" />,
   },
   {
     title: "Products",
@@ -71,17 +101,10 @@ const navItems: NavItem[] = [
     icon: <Truck className="h-5 w-5" />,
   },
   {
-    title: "Catalog",
-    titleAmharic: "ካታሎግ",
-    href: "/catalog",
-    icon: <BookOpen className="h-5 w-5" />,
-  },
-  {
     title: "WhatsApp",
     titleAmharic: "ዋትስአፕ",
     href: "/whatsapp",
     icon: <MessageCircle className="h-5 w-5" />,
-    badge: 12,
   },
   {
     title: "Reports",
@@ -110,7 +133,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-4">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-ethiopian-green">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <span className="text-lg font-bold text-white">S</span>
           </div>
           {!isCollapsed && (

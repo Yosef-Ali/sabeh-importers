@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,23 @@ import {
 } from "@/components/ui/card";
 
 export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,9 +45,10 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login
+    // Simulate login — set auth cookie for middleware protection
     setTimeout(() => {
-      router.push("/dashboard");
+      document.cookie = "sabeh-auth-token=demo-session; path=/; max-age=86400; SameSite=Lax";
+      router.push(callbackUrl);
     }, 1500);
   };
 
@@ -40,8 +57,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-ethiopian-green">
-            <span className="text-3xl font-bold text-white">S</span>
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-primary">
+            <span className="text-3xl font-bold text-primary-foreground">S</span>
           </div>
           <h1 className="text-2xl font-bold">Sabeh Importers</h1>
           <p className="text-muted-foreground font-amharic">ሳቤህ ኢምፖርተርስ</p>

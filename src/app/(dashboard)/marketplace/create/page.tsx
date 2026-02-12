@@ -6,9 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createListing } from '@/actions/marketplace';
 
-const initialState = {
-  message: '',
-};
+const initialState: { error?: string; success?: boolean; listingId?: string } = {};
 
 export default function CreateListingPage() {
   const [state, formAction] = useFormState(createListing, initialState);
@@ -58,7 +56,7 @@ export default function CreateListingPage() {
             <div className="text-red-500 text-sm">{state.error}</div>
         )}
 
-        <Button type="submit" className="w-full bg-[#c9a962] hover:bg-[#a08339] text-[#1a2d4a] font-bold">
+        <Button type="submit" className="w-full bg-[#FCDD09] hover:bg-[#C4AB00] text-[#1a2d4a] font-bold">
           Publish Listing
         </Button>
       </form>

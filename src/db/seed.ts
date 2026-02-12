@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as dotenv from 'dotenv';
 import * as schema from './schema';
+import { eq } from 'drizzle-orm';
 
 dotenv.config({ path: '.env' });
 
@@ -13,50 +14,60 @@ async function seed() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = drizzle(pool, { schema });
 
-  console.log('🌱 Seeding database...\n');
+  console.log('🌱 Seeding database with 100 Ethiopian-focused listings...\n');
 
-  // ─── 1. CREATE ADMIN USER ─────────────────────────
+  // Clear existing data (optional, but good for a fresh start in development)
+  // console.log('Cleaning existing data...');
+  // await db.delete(schema.listings);
+
+  // ─── 1. CREATE USERS ──────────────────────────────
   console.log('Creating users...');
-  const [admin] = await db.insert(schema.users).values({
+
+  let [admin] = await db.insert(schema.users).values({
     email: 'admin@sabeh.com',
     name: 'Admin User',
     nameAmharic: 'አስተዳዳሪ',
     phone: '+251911000001',
-    password: '$2b$10$placeholder_hash_replace_with_real', // TODO: hash with bcrypt
+    password: '$2b$10$placeholder_hash_replace_with_real',
     role: 'ADMIN',
     isActive: true,
     isEmailVerified: true,
     verificationStatus: 'VERIFIED',
   }).onConflictDoNothing().returning();
 
-  const [seller] = await db.insert(schema.users).values({
+  if (!admin) {
+    [admin] = await db.select().from(schema.users).where(eq(schema.users.email, 'admin@sabeh.com')).limit(1);
+  }
+
+  let [seller] = await db.insert(schema.users).values({
     email: 'seller@sabeh.com',
-    name: 'Test Seller',
-    nameAmharic: 'ሻጭ',
-    phone: '+251911000002',
+    name: 'Yosef Ali',
+    nameAmharic: 'ዮሴፍ አሊ',
+    phone: '+251911223344',
     password: '$2b$10$placeholder_hash_replace_with_real',
     role: 'SELLER',
     isActive: true,
     isEmailVerified: true,
     verificationStatus: 'VERIFIED',
-    responseRate: 95,
-    responseTime: 'within 1 hour',
+    responseRate: 98,
+    responseTime: 'under 15 mins',
   }).onConflictDoNothing().returning();
 
-  const [buyer] = await db.insert(schema.users).values({
+  if (!seller) {
+    [seller] = await db.select().from(schema.users).where(eq(schema.users.email, 'seller@sabeh.com')).limit(1);
+  }
+
+  let [buyer] = await db.insert(schema.users).values({
     email: 'buyer@sabeh.com',
-    name: 'Test Buyer',
-    phone: '+251911000003',
+    name: 'Hagos Belay',
+    phone: '+251911556677',
     password: '$2b$10$placeholder_hash_replace_with_real',
     role: 'BUYER',
     isActive: true,
   }).onConflictDoNothing().returning();
 
-  console.log(`  ✓ Created ${[admin, seller, buyer].filter(Boolean).length} users`);
-
-  // ─── 2. CREATE CATEGORIES (Dubizzle-style) ────────
+  // ─── 2. CREATE CATEGORIES ─────────────────────────
   console.log('Creating categories...');
-
   const categoryData = [
     { name: 'Motors', nameAmharic: 'ተሽከርካሪዎች', slug: 'motors', icon: 'Car', sortOrder: 1 },
     { name: 'Property', nameAmharic: 'ንብረት', slug: 'property', icon: 'Home', sortOrder: 2 },
@@ -70,165 +81,136 @@ async function seed() {
     { name: 'Community', nameAmharic: 'ማህበረሰብ', slug: 'community', icon: 'Users', sortOrder: 10 },
   ];
 
-  const parentCategories = await db.insert(schema.categories)
+  let parentCategories = await db.insert(schema.categories)
     .values(categoryData)
     .onConflictDoNothing()
     .returning();
 
-  // Add subcategories for Motors
-  const motorsCategory = parentCategories.find(c => c.slug === 'motors');
-  if (motorsCategory) {
-    await db.insert(schema.categories).values([
-      { name: 'Cars for Sale', nameAmharic: 'ለሽያጭ የቀረቡ መኪናዎች', slug: 'cars-for-sale', parentId: motorsCategory.id, sortOrder: 1,
-        customFields: [
-          { name: 'year', label: 'Year', labelAmharic: 'ዓመት', type: 'number' as const, required: true },
-          { name: 'mileage', label: 'Mileage (km)', labelAmharic: 'ኪሎሜትር', type: 'number' as const },
-          { name: 'transmission', label: 'Transmission', type: 'select' as const, options: ['Automatic', 'Manual'] },
-          { name: 'fuel', label: 'Fuel Type', type: 'select' as const, options: ['Petrol', 'Diesel', 'Electric', 'Hybrid'] },
-          { name: 'make', label: 'Make', type: 'text' as const, required: true },
-          { name: 'model', label: 'Model', type: 'text' as const, required: true },
-        ],
-      },
-      { name: 'Motorcycles', nameAmharic: 'ሞተርሳይክል', slug: 'motorcycles', parentId: motorsCategory.id, sortOrder: 2 },
-      { name: 'Trucks & Heavy Vehicles', nameAmharic: 'ከባድ ተሽከርካሪዎች', slug: 'trucks-heavy', parentId: motorsCategory.id, sortOrder: 3 },
-      { name: 'Auto Parts', nameAmharic: 'የመኪና ዕቃዎች', slug: 'auto-parts', parentId: motorsCategory.id, sortOrder: 4 },
-    ]).onConflictDoNothing();
+  if (parentCategories.length === 0) {
+    parentCategories = await db.select().from(schema.categories);
   }
 
-  // Add subcategories for Electronics
-  const electronicsCategory = parentCategories.find(c => c.slug === 'electronics');
-  if (electronicsCategory) {
-    await db.insert(schema.categories).values([
-      { name: 'Mobile Phones', nameAmharic: 'ሞባይል ስልኮች', slug: 'mobile-phones', parentId: electronicsCategory.id, sortOrder: 1 },
-      { name: 'Computers & Laptops', nameAmharic: 'ኮምፒውተሮች', slug: 'computers', parentId: electronicsCategory.id, sortOrder: 2 },
-      { name: 'TVs & Audio', nameAmharic: 'ቲቪ እና ኦዲዮ', slug: 'tvs-audio', parentId: electronicsCategory.id, sortOrder: 3 },
-      { name: 'Gaming', nameAmharic: 'ጌሚንግ', slug: 'gaming', parentId: electronicsCategory.id, sortOrder: 4 },
-    ]).onConflictDoNothing();
-  }
-
-  console.log(`  ✓ Created ${parentCategories.length} parent categories + subcategories`);
-
-  // ─── 3. CREATE SAMPLE LISTINGS ────────────────────
-  if (seller) {
-    console.log('Creating sample listings...');
-    const carsCategory = parentCategories.find(c => c.slug === 'motors');
-    const phonesCategory = parentCategories.find(c => c.slug === 'electronics');
-    const furnitureCategory = parentCategories.find(c => c.slug === 'furniture-home');
-
-    const listingData = [
-      {
-        sellerId: seller.id,
-        title: 'Toyota Corolla 2022 - Excellent Condition',
-        titleAmharic: 'ቶዮታ ኮሮላ 2022 - እጅግ ጥሩ ሁኔታ',
-        description: 'Well-maintained Toyota Corolla 2022 model. Single owner, full service history. Low mileage, accident-free.',
-        price: '2500000',
-        currency: 'ETB' as const,
-        categoryId: carsCategory?.id || parentCategories[0].id,
-        condition: 'LIKE_NEW' as const,
-        location: 'Bole, Addis Ababa',
-        city: 'Addis Ababa',
-        region: 'Addis Ababa',
-        slug: 'toyota-corolla-2022-' + Date.now(),
-        contactPhone: '+251911000002',
-        showPhone: true,
-        negotiable: true,
-        attributes: { year: 2022, mileage: 35000, transmission: 'Automatic', fuel: 'Petrol', make: 'Toyota', model: 'Corolla' },
-        status: 'ACTIVE' as const,
-      },
-      {
-        sellerId: seller.id,
-        title: 'iPhone 15 Pro Max 256GB',
-        description: 'Brand new iPhone 15 Pro Max, sealed in box. 256GB Natural Titanium.',
-        price: '85000',
-        currency: 'ETB' as const,
-        categoryId: phonesCategory?.id || parentCategories[0].id,
-        condition: 'NEW' as const,
-        location: 'Merkato, Addis Ababa',
-        city: 'Addis Ababa',
-        slug: 'iphone-15-pro-max-' + Date.now(),
-        contactPhone: '+251911000002',
-        showPhone: true,
-        negotiable: false,
-        status: 'ACTIVE' as const,
-      },
-      {
-        sellerId: seller.id,
-        title: 'L-Shaped Sofa Set - Italian Leather',
-        titleAmharic: 'ኤል ቅርጽ ሶፋ - ጣሊያን ቆዳ',
-        description: 'Premium Italian leather L-shaped sofa set. Seats 6 comfortably. Minor wear on armrest.',
-        price: '45000',
-        currency: 'ETB' as const,
-        categoryId: furnitureCategory?.id || parentCategories[0].id,
-        condition: 'USED_GOOD' as const,
-        location: 'CMC, Addis Ababa',
-        city: 'Addis Ababa',
-        slug: 'l-shaped-sofa-italian-' + Date.now(),
-        contactPhone: '+251911000002',
-        showPhone: true,
-        negotiable: true,
-        status: 'ACTIVE' as const,
-      },
-      {
-        sellerId: seller.id,
-        title: 'BYD Seal 2024 - Electric Vehicle',
-        titleAmharic: 'BYD Seal 2024 - ኤሌክትሪክ መኪና',
-        description: 'Brand new BYD Seal electric sedan. 700km range, fast charging, premium interior. Direct import.',
-        price: '4200000',
-        currency: 'ETB' as const,
-        categoryId: carsCategory?.id || parentCategories[0].id,
-        condition: 'NEW' as const,
-        location: 'Bole, Addis Ababa',
-        city: 'Addis Ababa',
-        slug: 'byd-seal-2024-ev-' + Date.now(),
-        contactPhone: '+251911000002',
-        showPhone: true,
-        negotiable: true,
-        isFeatured: true,
-        isPromoted: true,
-        attributes: { year: 2024, mileage: 0, transmission: 'Automatic', fuel: 'Electric', make: 'BYD', model: 'Seal' },
-        status: 'ACTIVE' as const,
-      },
-    ];
-
-    await db.insert(schema.listings).values(listingData);
-    console.log(`  ✓ Created ${listingData.length} sample listings`);
-  }
-
-  // ─── 4. CREATE SAMPLE WAREHOUSE ───────────────────
-  console.log('Creating warehouse...');
-  await db.insert(schema.warehouses).values({
-    name: 'Main Warehouse',
-    nameAmharic: 'ዋና መጋዘን',
-    code: 'WH-001',
-    city: 'Addis Ababa',
-    region: 'Addis Ababa',
-    address: 'Kality Industrial Zone',
-    isDefault: true,
-    isActive: true,
-  }).onConflictDoNothing();
-  console.log('  ✓ Created warehouse');
-
-  // ─── 5. APP SETTINGS ─────────────────────────────
-  console.log('Creating settings...');
-  const settingsData = [
-    { key: 'app_name', value: 'Sabeh Importers', description: 'Application name' },
-    { key: 'app_name_amharic', value: 'ሳቤ ኢምፖርተርስ', description: 'Amharic app name' },
-    { key: 'currency', value: 'ETB', description: 'Default currency' },
-    { key: 'tax_rate', value: '15', description: 'VAT rate percentage' },
-    { key: 'listing_expiry_days', value: '30', description: 'Days before a listing expires' },
-    { key: 'max_images_per_listing', value: '10', description: 'Max images per listing' },
+  // ─── 3. PREPARE ASSETS ────────────────────────────
+  const motorImages = [
+    '/images/products/motors/mercedes-c-class.png',
+    '/images/products/motors/land-cruiser.png',
+    '/images/products/motors/kia-sportage.png',
+    '/images/products/motors/vespa.png',
+    '/images/products/motors/bajaj-re.png',
+    '/images/products/motors/isuzu-truck.png',
+    '/images/products/motors/hyundai-elantra.png',
+    '/images/products/motors/ford-raptor.png',
+    '/images/products/toyota-corolla.png',
+    '/images/products/byd-seal.png',
   ];
 
-  await db.insert(schema.settings).values(settingsData).onConflictDoNothing();
-  console.log(`  ✓ Created ${settingsData.length} settings`);
+  const propertyImages = [
+    '/images/products/property/luxury-apartment.png',
+    '/images/products/property/modern-villa.png',
+  ];
 
-  console.log('\n✅ Seed complete!\n');
-  console.log('Test accounts:');
-  console.log('  Admin:  admin@sabeh.com');
-  console.log('  Seller: seller@sabeh.com');
-  console.log('  Buyer:  buyer@sabeh.com');
-  console.log('  Password: (update with bcrypt hash)\n');
 
+  const genericImages = [
+    '/images/products/iphone-15.png',
+    '/images/products/leather-sofa.png',
+  ];
+
+  // Map of specific product titles (slug-like) to high-quality image arrays (5 images each)
+  const detailedProductAssets: Record<string, string[]> = {
+    'luxury-villa': [
+      '/images/products/property/luxury-villa/exterior.png',
+      '/images/products/property/luxury-villa/living-room.png',
+      '/images/products/property/luxury-villa/bedroom.png',
+      '/images/products/property/luxury-villa/kitchen.png',
+      '/images/products/property/luxury-villa/pool.png',
+    ],
+    // Future detailed products can be added here
+  };
+
+  const locations = [
+    { loc: 'Bole, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'CMC, Addis Ababa', city: 'Addis Ababa' },
+    { loc: '4 Kilo, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Merkato, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Old Airport, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Kazanchis, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Kality, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Haya Hulet, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Lebu, Addis Ababa', city: 'Addis Ababa' },
+    { loc: 'Bishoftu', city: 'Bishoftu' },
+    { loc: 'Adama', city: 'Adama' },
+    { loc: 'Bahir Dar', city: 'Bahir Dar' },
+    { loc: 'Hawassa', city: 'Hawassa' },
+  ];
+
+  // ─── 4. GENERATE 100 LISTINGS ─────────────────────
+  console.log('Generating 100 listings...');
+  const listings: any[] = [];
+  const targetSeller = seller || admin;
+
+  for (let i = 1; i <= 100; i++) {
+    const category = parentCategories[i % parentCategories.length];
+    const location = locations[i % locations.length];
+
+    let images: string[] = [];
+    let title = '';
+    let price = '1000';
+
+    if (category.slug === 'motors') {
+      images = [motorImages[i % motorImages.length]];
+      const brands = ['Toyota', 'Hyundai', 'Mercedes', 'Suzuki', 'Kia', 'Lifan'];
+      const brand = brands[i % brands.length];
+      title = `${brand} ${i % 2 === 0 ? 'Sedan' : 'SUV'} - 202${i % 5} Model`;
+      price = (Math.floor(Math.random() * 5000000) + 500000).toString();
+    } else if (category.slug === 'property') {
+      const isVilla = i % 2 !== 0;
+      title = `${isVilla ? 'Luxury Villa' : 'Modern Apartment'} in ${location.loc}`;
+      price = (Math.floor(Math.random() * 20000000) + 2000000).toString();
+
+      // Default placeholder images
+      images = [propertyImages[i % propertyImages.length]];
+    } else {
+      images = [genericImages[i % genericImages.length]];
+      title = `Premium ${category.name} Item - Special Offer #${i}`;
+      price = (Math.floor(Math.random() * 100000) + 1000).toString();
+    }
+
+    // Check if we have a detailed asset set for this product title (case-insensitive slug match)
+    const productSlug = title.toLowerCase().replace(/ /g, '-');
+    for (const [key, assets] of Object.entries(detailedProductAssets)) {
+      if (productSlug.includes(key)) {
+        images = assets;
+        break;
+      }
+    }
+
+    listings.push({
+      sellerId: targetSeller.id,
+      categoryId: category.id,
+      title,
+      description: `This is a high-quality ${category.name} listing located in ${location.loc}. High performance, well maintained, and ready for immediate purchase. Built for the Ethiopian market context.`,
+      price,
+      currency: 'ETB',
+      condition: i % 3 === 0 ? 'NEW' : 'USED_GOOD',
+      location: location.loc,
+      city: location.city,
+      images,
+      slug: `${title.toLowerCase().replace(/ /g, '-')}-${Date.now()}-${i}`,
+      status: 'ACTIVE',
+      negotiable: i % 2 === 0,
+      isFeatured: i % 10 === 0,
+      isPromoted: i % 15 === 0,
+      createdAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)),
+    });
+  }
+
+  // Insert in batches of 20 to avoid payload limits if any
+  for (let j = 0; j < listings.length; j += 20) {
+    await db.insert(schema.listings).values(listings.slice(j, j + 20));
+    console.log(`  ✓ Inserted listings ${j + 1} to ${Math.min(j + 20, listings.length)}`);
+  }
+
+  console.log('\n✅ Massive Seed Complete!');
   await pool.end();
   process.exit(0);
 }

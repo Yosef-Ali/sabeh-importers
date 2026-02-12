@@ -16,16 +16,17 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Sabeh Importers | ሳቤህ ኢምፖርተርስ",
+  title: "Sabeh Hybrid | Ethiopia's Premium Marketplace",
   description:
-    "Import & Distribution Management System for Sabeh Importers Ethiopia",
+    "Ethiopia's most exclusive marketplace for luxury vehicles, premium real estate, and elite lifestyle assets.",
   keywords: [
-    "import",
-    "distribution",
+    "marketplace",
     "ethiopia",
-    "inventory",
-    "management",
-    "wholesale",
+    "luxury",
+    "cars",
+    "property",
+    "addis ababa",
+    "import",
   ],
   authors: [{ name: "Sabeh Importers" }],
   icons: {
@@ -43,6 +44,14 @@ export default function RootLayout({
       <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
       </head>
