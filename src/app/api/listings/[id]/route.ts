@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getListingById } from '@/actions/marketplace';
+import { getListing, deleteListing } from "@/lib/actions/marketplace";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const result = await getListingById(params.id);
-
-  if ('error' in result) {
-    return NextResponse.json({ error: result.error }, { status: 404 });
+  if (!params.id) {
+    return NextResponse.json({ error: 'Listing ID is required' }, { status: 400 });
   }
 
-  return NextResponse.json(result);
+  const listing = await getListing(params.id);
+
+  if (!listing) {
+    return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
+  }
+
+  return NextResponse.json(listing);
 }

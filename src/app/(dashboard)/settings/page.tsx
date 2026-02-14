@@ -191,23 +191,31 @@ export default function SettingsPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Company Name</Label>
-                  <Input defaultValue="Sabeh Importers" />
+                  <Input placeholder="Your Company PLC" />
                 </div>
                 <div className="space-y-2">
                   <Label>Company Name (Amharic)</Label>
-                  <Input defaultValue="ሳቤህ ኢምፖርተርስ" className="font-amharic" />
+                  <Input placeholder="የድርጅት ስም" className="font-amharic" />
                 </div>
                 <div className="space-y-2">
                   <Label>TIN Number</Label>
-                  <Input defaultValue="0012345678" />
+                  <Input placeholder="0012345678" />
                 </div>
                 <div className="space-y-2">
                   <Label>Business License</Label>
-                  <Input defaultValue="ET/BL/2024/12345" />
+                  <Input placeholder="ET/BL/2024/XXXXX" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Website</Label>
+                  <Input type="url" placeholder="https://yourcompany.com" />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Company Description</Label>
+                  <Textarea placeholder="Describe your business, products, and services..." rows={3} />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <Label>Address</Label>
-                  <Textarea defaultValue="Bole Sub-City, Woreda 03, Addis Ababa, Ethiopia" />
+                  <Textarea placeholder="Bole Sub-City, Woreda 03, Addis Ababa, Ethiopia" />
                 </div>
               </div>
               <Button>Update Company Info</Button>

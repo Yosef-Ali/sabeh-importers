@@ -16,10 +16,17 @@ import { useAuthStore } from "@/store/auth";
 import { updateProfile } from "@/lib/actions/users";
 
 // ── Step definitions ─────────────────────────────────────────────────────────
-const STEPS = [
+const BUYER_STEPS = [
   { id: 1, label: "Profile",   icon: User },
   { id: 2, label: "Plan",      icon: Zap },
   { id: 3, label: "Verify",    icon: FileText },
+];
+
+const SELLER_STEPS = [
+  { id: 1, label: "Profile",   icon: User },
+  { id: 2, label: "Company",   icon: Building2 },
+  { id: 3, label: "Plan",      icon: Zap },
+  { id: 4, label: "Verify",    icon: FileText },
 ];
 
 const PLANS = [
@@ -63,6 +70,8 @@ export default function OnboardingPage() {
   const { user } = useAuthStore();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
+  const isSeller = user?.role === "SELLER";
+  const STEPS = isSeller ? SELLER_STEPS : BUYER_STEPS;
 
   // Step 1 data
   const [profile, setProfile] = useState({
@@ -71,12 +80,27 @@ export default function OnboardingPage() {
     city: "",
   });
 
-  // Step 2 data
+  // Company data (seller only)
+  const [company, setCompanyState] = useState({
+    companyName: "",
+    companyNameAmharic: "",
+    businessLicense: "",
+    tinNumber: "",
+    website: "",
+    companyDescription: "",
+  });
+
+  // Step: Plan data
   const [selectedPlan, setSelectedPlan] = useState("free");
 
   function setP(key: keyof typeof profile) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setProfile((p) => ({ ...p, [key]: e.target.value }));
+  }
+
+  function setC(key: keyof typeof company) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setCompanyState((p) => ({ ...p, [key]: e.target.value }));
   }
 
   async function saveProfile() {
@@ -90,6 +114,25 @@ export default function OnboardingPage() {
     setSaving(false);
     setStep(2);
   }
+
+  async function saveCompany() {
+    if (!user) return;
+    setSaving(true);
+    await updateProfile(user.id, {
+      companyName: company.companyName || undefined,
+      companyNameAmharic: company.companyNameAmharic || undefined,
+      businessLicense: company.businessLicense || undefined,
+      tinNumber: company.tinNumber || undefined,
+      website: company.website || undefined,
+      companyDescription: company.companyDescription || undefined,
+    });
+    setSaving(false);
+    setStep(3);
+  }
+
+  // For sellers: plan=step3, verify=step4; for buyers: plan=step2, verify=step3
+  const planStep = isSeller ? 3 : 2;
+  const verifyStep = isSeller ? 4 : 3;
 
   function goToDashboard() {
     router.push("/dashboard");
@@ -202,8 +245,93 @@ export default function OnboardingPage() {
           </Card>
         )}
 
-        {/* ── Step 2: Plan selection ───────────────────────────── */}
-        {step === 2 && (
+        {/* ── Company details step (seller only) ──────────────── */}
+        {isSeller && step === 2 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" /> Company details
+              </CardTitle>
+              <CardDescription>
+                Add your business information to build trust with buyers. You can skip and fill this in later from Settings.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="companyName">Company Name</Label>
+                  <Input
+                    id="companyName"
+                    placeholder="Acme Importers PLC"
+                    value={company.companyName}
+                    onChange={setC("companyName")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="companyNameAmharic">Company Name (Amharic)</Label>
+                  <Input
+                    id="companyNameAmharic"
+                    placeholder="የድርጅት ስም"
+                    className="font-amharic"
+                    value={company.companyNameAmharic}
+                    onChange={setC("companyNameAmharic")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="businessLicense">Business License</Label>
+                  <Input
+                    id="businessLicense"
+                    placeholder="ET/BL/2024/XXXXX"
+                    value={company.businessLicense}
+                    onChange={setC("businessLicense")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tinNumber">TIN Number</Label>
+                  <Input
+                    id="tinNumber"
+                    placeholder="0012345678"
+                    value={company.tinNumber}
+                    onChange={setC("tinNumber")}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    type="url"
+                    placeholder="https://yourcompany.com"
+                    value={company.website}
+                    onChange={setC("website")}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="companyDescription">Company Description</Label>
+                <Textarea
+                  id="companyDescription"
+                  placeholder="Describe your business, products, and services..."
+                  value={company.companyDescription}
+                  onChange={setC("companyDescription")}
+                  rows={3}
+                />
+              </div>
+              <div className="flex justify-between pt-2">
+                <Button variant="ghost" onClick={() => setStep(1)}>← Back</Button>
+                <div className="flex gap-3">
+                  <Button variant="ghost" onClick={() => setStep(planStep)}>Skip for now</Button>
+                  <Button onClick={saveCompany} disabled={saving} className="gap-2">
+                    {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                    Save & Continue <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* ── Plan selection step ───────────────────────────── */}
+        {step === planStep && (
           <div className="space-y-4">
             <Card>
               <CardHeader>
@@ -267,16 +395,16 @@ export default function OnboardingPage() {
             </div>
 
             <div className="flex justify-between pt-2">
-              <Button variant="ghost" onClick={() => setStep(1)}>← Back</Button>
-              <Button onClick={() => setStep(3)} className="gap-2">
+              <Button variant="ghost" onClick={() => setStep(isSeller ? 2 : 1)}>← Back</Button>
+              <Button onClick={() => setStep(verifyStep)} className="gap-2">
                 Continue <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
           </div>
         )}
 
-        {/* ── Step 3: Verification docs ────────────────────────── */}
-        {step === 3 && (
+        {/* ── Verification docs step ────────────────────────── */}
+        {step === verifyStep && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -309,7 +437,7 @@ export default function OnboardingPage() {
               </div>
 
               <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-between">
-                <Button variant="ghost" onClick={() => setStep(2)}>← Back</Button>
+                <Button variant="ghost" onClick={() => setStep(planStep)}>← Back</Button>
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={goToDashboard}>
                     Skip — go to dashboard

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getCategories } from '@/actions/marketplace';
+import { getCategories } from "@/lib/actions/marketplace";
 
 export async function GET() {
   const result = await getCategories();

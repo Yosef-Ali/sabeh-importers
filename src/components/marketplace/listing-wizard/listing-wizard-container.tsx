@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ListingWizard, ListingFormData } from "./listing-wizard";
 import { Step1Details } from "./step-1-details";
 import { Step2Visibility } from "./step-2-visibility";
-import { createListing } from "@/actions/marketplace";
+import { createListing } from "@/lib/actions/marketplace";
 
 interface ListingWizardContainerProps {
   categories: Array<{

@@ -93,7 +93,14 @@ export async function registerAction(
   name: string,
   email: string,
   password: string,
-  role: "SELLER" | "BUYER" = "SELLER"
+  role: "SELLER" | "BUYER" = "SELLER",
+  companyFields?: {
+    companyName?: string;
+    companyNameAmharic?: string;
+    businessLicense?: string;
+    tinNumber?: string;
+    companyDescription?: string;
+  }
 ): Promise<RegisterResult> {
   if (!name || !email || !password) {
     return { success: false, error: "All fields are required." };
@@ -125,6 +132,13 @@ export async function registerAction(
     isActive: true,
     isEmailVerified: false,
     verificationStatus: "UNVERIFIED",
+    ...(role === "SELLER" && companyFields ? {
+      companyName: companyFields.companyName?.trim() || undefined,
+      companyNameAmharic: companyFields.companyNameAmharic?.trim() || undefined,
+      businessLicense: companyFields.businessLicense?.trim() || undefined,
+      tinNumber: companyFields.tinNumber?.trim() || undefined,
+      companyDescription: companyFields.companyDescription?.trim() || undefined,
+    } : {}),
   });
 
   // Issue a verification token and send the email

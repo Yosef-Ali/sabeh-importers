@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import { ListingSheet } from "@/components/marketplace/listing-sheet";
+
 interface Listing {
   id: string;
   title: string;
@@ -25,12 +27,20 @@ interface Listing {
   category?: {
     name: string;
   } | null;
+  description?: string | null;
+  negotiable?: boolean | null;
+  condition?: "NEW" | "LIKE_NEW" | "USED_GOOD" | "USED_FAIR" | "FOR_PARTS" | null;
+  city?: string | null;
+  region?: string | null;
+  contactPhone?: string | null;
+  categoryId?: string | null;
 }
 
 interface ListingsTableProps {
   listings: Listing[];
   language?: "en" | "am";
   onDelete?: (listingId: string) => Promise<void>;
+  categories: { id: string; name: string }[];
 }
 
 const STATUS_CONFIG = {
@@ -65,8 +75,16 @@ export function ListingsTable({
   listings,
   language = "en",
   onDelete,
+  categories,
 }: ListingsTableProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editingListing, setEditingListing] = useState<Listing | undefined>(undefined);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const handleEdit = (listing: Listing) => {
+    setEditingListing(listing);
+    setIsSheetOpen(true);
+  };
 
   const handleDelete = async (listingId: string) => {
     if (
@@ -227,15 +245,14 @@ export function ListingsTable({
                           <Eye className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <Link href={`/dashboard/marketplace/edit/${listing.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleEdit(listing)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -321,11 +338,9 @@ export function ListingsTable({
                         {language === "am" ? "እይ" : "View"}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/dashboard/marketplace/edit/${listing.id}`}>
-                        <Edit className="mr-2 h-4 w-4" />
-                        {language === "am" ? "አርትዕ" : "Edit"}
-                      </Link>
+                    <DropdownMenuItem onClick={() => handleEdit(listing)}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      {language === "am" ? "አርትዕ" : "Edit"}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleDelete(listing.id)}
@@ -356,6 +371,17 @@ export function ListingsTable({
           );
         })}
       </div>
+
+      <ListingSheet
+        open={isSheetOpen}
+        onOpenChange={(open) => {
+          setIsSheetOpen(open);
+          if (!open) setEditingListing(undefined);
+        }}
+        listing={editingListing}
+        categories={categories}
+        language={language}
+      />
     </>
   );
 }

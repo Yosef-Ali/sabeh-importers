@@ -3,10 +3,11 @@
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, AlertCircle, MailCheck, Store, ShoppingBag } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, MailCheck, Store, ShoppingBag, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card";
@@ -36,10 +37,22 @@ function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [companyData, setCompanyData] = useState({
+    companyName: "",
+    companyNameAmharic: "",
+    businessLicense: "",
+    tinNumber: "",
+    companyDescription: "",
+  });
 
   function set(key: keyof typeof formData) {
     return (e: React.ChangeEvent<HTMLInputElement>) =>
       setFormData((p) => ({ ...p, [key]: e.target.value }));
+  }
+
+  function setCompany(key: keyof typeof companyData) {
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setCompanyData((p) => ({ ...p, [key]: e.target.value }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -47,7 +60,14 @@ function RegisterForm() {
     setIsLoading(true);
     setError(null);
 
-    const result = await registerAction(formData.name, formData.email, formData.password, role);
+    const hasCompanyData = role === "SELLER" && Object.values(companyData).some(v => v.trim());
+    const result = await registerAction(
+      formData.name,
+      formData.email,
+      formData.password,
+      role,
+      hasCompanyData ? companyData : undefined,
+    );
 
     if (!result.success) {
       setError(result.error);
@@ -216,6 +236,64 @@ function RegisterForm() {
                 </div>
                 <p className="text-xs text-muted-foreground">Minimum 8 characters</p>
               </div>
+
+              {role === "SELLER" && (
+                <div className="space-y-3 rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Building className="h-4 w-4" />
+                    Company details <span className="text-xs font-normal text-muted-foreground">(optional)</span>
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="companyName" className="text-xs">Company Name</Label>
+                      <Input
+                        id="companyName"
+                        placeholder="Acme Importers PLC"
+                        value={companyData.companyName}
+                        onChange={setCompany("companyName")}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="companyNameAmharic" className="text-xs">Company Name (Amharic)</Label>
+                      <Input
+                        id="companyNameAmharic"
+                        placeholder="የድርጅት ስም"
+                        className="font-amharic"
+                        value={companyData.companyNameAmharic}
+                        onChange={setCompany("companyNameAmharic")}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="businessLicense" className="text-xs">Business License</Label>
+                      <Input
+                        id="businessLicense"
+                        placeholder="ET/BL/2024/XXXXX"
+                        value={companyData.businessLicense}
+                        onChange={setCompany("businessLicense")}
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="tinNumber" className="text-xs">TIN Number</Label>
+                      <Input
+                        id="tinNumber"
+                        placeholder="0012345678"
+                        value={companyData.tinNumber}
+                        onChange={setCompany("tinNumber")}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="companyDescription" className="text-xs">Company Description</Label>
+                    <Textarea
+                      id="companyDescription"
+                      placeholder="Briefly describe your business..."
+                      value={companyData.companyDescription}
+                      onChange={setCompany("companyDescription")}
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              )}
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (

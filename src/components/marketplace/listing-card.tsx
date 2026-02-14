@@ -56,6 +56,7 @@ export function ListingCard({
   sellerName, sellerVerified = false, createdAt, className
 }: ListingCardProps) {
   const [liked, setLiked] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const conditionStyle = CONDITION_STYLES[condition] || CONDITION_STYLES.USED_GOOD;
 
   return (
@@ -66,13 +67,14 @@ export function ListingCard({
       <Link href={`/listings/${id}`} className="block h-full">
         {/* Image Container */}
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#0A192F]">
-          {image ? (
+          {image && !imgError ? (
             <Image
               src={image}
               alt={title}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              onError={() => setImgError(true)}
             />
           ) : (
             <PlaceholderImage title={title} category={_category} />

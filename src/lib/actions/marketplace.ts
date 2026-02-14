@@ -4,6 +4,162 @@
 import { db } from "@/lib/db";
 import { listings, categories } from "@/db/schema";
 import { desc, eq, and, gte, lte, ilike, or, sql, SQL } from "drizzle-orm";
+import { createListingSchema, updateListingSchema } from "@/lib/validations/listing";
+import { slugify } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/session";
+import { revalidatePath } from "next/cache";
+
+// ─── CREATE LISTING ───────────────────────────────────
+export async function createListing(formData: FormData) {
+  try {
+    const session = await getCurrentUser();
+    if (!session) return { error: 'Unauthorized. Please sign in.' };
+    const sellerId = session.id;
+
+    // Parse images: sent as a JSON array string
+    let images: string[] = [];
+    const imagesRaw = formData.get('images');
+    if (imagesRaw && typeof imagesRaw === 'string') {
+      try {
+        images = JSON.parse(imagesRaw);
+      } catch {
+        images = [];
+      }
+    }
+
+    const rawData = {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      price: formData.get('price'),
+      currency: formData.get('currency') || 'ETB',
+      negotiable: formData.get('negotiable') === 'true',
+      categoryId: formData.get('categoryId'),
+      condition: formData.get('condition') || 'USED_GOOD',
+      location: formData.get('location'),
+      city: formData.get('city'),
+      region: formData.get('region'),
+      contactPhone: formData.get('contactPhone'),
+      contactWhatsapp: formData.get('contactWhatsapp'),
+      showPhone: formData.get('showPhone') !== 'false',
+      images,
+    };
+
+    const validatedData = createListingSchema.parse(rawData);
+
+    // Generate slug from title
+    const slug = slugify(validatedData.title) + '-' + Date.now();
+
+    const [listing] = await db.insert(listings).values({
+      title: validatedData.title,
+      titleAmharic: validatedData.titleAmharic,
+      description: validatedData.description,
+      descriptionAmharic: validatedData.descriptionAmharic,
+      price: validatedData.price.toString(),
+      currency: validatedData.currency,
+      negotiable: validatedData.negotiable,
+      categoryId: validatedData.categoryId,
+      condition: validatedData.condition,
+      slug,
+      location: validatedData.location,
+      city: validatedData.city,
+      region: validatedData.region,
+      contactPhone: validatedData.contactPhone,
+      contactWhatsapp: validatedData.contactWhatsapp,
+      showPhone: validatedData.showPhone,
+      attributes: validatedData.attributes,
+      images: images,
+      sellerId,
+      status: 'PENDING_REVIEW',
+    }).returning();
+
+    revalidatePath('/marketplace');
+    revalidatePath('/');
+    revalidatePath('/my-listings');
+    return { success: true, listingId: listing.id };
+  } catch (error) {
+    console.error('Failed to create listing:', error);
+    if (error instanceof Error && error.name === 'ZodError') {
+      return { error: 'Validation failed. Please check your input.' };
+    }
+    return { error: 'Failed to create listing. Please try again.' };
+  }
+}
+
+// ─── UPDATE LISTING ───────────────────────────────────
+export async function updateListing(listingId: string, formData: FormData) {
+  try {
+    const session = await getCurrentUser();
+    if (!session) return { error: 'Unauthorized. Please sign in.' };
+    const sellerId = session.id;
+
+    // Verify ownership
+    const existingListing = await db.query.listings.findFirst({
+      where: and(eq(listings.id, listingId), eq(listings.sellerId, sellerId)),
+    });
+
+    if (!existingListing) {
+      return { error: 'Listing not found or you do not have permission to edit it.' };
+    }
+
+    // Parse images
+    let images: string[] | undefined;
+    const imagesRaw = formData.get('images');
+    if (imagesRaw && typeof imagesRaw === 'string') {
+      try {
+        images = JSON.parse(imagesRaw);
+      } catch {
+        images = [];
+      }
+    }
+
+    const rawData = {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      price: formData.get('price'),
+      currency: formData.get('currency'),
+      negotiable: formData.get('negotiable') === 'true',
+      categoryId: formData.get('categoryId'),
+      condition: formData.get('condition'),
+      location: formData.get('location'),
+      city: formData.get('city'),
+      region: formData.get('region'),
+      contactPhone: formData.get('contactPhone'),
+      contactWhatsapp: formData.get('contactWhatsapp'),
+      showPhone: formData.get('showPhone') !== 'false',
+      images,
+    };
+
+    // Filter out undefined/empty string keys for partial update
+    const dataToValidate: any = {};
+    for (const [key, value] of Object.entries(rawData)) {
+      if (value !== null && value !== "" && value !== undefined) {
+        dataToValidate[key] = value;
+      }
+    }
+
+    const validatedData = updateListingSchema.parse(dataToValidate);
+
+    const updatePayload: any = { ...validatedData, updatedAt: new Date() };
+    if (validatedData.price !== undefined) {
+      updatePayload.price = validatedData.price.toString();
+    }
+
+    await db.update(listings)
+      .set(updatePayload)
+      .where(eq(listings.id, listingId));
+
+    revalidatePath('/marketplace');
+    revalidatePath(`/listings/${listingId}`);
+    revalidatePath('/my-listings');
+    return { success: true, listingId };
+  } catch (error) {
+    console.error('Failed to update listing:', error);
+    if (error instanceof Error && error.name === 'ZodError') {
+      return { error: 'Validation failed. Please check your input.' };
+    }
+    return { error: 'Failed to update listing.' };
+  }
+}
 
 export interface GetListingsParams {
   query?: string;
@@ -16,6 +172,7 @@ export interface GetListingsParams {
   limit?: number;
   featured?: boolean;
   verified?: boolean; // Filter by verified sellers
+  city?: string;
 }
 
 export async function getListings({
@@ -28,6 +185,7 @@ export async function getListings({
   page = 1,
   limit = 20,
   featured,
+  city,
 }: GetListingsParams) {
   const offset = (page - 1) * limit;
   const conditions: SQL[] = [eq(listings.status, "ACTIVE")];
@@ -59,6 +217,11 @@ export async function getListings({
   // Condition
   if (condition) {
     conditions.push(eq(listings.condition, condition));
+  }
+
+  // Location / City
+  if (city) {
+    conditions.push(ilike(listings.city, `%${city}%`));
   }
 
   // Featured Filter

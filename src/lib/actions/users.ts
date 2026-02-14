@@ -5,10 +5,21 @@ import { users, listings, reviews } from "@/db/schema";
 import { desc, eq, sql, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-// Update profile fields (name, phone, bio, city)
+// Update profile fields (name, phone, bio, city, company details)
 export async function updateProfile(
   userId: string,
-  data: { name?: string; phone?: string; bio?: string; city?: string }
+  data: {
+    name?: string;
+    phone?: string;
+    bio?: string;
+    city?: string;
+    companyName?: string;
+    companyNameAmharic?: string;
+    businessLicense?: string;
+    tinNumber?: string;
+    website?: string;
+    companyDescription?: string;
+  }
 ) {
   await db.update(users).set({ ...data, updatedAt: new Date() }).where(eq(users.id, userId));
   revalidatePath("/settings");
@@ -27,8 +38,16 @@ export async function getUserProfile(userId: string) {
       phone: true,
       avatar: true,
       bio: true,
+      role: true,
       createdAt: true,
       verificationStatus: true,
+      companyName: true,
+      companyNameAmharic: true,
+      businessLicense: true,
+      tinNumber: true,
+      website: true,
+      companyDescription: true,
+      coverImage: true,
     },
   });
 

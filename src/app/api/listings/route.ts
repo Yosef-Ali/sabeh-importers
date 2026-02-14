@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getListings } from '@/actions/marketplace';
+import { getListings, createListing } from "@/lib/actions/marketplace";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -9,9 +9,14 @@ export async function GET(request: NextRequest) {
     categoryId: searchParams.get('categoryId') || undefined,
     minPrice: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
     maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
-    condition: searchParams.get('condition') || undefined,
+    condition: (searchParams.get('condition') as
+      | "NEW"
+      | "LIKE_NEW"
+      | "USED_GOOD"
+      | "USED_FAIR"
+      | "FOR_PARTS") || undefined,
     city: searchParams.get('city') || undefined,
-    sortBy: searchParams.get('sortBy') || 'newest',
+    sort: (searchParams.get('sortBy') as any) || 'newest',
     page: Number(searchParams.get('page')) || 1,
     limit: Number(searchParams.get('limit')) || 20,
   });

@@ -12,6 +12,10 @@ import {
   Package,
   MessageCircle,
   Shield,
+  Building,
+  Globe,
+  FileCheck,
+  Receipt,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -25,9 +29,10 @@ export async function generateMetadata({ params }: UserProfilePageProps) {
   const profile = await getUserProfile(params.id);
   if (!profile) return { title: "User Not Found" };
 
+  const displayName = profile.companyName || profile.name;
   return {
-    title: `${profile.name} | Sabeh Market`,
-    description: `View ${profile.name}'s profile, listings, and reviews on Sabeh Market.`,
+    title: `${displayName} | Sabeh Market`,
+    description: `View ${displayName}'s profile, listings, and reviews on Sabeh Market.`,
   };
 }
 
@@ -41,16 +46,31 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
   const userListings = await getUserListings(params.id, 8);
   const userReviews = await getUserReviews(params.id);
 
+  const isCompany = !!profile.companyName;
+  const displayName = profile.companyName || profile.name;
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-8 md:py-12">
+        {/* Cover Image Banner (company only) */}
+        {isCompany && profile.coverImage && (
+          <div className="relative h-48 md:h-64 rounded-t-xl overflow-hidden mb-0">
+            <img
+              src={profile.coverImage}
+              alt={`${displayName} cover`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          </div>
+        )}
+
         {/* Profile Header */}
-        <div className="rounded-xl border border-border bg-card p-8 shadow-sm mb-8">
+        <div className={`rounded-xl border border-border bg-card p-8 shadow-sm mb-8 ${isCompany && profile.coverImage ? "rounded-t-none -mt-0" : ""}`}>
           <div className="flex flex-col md:flex-row gap-8">
             {/* Avatar */}
             <div className="flex-shrink-0">
-              <div className="h-32 w-32 rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center text-5xl font-bold text-white shadow-lg ring-4 ring-gold/20">
-                {profile.name[0]}
+              <div className={`h-32 w-32 rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center text-5xl font-bold text-white shadow-lg ring-4 ring-gold/20 ${isCompany && profile.coverImage ? "-mt-20 relative z-10" : ""}`}>
+                {isCompany ? <Building className="h-14 w-14" /> : displayName[0]}
               </div>
             </div>
 
@@ -58,7 +78,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
             <div className="flex-1 space-y-4">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-foreground">{profile.name}</h1>
+                  <h1 className="text-3xl font-bold text-foreground">{displayName}</h1>
                   {profile.verificationStatus === "VERIFIED" && (
                     <Badge className="bg-gold/20 text-gold border-gold/30">
                       <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -66,16 +86,46 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
                     </Badge>
                   )}
                 </div>
+                {isCompany && profile.companyNameAmharic && (
+                  <p className="text-sm font-amharic text-muted-foreground mb-1">{profile.companyNameAmharic}</p>
+                )}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <Calendar className="h-4 w-4 text-gold" />
                     Member since {new Date(profile.createdAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                   </span>
+                  {isCompany && profile.website && (
+                    <a href={profile.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
+                      <Globe className="h-4 w-4 text-gold" />
+                      {profile.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  )}
                 </div>
               </div>
 
-              {profile.bio && (
+              {/* Company description or bio */}
+              {(isCompany && profile.companyDescription) ? (
+                <p className="text-muted-foreground max-w-2xl">{profile.companyDescription}</p>
+              ) : profile.bio ? (
                 <p className="text-muted-foreground max-w-2xl">{profile.bio}</p>
+              ) : null}
+
+              {/* Verification badges (company) */}
+              {isCompany && (profile.businessLicense || profile.tinNumber) && (
+                <div className="flex flex-wrap gap-3">
+                  {profile.businessLicense && (
+                    <Badge variant="outline" className="gap-1.5">
+                      <FileCheck className="h-3 w-3 text-green-500" />
+                      Licensed Business
+                    </Badge>
+                  )}
+                  {profile.tinNumber && (
+                    <Badge variant="outline" className="gap-1.5">
+                      <Receipt className="h-3 w-3 text-green-500" />
+                      TIN Verified
+                    </Badge>
+                  )}
+                </div>
               )}
 
               {/* Stats */}
@@ -110,7 +160,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
               <div className="flex flex-wrap gap-3 pt-4">
                 <Button className="bg-gold hover:bg-gold/90 text-navy font-bold">
                   <MessageCircle className="h-4 w-4 mr-2" />
-                  Contact Seller
+                  Contact {isCompany ? "Company" : "Seller"}
                 </Button>
                 <Button variant="outline" className="border-border">
                   <Shield className="h-4 w-4 mr-2" />

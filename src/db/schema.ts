@@ -122,6 +122,14 @@ export const users = pgTable('users', {
   isEmailVerified: boolean('is_email_verified').default(false).notNull(),
   isPhoneVerified: boolean('is_phone_verified').default(false).notNull(),
   verificationStatus: verificationStatusEnum('verification_status').default('UNVERIFIED').notNull(),
+  // Company fields (for SELLER accounts)
+  companyName: text('company_name'),
+  companyNameAmharic: text('company_name_amharic'),
+  businessLicense: text('business_license'),
+  tinNumber: text('tin_number'),
+  website: text('website'),
+  companyDescription: text('company_description'),
+  coverImage: text('cover_image'),
   responseRate: integer('response_rate'), // percentage 0-100
   responseTime: text('response_time'), // "within 1 hour", etc.
   lastLogin: timestamp('last_login'),

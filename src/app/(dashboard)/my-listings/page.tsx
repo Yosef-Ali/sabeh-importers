@@ -2,12 +2,13 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getUserListingsWithStats } from "@/lib/actions/marketplace";
+import { getUserListingsWithStats, getCategories } from "@/lib/actions/marketplace";
 import { DashboardStats } from "@/components/dashboard/dashboard-stats";
 import { ListingsTable } from "@/components/dashboard/listings-table";
 import { deleteListing } from "@/lib/actions/marketplace";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/session";
+import { CreateListingButton } from "@/components/marketplace/create-listing-button";
 
 export const metadata = {
   title: "My Listings | Sabeh Importers",
@@ -20,8 +21,11 @@ export default async function MyListingsPage() {
 
   const userId = currentUser.id;
 
-  // Fetch user listings with statistics
-  const { listings, stats } = await getUserListingsWithStats(userId);
+  // Fetch user listings with statistics and categories
+  const [{ listings, stats }, categories] = await Promise.all([
+    getUserListingsWithStats(userId),
+    getCategories(),
+  ]);
 
   // Server action for deleting listings
   async function handleDelete(listingId: string) {
@@ -42,16 +46,7 @@ export default async function MyListingsPage() {
             Manage your marketplace advertisements
           </p>
         </div>
-        <Link href="/dashboard/marketplace/create">
-          <Button
-            variant="accent"
-            size="lg"
-            className="font-display font-bold shadow-hard-navy"
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            Create Listing
-          </Button>
-        </Link>
+        <CreateListingButton categories={categories || []} />
       </div>
 
       {/* Statistics Cards */}
@@ -68,6 +63,7 @@ export default async function MyListingsPage() {
           listings={listings as any}
           language="en"
           onDelete={handleDelete}
+          categories={categories || []}
         />
       </div>
     </div>
