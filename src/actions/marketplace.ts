@@ -1,19 +1,31 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { listings, categories, users, wishlists } from '@/db/schema';
+import { listings, categories, wishlists } from '@/db/schema';
 import { revalidatePath } from 'next/cache';
 import { eq, desc, asc, and, gte, lte, ilike, sql, isNull } from 'drizzle-orm';
 import { createListingSchema } from '@/lib/validations/listing';
 import { slugify } from '@/lib/utils';
+import { getSession } from '@/lib/session';
 
 // ─── CREATE LISTING ───────────────────────────────────
-export async function createListing(_prevState: any, formData: FormData) {
+export async function createListing(formData: FormData) {
   try {
     // TODO: Replace with real auth when NextAuth is configured
     // const session = await auth();
     // if (!session?.user?.id) return { error: 'Unauthorized' };
     // const sellerId = session.user.id;
+
+    // Parse images: sent as a JSON array string from the wizard
+    let images: string[] = [];
+    const imagesRaw = formData.get('images');
+    if (imagesRaw && typeof imagesRaw === 'string') {
+      try {
+        images = JSON.parse(imagesRaw);
+      } catch {
+        images = [];
+      }
+    }
 
     const rawData = {
       title: formData.get('title'),
@@ -29,7 +41,7 @@ export async function createListing(_prevState: any, formData: FormData) {
       contactPhone: formData.get('contactPhone'),
       contactWhatsapp: formData.get('contactWhatsapp'),
       showPhone: formData.get('showPhone') !== 'false',
-      images: [],
+      images,
     };
 
     const validatedData = createListingSchema.parse(rawData);
@@ -37,10 +49,10 @@ export async function createListing(_prevState: any, formData: FormData) {
     // Generate slug from title
     const slug = slugify(validatedData.title) + '-' + Date.now();
 
-    // TEMPORARY: Use first user in DB until auth is set up
-    const [firstUser] = await db.select({ id: users.id }).from(users).limit(1);
-    if (!firstUser) return { error: 'No users in database. Run db:seed first.' };
-    const sellerId = firstUser.id;
+    // Get authenticated seller from session
+    const session = getSession();
+    if (!session) return { error: 'Unauthorized. Please sign in.' };
+    const sellerId = session.userId;
 
     const [listing] = await db.insert(listings).values({
       title: validatedData.title,
@@ -60,12 +72,15 @@ export async function createListing(_prevState: any, formData: FormData) {
       contactWhatsapp: validatedData.contactWhatsapp,
       showPhone: validatedData.showPhone,
       attributes: validatedData.attributes,
+      images: images,
       sellerId,
-      status: 'ACTIVE',
+      status: 'PENDING_REVIEW',
     }).returning();
 
     revalidatePath('/marketplace');
     revalidatePath('/');
+    revalidatePath('/my-listings');
+    revalidatePath('/admin/listings');
     return { success: true, listingId: listing.id };
   } catch (error) {
     console.error('Failed to create listing:', error);

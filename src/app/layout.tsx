@@ -1,24 +1,34 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat, Cormorant_Garamond } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Rajdhani, Bebas_Neue, Noto_Sans_Ethiopic } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme-provider";
+import { Providers } from "@/components/providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const montserrat = Montserrat({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-montserrat",
+  variable: "--font-jakarta",
+  weight: ["300", "400", "500", "600", "700"],
 });
-const cormorantGaramond = Cormorant_Garamond({
+const rajdhani = Rajdhani({
   subsets: ["latin"],
-  variable: "--font-cormorant-garamond",
-  weight: ["400", "500", "600", "700"],
+  variable: "--font-rajdhani",
+  weight: ["300", "400", "500", "600", "700"],
+});
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-bebas-neue",
+  weight: ["400"],
+});
+const notoSansEthiopic = Noto_Sans_Ethiopic({
+  subsets: ["ethiopic"],
+  variable: "--font-noto-ethiopic",
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Sabeh Hybrid | Ethiopia's Premium Marketplace",
+  title: "Sabeh Authority | Global Maritime Standards",
   description:
-    "Ethiopia's most exclusive marketplace for luxury vehicles, premium real estate, and elite lifestyle assets.",
+    "Authoritative commerce for the modern seafarer. High-trust trading platform for verified industrial and maritime assets.",
   keywords: [
     "marketplace",
     "ethiopia",
@@ -43,30 +53,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
-          rel="stylesheet"
-        />
-        <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
       </head>
       <body
-        className={`${inter.className} ${inter.variable} ${montserrat.variable} ${cormorantGaramond.variable}`}
+        className={`${inter.variable} ${plusJakartaSans.variable} ${rajdhani.variable} ${bebasNeue.variable} ${notoSansEthiopic.variable}`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Providers>
           {children}
-          <Toaster position="top-right" richColors />
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

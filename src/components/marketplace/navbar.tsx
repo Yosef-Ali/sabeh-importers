@@ -46,8 +46,8 @@ function NavbarSearch() {
       <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
       <Input
         type="search"
-        placeholder="Search luxury assets..."
-        className="w-full rounded-full pl-10 pr-4 h-10 bg-white/10 border-white/20 text-white placeholder:text-white/40 hover:border-gold/30 focus-visible:border-gold/50 focus-visible:ring-1 focus-visible:ring-gold/20 transition-all duration-200"
+        placeholder="Find vessels, machinery, or equipment..."
+        className="w-full rounded-none pl-10 pr-4 h-10 bg-white/5 border-white/10 text-white placeholder:text-white/30 hover:border-accent/30 focus-visible:border-accent/50 focus-visible:ring-0 transition-all duration-200 font-mono text-xs"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
@@ -58,27 +58,35 @@ function NavbarSearch() {
 export function Navbar() {
   return (
     <header className="fixed top-0 w-full z-50">
-      {/* Main Glass Nav */}
-      <nav className="glass-nav border-b border-primary/20 h-20 flex items-center px-4 md:px-8 justify-between">
+      <nav className="bg-[#0A192F] text-white border-b border-white/10 h-20 flex items-center px-4 md:px-8 justify-between sticky top-0 z-50">
         {/* Left: Logo + Nav Links */}
         <div className="flex items-center gap-12">
           <Link href="/" className="flex items-center gap-3">
-            <Image src="/Sabeh_Logo_Icon.svg" alt="" width={40} height={40} className="h-10 w-10" priority />
-            <span className="text-primary text-2xl font-montserrat font-bold tracking-tight uppercase">SABEH</span>
+            <div className="w-10 h-10 bg-[#0A192F] border border-accent/30 flex items-center justify-center rounded-none flex-shrink-0">
+              <Image src="/Sabeh_Logo_Icon.svg" alt="Sabeh" width={36} height={36} />
+            </div>
+            <span className="text-white text-2xl font-display font-bold tracking-tighter uppercase">SABEH</span>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden lg:flex gap-8 text-white/80 uppercase text-[10px] tracking-[0.2em] font-bold">
-            {CATEGORIES.slice(0, 4).map((cat) => (
+          <div className="hidden lg:flex gap-10 text-white/80 uppercase font-mono text-sm font-bold tracking-widest">
+            {CATEGORIES.slice(0, 4).map((cat, idx) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="hover:text-primary transition-colors flex items-center gap-2"
+                className="hover:text-accent transition-colors flex items-center gap-2"
               >
-                <span className="material-symbols-outlined text-sm">{cat.materialIcon}</span>
+                <span className="text-accent/50 mr-1">0{idx + 1}.</span>
                 {cat.label}
               </Link>
             ))}
+            <Link
+              href="/guide"
+              className="hover:text-accent transition-colors flex items-center gap-2"
+            >
+              <span className="text-accent/50 mr-1">05.</span>
+              Guide
+            </Link>
           </div>
         </div>
 
@@ -94,15 +102,14 @@ export function Navbar() {
           <ModeToggle />
 
           {/* Sign In */}
-          <Link href="/dashboard" className="hidden sm:block text-white/90 uppercase text-[10px] tracking-widest font-bold hover:text-primary transition-colors">
-            Sign In
+          <Link href="/dashboard" className="hidden sm:block text-white/90 uppercase font-mono text-xs font-bold tracking-widest hover:text-accent transition-colors">
+            Command
           </Link>
 
           {/* Place an Ad CTA */}
           <Link href="/listings/create">
-            <button className="bg-primary text-primary-foreground px-3 py-2 md:px-6 md:py-2.5 rounded-lg text-[10px] tracking-widest font-bold hover:bg-white transition-all shadow-lg flex items-center gap-2 active:scale-95">
-              <span className="material-symbols-outlined text-sm">add_circle</span>
-              <span className="hidden md:inline">PLACE AN AD</span>
+            <button className="bg-accent text-primary px-6 py-2.5 rounded-none text-xs font-bold uppercase tracking-wider shadow-hard-navy hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center gap-2 active:scale-95">
+              POST LISTING
             </button>
           </Link>
 
@@ -118,8 +125,10 @@ export function Navbar() {
               <div className="flex flex-col h-full">
                 <div className="p-6 flex items-center justify-between">
                   <Link href="/" className="flex items-center gap-2">
-                    <Image src="/Sabeh_Logo_Icon.svg" alt="" width={32} height={32} />
-                    <span className="text-primary text-xl font-montserrat font-bold tracking-tight uppercase">SABEH</span>
+                    <div className="w-9 h-9 bg-[#0A192F] border border-accent/30 flex items-center justify-center rounded-none flex-shrink-0">
+                      <Image src="/Sabeh_Logo_Icon.svg" alt="Sabeh" width={32} height={32} />
+                    </div>
+                    <span className="text-foreground text-xl font-display font-bold tracking-tighter uppercase">SABEH</span>
                   </Link>
                   <ModeToggle />
                 </div>
@@ -140,7 +149,18 @@ export function Navbar() {
                   </div>
                   
                   <Separator className="mx-6 bg-border/50" />
-                  
+
+                  <div className="px-6 mt-4 mb-4">
+                    <SheetClose asChild>
+                      <Link href="/guide" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors hover:bg-primary/5 hover:text-primary">
+                        <span className="material-symbols-outlined text-lg text-primary/60">help_outline</span>
+                        <span>Platform Guide</span>
+                      </Link>
+                    </SheetClose>
+                  </div>
+
+                  <Separator className="mx-6 bg-border/50" />
+
                   <div className="px-6 mt-6">
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60 mb-3">Account</p>
                     <nav className="space-y-1">

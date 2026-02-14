@@ -3,6 +3,18 @@
 import { db } from "@/lib/db";
 import { users, listings, reviews } from "@/db/schema";
 import { desc, eq, sql, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+// Update profile fields (name, phone, bio, city)
+export async function updateProfile(
+  userId: string,
+  data: { name?: string; phone?: string; bio?: string; city?: string }
+) {
+  await db.update(users).set({ ...data, updatedAt: new Date() }).where(eq(users.id, userId));
+  revalidatePath("/settings");
+  revalidatePath("/dashboard");
+  return { success: true };
+}
 
 // Get user profile with stats
 export async function getUserProfile(userId: string) {

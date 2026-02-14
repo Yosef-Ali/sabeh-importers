@@ -14,6 +14,8 @@ export interface GetListingsParams {
   sort?: "newest" | "price_asc" | "price_desc";
   page?: number;
   limit?: number;
+  featured?: boolean;
+  verified?: boolean; // Filter by verified sellers
 }
 
 export async function getListings({
@@ -25,6 +27,7 @@ export async function getListings({
   sort = "newest",
   page = 1,
   limit = 20,
+  featured,
 }: GetListingsParams) {
   const offset = (page - 1) * limit;
   const conditions: SQL[] = [eq(listings.status, "ACTIVE")];
@@ -57,6 +60,16 @@ export async function getListings({
   if (condition) {
     conditions.push(eq(listings.condition, condition));
   }
+
+  // Featured Filter
+  if (featured !== undefined) {
+    conditions.push(eq(listings.isFeatured, featured));
+  }
+
+  // Note: 'verified' filter would strictly require joining with the seller table if filtering at SQL level
+  // or we can handle it if we have a denormalized field. For now, we will handle it in the query if possible
+  // or rely on isFeatured for the homepage section as a proxy for "Premium/Verified" listings for this refactor.
+
 
   // Sorting
   let orderBy;
@@ -115,11 +128,13 @@ export async function getListing(id: string) {
     with: {
       seller: {
         columns: {
+          id: true,
           name: true,
           avatar: true,
           phone: true,
           email: true,
           createdAt: true,
+          verificationStatus: true,
         },
       },
       category: true,
@@ -127,6 +142,14 @@ export async function getListing(id: string) {
   });
 
   return listing;
+}
+
+export async function getSellerActiveListingCount(sellerId: string): Promise<number> {
+  const [result] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(listings)
+    .where(and(eq(listings.sellerId, sellerId), eq(listings.status, "ACTIVE")));
+  return Number(result?.count ?? 0);
 }
 
 export async function getCategories() {
@@ -153,6 +176,48 @@ export async function getUserListings(userId: string) {
   });
 
   return { data };
+}
+
+export async function getUserListingsWithStats(userId: string) {
+  // Run queries in parallel for better performance
+  const [userListings, statsResult] = await Promise.all([
+    // Get all user listings with category information
+    db.query.listings.findMany({
+      where: eq(listings.sellerId, userId),
+      orderBy: [desc(listings.createdAt)],
+      with: {
+        category: {
+          columns: {
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    }),
+    // Get aggregated stats
+    db
+      .select({
+        total: sql<number>`count(*)::int`,
+        active: sql<number>`count(*) filter (where ${listings.status} = 'ACTIVE')::int`,
+        totalViews: sql<number>`coalesce(sum(${listings.viewCount}), 0)::int`,
+      })
+      .from(listings)
+      .where(eq(listings.sellerId, userId)),
+  ]);
+
+  // Calculate unread messages count (placeholder for now)
+  // TODO: Implement when messages table is available
+  const unreadMessages = 0;
+
+  return {
+    listings: userListings,
+    stats: {
+      total: statsResult[0]?.total || 0,
+      active: statsResult[0]?.active || 0,
+      totalViews: statsResult[0]?.totalViews || 0,
+      unreadMessages,
+    },
+  };
 }
 
 export async function deleteListing(listingId: string) {

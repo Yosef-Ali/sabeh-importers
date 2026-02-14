@@ -81,9 +81,9 @@ export function AnimatedStats() {
       {STATS.map((stat, index) => (
         <div
           key={index}
-          className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10 hover:border-[#FCDD09]/30 transition-all group"
+          className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 border border-white/10 hover:border-gold/30 transition-all group"
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FCDD09]/20 text-[#FCDD09] group-hover:bg-[#FCDD09]/30 transition-colors">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/20 text-gold group-hover:bg-gold/30 transition-colors">
             {stat.icon}
           </div>
           <div>

@@ -78,62 +78,70 @@ export function Testimonials() {
   const current = TESTIMONIALS[currentIndex];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#1a2d4a] via-[#2d4a6f] to-[#1a2d4a]">
-      <div className="max-w-4xl mx-auto px-8 text-center">
-        <div className="mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Quote className="h-8 w-8 text-[#FCDD09]" />
-            <h2 className="text-3xl font-bold text-white">
-              What Our Community Says
+    <section className="py-32 bg-primary grid-blueprint border-y border-white/5">
+      <div className="max-w-5xl mx-auto px-8 text-center">
+        <div className="mb-16">
+          <div className="flex flex-col items-center gap-4 mb-4">
+            <span className="font-mono text-[10px] text-accent tracking-[0.4em] uppercase">Transmission_Log</span>
+            <h2 className="text-5xl font-display font-bold text-white uppercase tracking-tighter">
+              Authority Activity Logs
             </h2>
           </div>
-          <p className="text-white/70">
-            Join thousands of satisfied buyers and sellers
+          <p className="text-white/40 font-mono text-xs uppercase tracking-widest">
+            Intercepted communications from certified registry participants.
           </p>
         </div>
 
         <div className="relative">
           {/* Testimonial Card */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl">
-            {/* Avatar */}
-            <div className="flex justify-center mb-6">
-              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#FCDD09] to-[#e5c908] flex items-center justify-center text-2xl font-bold text-[#1a2d4a] shadow-lg ring-4 ring-white/20">
-                {current.name[0]}
-              </div>
-            </div>
+          <div className="bg-white p-10 md:p-16 rounded-none border-4 border-accent shadow-hard-yellow max-w-3xl mx-auto text-left relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-4 font-mono text-[60px] font-bold text-primary/5 leading-none select-none">LOG_{current.id}</div>
+            
+             {/* Header */}
+             <div className="flex items-center gap-6 mb-10">
+                <div className="h-20 w-20 rounded-none bg-primary flex items-center justify-center text-3xl font-display font-bold text-accent shadow-hard">
+                  {current.name[0]}
+                </div>
+                <div>
+                   <p className="font-display font-bold text-xl text-primary uppercase tracking-tighter">{current.name}</p>
+                   <p className="text-xs font-mono text-primary/40 uppercase tracking-widest">Unit_Origin: {current.location.toUpperCase()}</p>
+                </div>
+             </div>
 
             {/* Stars */}
-            <div className="flex justify-center gap-1 mb-6">
+            <div className="flex gap-1 mb-8">
               {[...Array(current.rating)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-[#FCDD09] text-[#FCDD09]" />
+                <div key={i} className="w-6 h-6 bg-primary/5 flex items-center justify-center">
+                  <Star className="h-3 w-3 fill-accent text-accent" />
+                </div>
               ))}
             </div>
 
             {/* Comment */}
-            <p className="text-white text-lg md:text-xl leading-relaxed mb-6 italic">
+            <p className="text-primary text-xl md:text-2xl leading-tight font-display font-bold uppercase tracking-tight mb-10 border-l-4 border-accent pl-6">
               "{current.comment}"
             </p>
 
-            {/* Author */}
-            <div className="text-white/90">
-              <p className="font-bold text-lg">{current.name}</p>
-              <p className="text-sm text-white/60">{current.location}</p>
+            {/* Meta */}
+            <div className="flex items-center justify-between pt-8 border-t border-primary/5 font-mono text-[10px] text-primary/30 uppercase tracking-[0.2em]">
+               <span>Packet_Status: Verified</span>
+               <span>Encryption: RSA_4096</span>
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-center gap-4 mt-8">
+          <div className="flex items-center justify-center gap-6 mt-16">
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
               onClick={goToPrevious}
-              className="h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20 border border-white/20"
+              className="h-14 w-14 rounded-none bg-white/5 text-white hover:bg-accent hover:text-primary border-white/10 transition-all"
             >
               <ChevronLeft className="h-6 w-6" />
             </Button>
 
             {/* Dots */}
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {TESTIMONIALS.map((_, index) => (
                 <button
                   key={index}
@@ -141,21 +149,21 @@ export function Testimonials() {
                     setCurrentIndex(index);
                     setIsAutoPlaying(false);
                   }}
-                  className={`h-2 rounded-full transition-all ${
+                  className={`h-2 transition-all rounded-none ${
                     index === currentIndex
-                      ? "w-8 bg-[#FCDD09]"
-                      : "w-2 bg-white/30 hover:bg-white/50"
+                      ? "w-12 bg-accent"
+                      : "w-4 bg-white/20 hover:bg-white/40"
                   }`}
-                  aria-label={`Go to testimonial ${index + 1}`}
+                  aria-label={`Access log ${index + 1}`}
                 />
               ))}
             </div>
 
             <Button
-              variant="ghost"
+              variant="outline"
               size="icon"
               onClick={goToNext}
-              className="h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20 border border-white/20"
+              className="h-14 w-14 rounded-none bg-white/5 text-white hover:bg-accent hover:text-primary border-white/10 transition-all"
             >
               <ChevronRight className="h-6 w-6" />
             </Button>

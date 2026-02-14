@@ -2,52 +2,86 @@
 "use client";
 
 import { UploadDropzone } from "@/lib/uploadthing";
-import { X } from "lucide-react";
+import { X, UploadCloud, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
-  onChange: (url: string) => void;
-  value: string;
+  onChange: (value: string[]) => void;
+  value: string[];
   endpoint?: "listingImage" | "avatar";
+  maxFiles?: number;
 }
 
 export const ImageUpload = ({
   onChange,
   value,
   endpoint = "listingImage",
+  maxFiles = 10,
 }: ImageUploadProps) => {
-  if (value) {
-    return (
-      <div className="relative h-40 w-40">
-        <Image
-          fill
-          src={value}
-          alt="Upload"
-          className="rounded-md object-cover"
-        />
-        <button
-          onClick={() => onChange("")}
-          className="absolute right-0 top-0 -mr-2 -mt-2 rounded-full bg-rose-500 p-1 text-white shadow-sm"
-          type="button"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-    );
-  }
+  const onRemove = (url: string) => {
+    onChange(value.filter((current) => current !== url));
+  };
 
   return (
-    <UploadDropzone
-      endpoint={endpoint}
-      onClientUploadComplete={(res) => {
-        onChange(res?.[0].url);
-        toast.success("Image uploaded");
-      }}
-      onUploadError={(error: Error) => {
-        toast.error(`ERROR! ${error.message}`);
-      }}
-    />
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+        {value.map((url) => (
+          <div
+            key={url}
+            className="relative aspect-square overflow-hidden rounded-md border border-border bg-muted"
+          >
+            <div className="z-10 absolute top-2 right-2">
+              <button
+                type="button"
+                onClick={() => onRemove(url)}
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-rose-500 text-white shadow-sm hover:bg-rose-600 transition-colors"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+            <Image
+              fill
+              src={url}
+              alt="Listing Image"
+              className="object-cover"
+            />
+          </div>
+        ))}
+      </div>
+
+      {value.length < maxFiles && (
+        <UploadDropzone
+          endpoint={endpoint}
+          onClientUploadComplete={(res) => {
+            const newUrls = res?.map((file) => file.url) || [];
+            onChange([...value, ...newUrls]);
+            toast.success("Images uploaded successfully");
+          }}
+          onUploadError={(error: Error) => {
+            toast.error(`ERROR! ${error.message}`);
+          }}
+          config={{
+            mode: "auto",
+          }}
+          appearance={{
+            container: "border-2 border-dashed border-border bg-muted/20 hover:bg-muted/30 transition-colors p-8 rounded-lg",
+            label: "text-muted-foreground hover:text-primary transition-colors",
+            button: "bg-primary text-primary-foreground hover:bg-primary/90 transition-colors",
+            allowedContent: "text-muted-foreground/80 text-xs",
+          }}
+          content={{
+            label: "Drop images here or click to browse",
+            allowedContent: `Max ${maxFiles} images (4MB each)`,
+          }}
+        />
+      )}
+      
+      {value.length >= maxFiles && (
+         <p className="text-xs text-center text-muted-foreground">
+            Maximum of {maxFiles} images reached. Remove some to upload more.
+         </p>
+      )}
+    </div>
   );
 };

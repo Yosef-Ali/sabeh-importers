@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
+import { useAuthStore } from "@/store/auth";
 import {
   User,
   Building,
   Bell,
   Globe,
-  Shield,
   Palette,
-  Database,
   Webhook,
   CreditCard,
 } from "lucide-react";
@@ -36,6 +35,8 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function SettingsPage() {
+  const user = useAuthStore((s) => s.user);
+
   return (
     <div className="space-y-6">
       <div>
@@ -66,19 +67,19 @@ export default function SettingsPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" defaultValue="Admin User" />
+                  <Input id="name" defaultValue={user?.name ?? ""} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="nameAmharic">Name (Amharic)</Label>
-                  <Input id="nameAmharic" defaultValue="አድሚን" className="font-amharic" />
+                  <Input id="nameAmharic" placeholder="e.g. አድሚን" className="font-amharic" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" defaultValue="admin@sabehimporters.com" />
+                  <Input id="email" type="email" defaultValue={user?.email ?? ""} readOnly className="bg-muted cursor-not-allowed" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
-                  <Input id="phone" defaultValue="+251 91 234 5678" />
+                  <Input id="phone" placeholder="+251 9X XXX XXXX" />
                 </div>
               </div>
               <Button>Save Changes</Button>

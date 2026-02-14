@@ -63,16 +63,16 @@ export function MessageInput({ conversationId, currentUserId, listingPrice }: Me
     <div className="space-y-3">
       {/* Offer Input */}
       {showOfferInput && (
-        <div className="rounded-lg border border-[#FCDD09]/30 bg-[#FCDD09]/5 p-4">
+        <div className="rounded-lg border border-gold/30 bg-gold/5 p-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-bold text-[#1a2d4a] uppercase tracking-wide">
+            <p className="text-sm font-bold text-navy uppercase tracking-wide">
               💰 Make an Offer
             </p>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setShowOfferInput(false)}
-              className="h-6 w-6 text-gray-500 hover:text-[#1a2d4a]"
+              className="h-6 w-6 text-gray-500 hover:text-navy"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -84,7 +84,7 @@ export function MessageInput({ conversationId, currentUserId, listingPrice }: Me
                 placeholder="Enter your offer amount"
                 value={offerAmount}
                 onChange={(e) => setOfferAmount(e.target.value)}
-                className="border-[#FCDD09]/30 focus:border-[#FCDD09] focus:ring-[#FCDD09]"
+                className="border-gold/30 focus:border-gold focus:ring-gold"
               />
               <p className="text-xs text-gray-600 mt-1">
                 Listing price: {listingPrice.toLocaleString()} ETB
@@ -93,7 +93,7 @@ export function MessageInput({ conversationId, currentUserId, listingPrice }: Me
             <Button
               onClick={handleSendMessage}
               disabled={!offerAmount || isSending}
-              className="bg-[#FCDD09] hover:bg-[#e5c908] text-[#1a2d4a] font-bold"
+              className="bg-gold hover:bg-gold/90 text-navy font-bold"
             >
               Send Offer
             </Button>
@@ -108,7 +108,7 @@ export function MessageInput({ conversationId, currentUserId, listingPrice }: Me
             variant="outline"
             size="icon"
             onClick={() => setShowOfferInput(true)}
-            className="flex-shrink-0 border-[#FCDD09]/30 text-[#FCDD09] hover:bg-[#FCDD09]/10"
+            className="flex-shrink-0 border-gold/30 text-gold hover:bg-gold/10"
             title="Make an offer"
           >
             <DollarSign className="h-5 w-5" />
@@ -121,14 +121,14 @@ export function MessageInput({ conversationId, currentUserId, listingPrice }: Me
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={2}
-          className="resize-none border-gray-300 focus:border-[#FCDD09] focus:ring-[#FCDD09]"
+          className="resize-none border-gray-300 focus:border-gold focus:ring-gold"
           disabled={isSending}
         />
 
         <Button
           onClick={handleSendMessage}
           disabled={(!message.trim() && !offerAmount) || isSending}
-          className="flex-shrink-0 h-full bg-[#FCDD09] hover:bg-[#e5c908] text-[#1a2d4a] font-bold px-6"
+          className="flex-shrink-0 h-full bg-gold hover:bg-gold/90 text-navy font-bold px-6"
         >
           <Send className="h-5 w-5" />
         </Button>

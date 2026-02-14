@@ -1,5 +1,4 @@
 
-import { Suspense } from "react";
 import { Filters } from "@/components/marketplace/filters";
 import { ListingCard } from "@/components/marketplace/listing-card";
 import { SearchBar } from "@/components/marketplace/search-bar";
@@ -10,6 +9,7 @@ import Link from "next/link";
 import {
   SlidersHorizontal, X, Search, ArrowUpDown, ChevronRight, ChevronLeft,
 } from "lucide-react";
+import { Suspense } from "react";
 
 export const metadata = {
   title: "Search | Sabeh Marketplace",
@@ -95,7 +95,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background font-body selection:bg-primary/30">
+    <div className="min-h-screen bg-background font-sans selection:bg-primary/30">
       {/* ──── Top Bar ──── */}
       <div className="border-b border-border/60 bg-card">
         <div className="container py-4">
@@ -118,7 +118,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           {/* Search + Sort Row */}
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex-1 w-full max-w-2xl">
-              <SearchBar className="[&_input]:bg-muted/50" />
+              <SearchBar />
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -141,10 +141,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       <Link
                         key={opt.value}
                         href={`/search?${params.toString()}`}
-                        className={`rounded-full px-3 py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap flex-shrink-0 ${
+                        className={`rounded-sm px-3 py-1.5 text-[10px] md:text-xs font-bold uppercase tracking-widest transition-all whitespace-nowrap flex-shrink-0 ${
                           currentSort === opt.value
-                            ? "bg-primary text-primary-foreground shadow-md"
-                            : "bg-card text-muted-foreground hover:text-primary border border-border"
+                            ? "bg-foreground text-background shadow-sm"
+                            : "bg-card text-muted-foreground hover:text-foreground border border-border"
                         }`}
                       >
                         {opt.label}
@@ -163,8 +163,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="mb-6 flex flex-col gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div className="flex items-center gap-3 flex-wrap">
-              <p className="text-sm text-muted-foreground font-body">
-                <span className="font-bold text-foreground text-lg font-montserrat tabular-nums">{total}</span>
+              <p className="text-sm text-muted-foreground font-sans">
+                <span className="font-bold text-foreground text-lg font-display tabular-nums">{total}</span>
                 {" "}results
                 {searchParams.query && (
                   <> for <span className="font-bold text-foreground">&ldquo;{searchParams.query}&rdquo;</span></>
@@ -245,7 +245,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   <Search className="h-10 w-10 text-primary/40" />
                 </div>
                 <h3 className="text-2xl font-display text-foreground mb-2">No results found</h3>
-                <p className="mt-2 text-gray-500 font-light max-w-sm leading-relaxed">
+                <p className="mt-2 text-muted-foreground font-light max-w-sm leading-relaxed">
                   Try adjusting your filters, checking your spelling, or searching for something else.
                 </p>
                 <Link href="/search" className="mt-8">
@@ -364,7 +364,7 @@ function Pagination({
       {currentPage > 1 ? (
         <Link
           href={buildPageUrl(currentPage - 1)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary"
+          className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-3.5 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-foreground hover:text-background hover:border-foreground"
         >
           <ChevronLeft className="h-3.5 w-3.5" />
           Previous
@@ -387,10 +387,10 @@ function Pagination({
             <Link
               key={p}
               href={buildPageUrl(p)}
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold font-montserrat tabular-nums transition-all ${
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-sm text-sm font-bold font-display tabular-nums transition-all ${
                 p === currentPage
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "border border-border bg-card text-muted-foreground hover:bg-primary/10 hover:text-primary hover:border-primary/30"
+                  ? "bg-foreground text-background shadow-sm"
+                  : "border border-border bg-card text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
               }`}
             >
               {p}
@@ -403,7 +403,7 @@ function Pagination({
       {currentPage < totalPages ? (
         <Link
           href={buildPageUrl(currentPage + 1)}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary"
+          className="inline-flex items-center gap-1.5 rounded-sm border border-border bg-card px-3.5 py-2 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-all hover:bg-foreground hover:text-background hover:border-foreground"
         >
           Next
           <ChevronRight className="h-3.5 w-3.5" />

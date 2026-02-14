@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import {
   LayoutDashboard,
   Package,
@@ -10,7 +11,8 @@ import {
   Flag,
   Settings,
   LogOut,
-  Shield,
+  BadgeCheck,
+  Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -30,6 +32,16 @@ const navItems = [
     title: "Users",
     href: "/admin/users",
     icon: <Users className="h-5 w-5" />,
+  },
+  {
+    title: "Verifications",
+    href: "/admin/verifications",
+    icon: <BadgeCheck className="h-5 w-5" />,
+  },
+  {
+    title: "Promotions",
+    href: "/admin/promotions",
+    icon: <Star className="h-5 w-5" />,
   },
   {
     title: "Reports",
@@ -52,8 +64,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-[#1a2d4a] text-white shadow-lg">
         <div className="container flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#FCDD09]">
-              <Shield className="h-6 w-6 text-[#1a2d4a]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-none bg-[#0A192F] border border-[#FCDD09]/30 flex-shrink-0">
+              <Image src="/Sabeh_Logo_Icon.svg" alt="Sabeh" width={36} height={36} />
             </div>
             <div>
               <h1 className="text-lg font-bold">Admin Panel</h1>

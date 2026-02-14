@@ -26,6 +26,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth";
+import { logoutAction } from "@/lib/actions/auth";
 
 interface HeaderProps {
   isCollapsed: boolean;
@@ -35,17 +37,18 @@ export function Header({ isCollapsed }: HeaderProps) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [language, setLanguage] = React.useState<"en" | "am">("en");
+  const { user, logout } = useAuthStore();
 
-  function handleLogout() {
-    document.cookie = "sabeh-auth-token=; path=/; max-age=0";
-    router.push("/login");
+  async function handleLogout() {
+    logout(); // clear Zustand + localStorage
+    await logoutAction(); // clear httpOnly cookie + redirect
   }
 
   return (
     <header
       className={cn(
         "fixed right-0 top-0 z-30 flex h-16 items-center justify-between border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:px-6",
-        isCollapsed ? "lg:left-[70px]" : "lg:left-[260px]",
+        isCollapsed ? "lg:left-[68px]" : "lg:left-[240px]",
         "left-0"
       )}
     >
@@ -166,9 +169,9 @@ export function Header({ isCollapsed }: HeaderProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/images/avatar.png" alt="User" />
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  AD
+                {user?.avatar && <AvatarImage src={user.avatar} alt={user.name} />}
+                <AvatarFallback className="bg-navy text-white font-bold text-sm">
+                  {user?.name?.[0]?.toUpperCase() ?? "?"}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -176,18 +179,23 @@ export function Header({ isCollapsed }: HeaderProps) {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">Admin User</p>
+                <p className="text-sm font-medium leading-none">{user?.name ?? "Loading…"}</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  admin@sabehimporters.com
+                  {user?.email ?? ""}
                 </p>
+                {user?.role && (
+                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
+                    {user.role}
+                  </p>
+                )}
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>

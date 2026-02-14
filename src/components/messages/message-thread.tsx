@@ -68,7 +68,7 @@ export function MessageThread({ messages, currentUserId }: MessageThreadProps) {
               )}
             >
               {!isCurrentUser && (
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#1a2d4a] to-[#2d4a6f] flex items-center justify-center text-sm font-bold text-white shadow-sm flex-shrink-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center text-sm font-bold text-white shadow-sm flex-shrink-0">
                   {message.sender.name[0]}
                 </div>
               )}
@@ -77,7 +77,7 @@ export function MessageThread({ messages, currentUserId }: MessageThreadProps) {
                 className={cn(
                   "max-w-[70%] rounded-2xl px-4 py-3 shadow-sm",
                   isCurrentUser
-                    ? "bg-[#FCDD09] text-[#1a2d4a]"
+                    ? "bg-gold text-navy"
                     : "bg-white border border-gray-200 text-gray-800"
                 )}
               >
@@ -129,7 +129,7 @@ export function MessageThread({ messages, currentUserId }: MessageThreadProps) {
               </div>
 
               {isCurrentUser && (
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#FCDD09] to-[#e5c908] flex items-center justify-center text-sm font-bold text-[#1a2d4a] shadow-sm flex-shrink-0">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-sm font-bold text-navy shadow-sm flex-shrink-0">
                   {message.sender.name[0]}
                 </div>
               )}

@@ -1,104 +1,73 @@
-# Design System: Sabeh Hybrid
-**Project ID:** 15993632048680359095
+# Design System: Sabeh Authority
+**Project ID:** 446157067143279543
 
 ## 1. Visual Theme & Atmosphere
-**"Elevated Luxury, Ethiopian Soul"**
+**"Nautical Maritime Authority & Industrial Precision"**
 
-The design evokes a high-end auction house crossed with a sleek digital marketplace. The atmosphere is **cinematic and opulent** — deep, inky navy backgrounds contrast with warm, burnished gold accents, creating a sense of exclusivity and trust. The overall density is **restrained and spacious**, with generous whitespace allowing each element to command attention. The feeling is akin to a premium fashion magazine layout, not a cluttered classifieds board.
+The design has pivoted from luxury editorial to an **authoritative, industrial, and utilitarian** aesthetic. It evokes the feeling of a central maritime hub or a global naval command center. The atmosphere is **structured and precise**—dominated by deep nautical navies, industrial yellow accents, and sharp geometry. 
 
-- **Marketplace (Hero):** Cinematic, immersive, full-bleed imagery with glassmorphic overlays. "Elevate Your Lifestyle."
-- **Content Sections:** Airy cream-toned backgrounds (`#faf8f5`) with generous padding. Cards float with subtle shadows.
-- **Footer & Navigation:** Deep, ink-like navy (`#1a2d4a`) with whisper-thin gold (`#FCDD09`) accents.
+- **Atmosphere**: Utilitarian, reliable, high-trust, and command-focused.
+- **Density**: Dense but organized, utilizing grid-blueprint backgrounds and hard-edged containers.
+- **Vibe**: "International Maritime Standard" meets modern B2B industrial marketplace.
 
 ## 2. Color Palette & Roles
 
-### Primary Brand Colors
-- **Burnished Gold (#FCDD09):** The signature accent. Used for the logo wordmark, active navigation states, icon tints, CTA buttons, search accents, and all interactive highlights. It communicates luxury and premium value.
-- **Deep Navy (#1a2d4a):** The dominant anchor. Used for the navigation bar, footer, hero section background, and primary text on light backgrounds. It communicates authority, trust, and depth.
-- **Ink Navy (#0f1a2a):** A darker variant of Deep Navy. Used for the deepest backgrounds and heavy text contrast where extra weight is needed.
+### Core Palette
+- **Nautical Navy (#0A192F)**: The primary anchor. Used for headers, footers, primary CTA backgrounds, and deep backgrounds. Represents authority and trust.
+- **Industrial Gold (#FFD700)**: The high-visibility accent. Used for interactive elements, highlights, verification badges, and primary branding.
+- **Command Background (#F8F9FA)**: A clean, cool-toned gray-white used for the main page canvas.
+- **Surface White (#FFFFFF)**: Used for cards and secondary section backgrounds to provide contrast.
 
-### Atmosphere Colors
-- **Warm Cream (#faf8f5):** The primary body background. A barely-there warm tint that feels more inviting and premium than pure white. Used for section backgrounds and the overall page canvas.
-- **Pure White (#ffffff):** Used for card surfaces, content containers, and text on dark backgrounds.
-
-### Functional Colors
-- **Text on Light:** Deep Navy (#1a2d4a) for headings, `text-gray-700` for body, `text-gray-400` / `text-gray-500` for captions and metadata.
-- **Text on Dark:** White at varying opacities — `text-white/90` for primary, `text-white/80` for body, `text-white/50` for subtle labels, `text-white/30` for footer fine print.
-- **Borders:** `border-gray-100` on cards (whisper-light), `border-primary/20` for gold-tinted separators, `border-white/10` for dark-background dividers.
+### Functional Roles
+- **Text Main (#0F172A)**: Deep slate-navy for maximum readability on light backgrounds.
+- **Text Muted (#64748B)**: Medium gray for secondary labels and metadata.
+- **Success Tone (#10B981)**: Used for "Verified" statuses and growth indicators.
+- **Borders/Dividers (#E2E8F0)**: Used for subtle separation where hard shadows aren't applied.
 
 ## 3. Typography Rules
-**Font Families:**
-- **Display / Headings:** `Playfair Display` (Serif) — An elegant, editorial serif for all major headlines. Used with normal and italic weight. The italic style is used for emphasis keywords (e.g., *Lifestyle*, *Pocket*).
-- **Body / UI:** `Lato` (Sans-serif) — A clean, friendly sans-serif for all body text, navigation labels, captions, and UI elements. Light (300), Regular (400), and Bold (700) weights.
 
-**Hierarchy:**
-- **H1 (Hero Display):** 5xl–7xl (48–72px), Playfair Display, tight tracking, white on dark.
-- **H2 (Section Title):** 3xl–5xl (30–48px), Playfair Display, Deep Navy on light / White on dark.
-- **H3 (Card/Component Title):** sm–base (14–16px), Lato Bold, Deep Navy.
-- **Price:** xl (20px), Lato Bold, Deep Navy.
-- **Body:** sm–lg (14–18px), Lato Regular/Light, gray-700 or white/80.
-- **Caption / Labels:** `[10px]`–xs (10–12px), Lato Bold, uppercase tracking `[0.2em]`. Used extensively for navigation, category chips, timestamps, and micro-labels.
+### Font Families
+- **Display (Headings)**: `Space Grotesk` (Sans-serif) — A modern, geometric sans with a technical feel. Used for H1/H2 and major section titles.
+- **Body & UI**: `DM Sans` (Sans-serif) — A clean, versatile sans for all descriptive copy and form labels.
+- **Technical/Mono**: `Space Mono` (Monospace) — Used for "Command" identifiers, step counts (01. Marketplace), metadata IDs, and technical specifications.
+
+### Hierarchy
+- **Primary Headers**: 7xl (72px) / 4xl (36px), Space Grotesk, Bold, uppercase, tight tracking.
+- **Body Text**: base (16px), DM Sans, Regular.
+- **Labels/Commands**: xs (12px) / [10px], Space Mono, Bold, uppercase, tracking-widest.
 
 ## 4. Component Stylings
 
-### Navigation Bar (Glass Nav)
-- **Shape:** Fixed, full-width, `h-20` (80px height).
-- **Surface:** Glassmorphism — `backdrop-blur(12px)`, `rgba(26, 45, 74, 0.85)` semi-transparent Deep Navy.
-- **Border:** Bottom border with `border-primary/20` (subtle gold glow).
-- **Logo:** Burnished Gold, Playfair Display, bold, uppercase, italic, tracking-tighter, 3xl.
-- **Nav Links:** White/80, uppercase, `[10px]` text, `tracking-[0.2em]`, bold. Hover → Gold.
-- **CTA Button ("Place an Ad"):** Gold background, Deep Navy text, rounded, shadow-lg, `[10px]` tracking.
+### Headers & Navigation
+- **Header**: `h-20`, Nautical Navy background, translucent `border-b border-white/10`.
+- **Navigation Links**: Space Mono, Bold, uppercase. Active link in Industrial Gold.
+- **Logo Container**: `w-10 h-10` square, Industrial Gold background with Navy icon.
 
-### Hero Section
-- **Layout:** Full-viewport height (`85vh`), centered content, cinematic background image at 50% opacity.
-- **Overlay:** Gradient from `navy-deep/60` at top through transparent to `cream` at bottom, creating a seamless color transition.
-- **Search Bar (Glass):** `backdrop-blur(20px)`, `rgba(255, 255, 255, 0.1)` background, gold-tinted border, `rounded-xl`, heavy shadow (`shadow-2xl`). Contains segmented inputs with thin `border-white/10` dividers.
-
-### Listing Cards
-- **Shape:** `rounded-xl`, overflow hidden.
-- **Surface:** White background, `border-gray-100`, `shadow-sm` at rest.
-- **Hover:** `translateY(-4px)` lift with `shadow-xl` glow effect. Smooth transition.
-- **Image Area:** `h-48`, `object-cover`. Overlay elements: heart icon (top-right, white/80 circle), "FEATURED" badge (bottom-left, Gold bg, Navy text, `[10px]` bold).
-- **Content Area:** `p-4`. Price in xl bold Navy, title in sm gray-700, metadata row with Material icons at `[10px]` uppercase.
-
-### Category Cards
-- **Shape:** `rounded-xl`, `border-gray-100`, `shadow-sm`.
-- **Surface:** White, centered layout.
-- **Icon Container:** `w-16 h-16`, cream-toned circle (`bg-cream rounded-full`), icon in Gold.
-- **Hover:** Shadow deepens to `shadow-md`, icon background shifts to `bg-primary/10`.
-- **Text:** sm bold Navy title, `[10px]` gray-400 listing count.
-
-### Category Chips (Sticky Bar)
-- **Shape:** Horizontal scrolling row, sticky below nav (`top-20`), white bg.
-- **Active State:** Gold text + Gold bottom border (2px).
-- **Inactive:** Gray-500 text, transparent bottom border.
-- **Text:** xs bold uppercase, `tracking-widest`.
+### Cards & Containers
+- **General Cards**: White surface, `rounded-none` or `rounded-sm` (tight 2px-4px radius), 1px border.
+- **Shadows (Signature)**: `shadow-hard` — a solid, non-diffused 4px offset shadow (`4px 4px 0px rgba(0, 0, 0, 0.1)` or `#0A192F`).
+- **Highlights**: `bg-[#FFFBEB]` used for premium/pro listing cards to differentiate from standard inventory.
 
 ### Buttons
-- **Primary CTA:** Gold bg, Deep Navy text, rounded, `shadow-lg`. Hover → White bg.
-- **Secondary:** White bg, Deep Navy text, rounded-lg.
-- **App Download:** White bg, Deep Navy text, rounded-lg, icon + stacked text layout.
+- **Primary CTA**: Industrial Gold background, Nautical Navy text, `rounded-none`, `shadow-hard-navy`. Transitions to `translate-x-[2px] translate-y-[2px]` on hover.
+- **Secondary**: Transparent with 1px border, Nautical Navy or White text.
+- **Command Buttons**: Space Grotesk, Bold, uppercase, large (py-4), high impact.
 
-### Inputs & Search
-- **Hero Search:** Glassmorphic, segmented with thin internal borders, Material icon tints in Gold.
-- **Select Dropdowns:** Transparent background, white text, no ring.
+### Inputs & Forms
+- **Command Inputs**: Large, segmented inputs with Space Grotesk text, `shadow-hard`.
+- **Selects/Dropdowns**: Simple, border-less in hero sections, or border-sm in forms.
 
 ## 5. Layout Principles
-- **Max Width:** `max-w-7xl` (1280px), centered with `px-8` horizontal padding.
-- **Grid:** Responsive — 1 col (<640px), 2 col (sm), 3 col (md), 4 col (lg) for listings. 6 col for categories.
-- **Section Spacing:** `py-16`–`py-20` (64–80px vertical padding per section).
-- **Card Gaps:** `gap-4`–`gap-6` (16–24px).
-- **Footer:** 5-column grid on desktop, stacked on mobile. Deep Navy background with gold accents.
+- **Grid Layout**: Strong use of `grid-blueprint` (20px radial dots) for background texture.
+- **Max Width**: `max-w-[1440px]` with `px-8` standard padding.
+- **Spacing**: Generous vertical padding (`py-24`) to separate distinct "Command" tiers.
+- **Grid Gaps**: `gap-8` for main sections, `gap-6` for inventory feeds.
 
-## 6. Design System Notes for Stitch Generation
-
-**CRITICAL STITCH PROMPT CONTEXT:**
-When generating new screens for this project, include the following style block to maintain visual consistency:
-
+## 6. Stitch Generation Prompt (Authority Mode)
 ```
-Theme: Premium luxury marketplace. Dark navy (#1a2d4a) + burnished gold (#FCDD09) + warm cream (#faf8f5).
-Typography: Playfair Display (serif) for headings, Lato (sans-serif) for body. Extensive use of uppercase [10px] tracking-widest labels.
-Components: Glassmorphic navigation, rounded-xl cards with hover-lift, gold accent icons, cinematic hero imagery.
-Density: Spacious, editorial. Generous padding (py-16 to py-20). Max width 7xl.
-Mood: Opulent yet approachable. Ethiopian soul with international luxury standards.
+Theme: Industrial Maritime Authority. Nautical Navy (#0A192F) + Industrial Gold (#FFD700) + Command White (#F8F9FA).
+Typography: Space Grotesk (headings), Space Mono (technical/mono), DM Sans (body).
+Shapes: Square corners (rounded-none), Hard non-diffused shadows (4px 4px 0px #0A192F). Blueprint grid backgrounds.
+Components: Segmented search bars, industrial icons, high-contrast command buttons, verified badges.
+Mood: Authoritative, secure, high-precision, industrial marketplace.
 ```

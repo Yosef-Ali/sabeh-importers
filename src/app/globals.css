@@ -4,30 +4,33 @@
 
 @layer base {
   :root {
-    --background: 40 25% 97%;
-    /* Warm Cream */
-    --foreground: 217 48% 22%;
-    /* Deep Navy */
+    --background: 210 20% 98%;
+    /* Command White #F8F9FA */
+    --foreground: 217 65% 11%;
+    /* Nautical Navy #0A192F */
     --card: 0 0% 100%;
-    --card-foreground: 217 48% 22%;
+    --card-foreground: 217 65% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 217 48% 22%;
-    --primary: 52 97% 51%;
-    /* Burnished Gold */
-    --primary-foreground: 217 48% 22%;
-    --secondary: 217 48% 28%;
-    /* Lighter Navy */
-    --secondary-foreground: 40 25% 97%;
-    --muted: 217 10% 90%;
-    --muted-foreground: 217 20% 40%;
-    --accent: 52 97% 51%;
-    --accent-foreground: 217 48% 22%;
+    --popover-foreground: 217 65% 11%;
+    --primary: 217 65% 11%;
+    /* Nautical Navy */
+    --primary-foreground: 51 100% 50%;
+    /* Industrial Gold #FFD700 */
+    --secondary: 217 65% 15%;
+    /* Slightly lighter Navy */
+    --secondary-foreground: 210 20% 98%;
+    --muted: 210 10% 90%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 51 100% 50%;
+    /* Industrial Gold */
+    --accent-foreground: 217 65% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 20% 90%;
-    --input: 217 20% 90%;
-    --ring: 52 97% 51%;
-    --radius: 0.75rem;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 65% 11%;
+    --radius: 0.125rem;
+    /* Industrial tight corners 2px */
   }
 
   .dark {
@@ -88,9 +91,18 @@
   @apply bg-muted-foreground/40;
 }
 
-/* ─── Subtle Background Pattern ─── */
-.subtle-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+/* ─── Dark mode: accent-background legibility fix ─── */
+/* In dark mode --primary and --accent are both gold. Any element with     */
+/* bg-accent that also carries text-primary renders yellow-on-yellow.      */
+/* .dark .bg-accent has specificity 0-1-1 > .text-primary 0-0-1 → wins.   */
+.dark .bg-accent {
+  color: hsl(var(--accent-foreground));
+}
+
+/* ─── Industrial Grid Blueprint ─── */
+.grid-blueprint {
+  background-image: radial-gradient(rgba(10, 25, 47, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* ─── Amharic Font ─── */
@@ -341,9 +353,21 @@
   @apply bg-background/60 backdrop-blur-md border border-border/50;
 }
 
+
+.text-gradient-gold {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500;
+}
+
+.text-gradient-navy {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-blue-700 to-blue-900;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg;
+}
+
 .category-chip:hover {
-  color: #FCDD09;
-  border-bottom: 2px solid #FCDD09;
+  @apply text-gold border-b-2 border-gold;
 }
 
 .listing-card-premium:hover {
@@ -360,5 +384,27 @@
   background:
     radial-gradient(ellipse at 20% 50%, rgba(252, 221, 9, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 20%, rgba(26, 45, 74, 0.15) 0%, transparent 50%),
-    linear-gradient(180deg, #1a2d4a 0%, #0f1a2a 100%);
+    linear-gradient(180deg, rgba(26, 45, 74, 0.6) 0%, rgba(10, 22, 40, 0.7) 100%);
+}
+
+/* ─── Marketplace Utilities ─── */
+.listing-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4;
+}
+
+.category-nav {
+  @apply sticky top-20 z-40 bg-white border-b-2 border-primary/10;
+}
+
+.search-layout {
+  @apply grid lg:grid-cols-[280px_1fr] gap-6;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

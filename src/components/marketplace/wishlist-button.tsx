@@ -56,31 +56,31 @@ export function WishlistButton({
         disabled={isLoading}
         className={cn(
           isInWishlist
-            ? "bg-[#FCDD09] hover:bg-[#e5c908] text-[#1a2d4a] border-[#FCDD09]"
-            : "border-gray-300 text-gray-700 hover:bg-[#FCDD09]/10 hover:border-[#FCDD09]",
-          className
+          ? "bg-gold hover:bg-gold/90 text-navy border-gold"
+          : "border-gray-300 text-gray-700 hover:bg-gold/10 hover:border-gold",
+        className
+      )}
+    >
+      <Heart
+        className={cn(
+          "h-4 w-4 mr-2",
+          isInWishlist && "fill-current"
         )}
-      >
-        <Heart
-          className={cn(
-            "h-4 w-4 mr-2",
-            isInWishlist && "fill-current"
-          )}
-        />
-        {isInWishlist ? "Saved" : "Save"}
-      </Button>
-    );
-  }
+      />
+      {isInWishlist ? "Saved" : "Save"}
+    </Button>
+  );
+}
 
-  return (
-    <button
-      onClick={handleToggle}
-      disabled={isLoading}
-      className={cn(
-        "flex h-10 w-10 items-center justify-center rounded-full transition-all",
-        isInWishlist
-          ? "bg-[#FCDD09] text-[#1a2d4a] shadow-md hover:bg-[#e5c908]"
-          : "bg-white/90 text-gray-700 shadow-sm hover:bg-white hover:shadow-md",
+return (
+  <button
+    onClick={handleToggle}
+    disabled={isLoading}
+    className={cn(
+      "flex h-10 w-10 items-center justify-center rounded-full transition-all",
+      isInWishlist
+        ? "bg-gold text-navy shadow-md hover:bg-gold/90"
+        : "bg-white/90 text-gray-700 shadow-sm hover:bg-white hover:shadow-md",
         className
       )}
       aria-label={isInWishlist ? "Remove from favorites" : "Add to favorites"}

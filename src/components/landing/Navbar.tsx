@@ -34,8 +34,8 @@ export function Navbar() {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 px-6 py-4 transition-all duration-500 ease-out ${
           isScrolled 
-            ? "border-b border-white/10 bg-black/90 backdrop-blur-xl" 
-            : ""
+            ? "border-b border-white/10 bg-navy/80 backdrop-blur-md shadow-hard-navy" 
+            : "bg-transparent"
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
@@ -45,17 +45,17 @@ export function Navbar() {
           {/* ============================================ */}
           <Link href="/" className="group flex items-center gap-3">
             {/* Logo Mark */}
-            <div className="flex h-10 items-center border border-amber-400/30 bg-amber-400/5 px-4 transition-all group-hover:border-amber-400/50 group-hover:bg-amber-400/10">
-              <span className="font-amharic text-lg font-bold text-amber-400">
+            <div className="flex h-10 items-center border border-accent/30 bg-accent/5 px-4 transition-all group-hover:border-accent/50 group-hover:bg-accent/10">
+              <span className="font-amharic text-lg font-bold text-accent">
                 ሳቤህ
               </span>
             </div>
             {/* Text */}
             <div className="hidden flex-col md:flex">
-              <span className="text-sm font-medium tracking-wider text-white">
+              <span className="text-sm font-bold tracking-widest text-white group-hover:text-accent transition-colors">
                 IMPORTERS
               </span>
-              <span className="font-amharic text-xs text-white/40">
+              <span className="font-amharic text-xs text-white/40 group-hover:text-white/60 transition-colors">
                 ኢምፖርተርስ
               </span>
             </div>
@@ -69,7 +69,7 @@ export function Navbar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="px-4 py-2 text-xs font-medium tracking-wider text-white/50 transition-all hover:text-white"
+                className="px-4 py-2 text-xs font-bold tracking-widest text-white/70 transition-all hover:text-accent hover:bg-white/5"
               >
                 {item.label.toUpperCase()}
               </Link>
@@ -83,7 +83,7 @@ export function Navbar() {
             {/* Phone - Desktop Only */}
             <a 
               href="tel:+251912345678"
-              className="hidden items-center gap-2 px-4 py-2 text-xs tracking-wider text-white/50 transition-all hover:text-amber-400 lg:flex"
+              className="hidden items-center gap-2 px-4 py-2 text-xs font-mono tracking-wider text-white/50 transition-all hover:text-accent lg:flex"
             >
               <Phone className="h-3.5 w-3.5" />
               <span>+251 91 234 5678</span>
@@ -95,7 +95,7 @@ export function Navbar() {
             {/* Sign In */}
             <Link 
               href="/login"
-              className="border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-medium tracking-wider text-white transition-all hover:border-white/20 hover:bg-white/10"
+              className="border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-bold tracking-widest text-white transition-all hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
             >
               SIGN IN
             </Link>
@@ -103,7 +103,7 @@ export function Navbar() {
             {/* Dashboard - Primary CTA */}
             <Link 
               href="/dashboard"
-              className="hidden bg-amber-400 px-5 py-2.5 text-xs font-semibold tracking-wider text-black transition-all hover:bg-amber-300 md:block"
+              className="hidden bg-accent px-5 py-2.5 text-xs font-bold tracking-widest text-navy transition-all hover:bg-accent/90 hover:shadow-lg hover:-translate-y-0.5 md:block shadow-md"
             >
               DASHBOARD
             </Link>
@@ -111,7 +111,7 @@ export function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/5 text-white transition-all hover:bg-white/10 md:hidden"
+              className="flex h-10 w-10 items-center justify-center border border-white/10 bg-white/5 text-white transition-all hover:bg-white/10 hover:text-accent md:hidden"
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>

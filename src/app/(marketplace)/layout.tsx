@@ -1,6 +1,5 @@
 
 import { Navbar } from "@/components/marketplace/navbar";
-import { Footer } from "@/components/marketplace/footer";
 
 export default function MarketplaceLayout({
   children,
@@ -8,12 +7,11 @@ export default function MarketplaceLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-background font-ui antialiased">
       <Navbar />
       <main className="flex-1 pt-20">
         {children}
       </main>
-      <Footer />
     </div>
   );
 }

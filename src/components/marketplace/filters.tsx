@@ -2,10 +2,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -58,22 +57,8 @@ export function Filters({ categories }: FiltersProps) {
     router.push(`/search?${params.toString()}`);
   };
 
-  const clearFilters = () => {
-    router.push("/search");
-    setMinPrice("");
-    setMaxPrice("");
-    setCondition("");
-    setCategoryId("all");
-  };
-
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-sm font-bold uppercase tracking-widest font-montserrat">Filters</h3>
-        <Button variant="link" className="h-auto p-0 text-[10px] font-bold uppercase tracking-tighter text-muted-foreground/60 hover:text-primary no-underline" onClick={clearFilters}>
-          Clear all
-        </Button>
-      </div>
       <Separator />
 
       {/* Categories */}
@@ -87,7 +72,7 @@ export function Filters({ categories }: FiltersProps) {
             <SelectItem value="all">All Categories</SelectItem>
             {categories.map((cat) => (
               <SelectItem key={cat.id} value={cat.id}>
-                {cat.name} {cat.listingCount ? <span className="font-montserrat tabular-nums">({cat.listingCount})</span> : ""}
+                {cat.name} {cat.listingCount ? <span className="font-display tabular-nums">({cat.listingCount})</span> : ""}
               </SelectItem>
             ))}
           </SelectContent>

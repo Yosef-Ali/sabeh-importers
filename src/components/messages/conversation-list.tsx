@@ -26,16 +26,16 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
           <Link
             key={conversation.id}
             href={`/messages/${conversation.id}`}
-            className="flex items-start gap-4 p-4 transition-colors hover:bg-[#faf8f5]"
+            className="flex items-start gap-4 p-4 transition-colors hover:bg-cream"
           >
             {/* Avatar */}
             <div className="relative flex-shrink-0">
-              <div className="h-14 w-14 rounded-full bg-gradient-to-br from-[#1a2d4a] to-[#2d4a6f] flex items-center justify-center text-xl font-bold text-white shadow-sm">
+              <div className="h-14 w-14 rounded-full bg-gradient-to-br from-navy to-navy-light flex items-center justify-center text-xl font-bold text-white shadow-sm">
                 {otherUser?.name?.[0] || "U"}
               </div>
               {unreadCount > 0 && (
-                <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-[#FCDD09] border-2 border-white flex items-center justify-center">
-                  <span className="text-[10px] font-bold text-[#1a2d4a]">
+                <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gold border-2 border-white flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-navy">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 </div>
@@ -47,13 +47,13 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="flex items-center gap-2">
                   <p className={cn(
-                    "font-semibold text-[#1a2d4a]",
+                    "font-semibold text-navy",
                     unreadCount > 0 && "font-bold"
                   )}>
                     {otherUser?.name || "Unknown User"}
                   </p>
                   {isCurrentUserBuyer && (
-                    <Badge variant="outline" className="text-xs border-[#FCDD09]/30 text-[#1a2d4a]">
+                    <Badge variant="outline" className="text-xs border-gold/30 text-navy">
                       Seller
                     </Badge>
                   )}
@@ -86,10 +86,10 @@ export function ConversationList({ conversations, currentUserId }: ConversationL
               {lastMessage && (
                 <p className={cn(
                   "text-sm text-gray-600 truncate",
-                  unreadCount > 0 && "font-semibold text-[#1a2d4a]"
+                  unreadCount > 0 && "font-semibold text-navy"
                 )}>
                   {lastMessage.type === "OFFER" ? (
-                    <span className="text-[#FCDD09]">💰 Offer: {Number(lastMessage.offerAmount).toLocaleString()} ETB</span>
+                    <span className="text-gold">💰 Offer: {Number(lastMessage.offerAmount).toLocaleString()} ETB</span>
                   ) : (
                     lastMessage.content
                   )}

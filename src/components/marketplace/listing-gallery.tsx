@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { PlaceholderImage } from "./placeholder-image";
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
@@ -16,6 +16,9 @@ interface ListingGalleryProps {
 export function ListingGallery({ images, title, category }: ListingGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const mainImageRef = useRef<HTMLDivElement>(null);
 
   // Safe fallback if images is null or empty
   const imageList = images && images.length > 0 ? images : null;
@@ -30,9 +33,53 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
     setSelectedIndex((prev) => (prev === imageList.length - 1 ? 0 : prev + 1));
   };
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!imageList || imageList.length <= 1) return;
+
+      if (e.key === "ArrowLeft") {
+        handlePrevious();
+      } else if (e.key === "ArrowRight") {
+        handleNext();
+      } else if (e.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [imageList, isFullscreen]);
+
+  // Mobile swipe handling
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    } else if (isRightSwipe) {
+      handlePrevious();
+    }
+  };
+
   if (!imageList) {
     return (
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-gray-100 bg-muted/30 shadow-sm">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none border-2 border-primary/10 bg-primary/5 shadow-hard">
         <PlaceholderImage title={title} category={category} className="h-full" />
       </div>
     );
@@ -40,67 +87,73 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
 
   return (
     <>
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Main Image */}
-        <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#faf8f5] border border-gray-100 shadow-lg transition-shadow hover:shadow-xl">
+        <div
+          ref={mainImageRef}
+          className="group relative aspect-[4/3] w-full overflow-hidden rounded-none bg-primary border-4 border-primary shadow-hard-navy touch-pan-y"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <Image
             src={imageList[selectedIndex]}
             alt={`${title} - Image ${selectedIndex + 1}`}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90 group-hover:opacity-100"
             priority
           />
 
           {/* Image Counter Badge */}
-          <div className="absolute bottom-4 right-4 rounded-lg bg-[#1a2d4a]/80 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-sm">
-            {selectedIndex + 1} / {imageList.length}
+          <div className="absolute bottom-6 right-6 bg-accent text-primary px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest shadow-hard-navy">
+            MANIFEST_IMG: {selectedIndex + 1} / {imageList.length}
           </div>
 
           {/* Navigation Arrows */}
           {imageList.length > 1 && (
             <>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={handlePrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 text-[#1a2d4a] shadow-lg opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white hover:scale-110"
+                className="absolute left-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-none bg-white/90 border-2 border-primary text-primary shadow-hard hover:bg-accent transition-all opacity-0 group-hover:opacity-100"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-6 w-6" />
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={handleNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full bg-white/90 text-[#1a2d4a] shadow-lg opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white hover:scale-110"
+                className="absolute right-6 top-1/2 -translate-y-1/2 h-12 w-12 rounded-none bg-white/90 border-2 border-primary text-primary shadow-hard hover:bg-accent transition-all opacity-0 group-hover:opacity-100"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-6 w-6" />
               </Button>
             </>
           )}
 
           {/* Fullscreen Button */}
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={() => setIsFullscreen(true)}
-            className="absolute top-4 right-4 h-10 w-10 rounded-lg bg-white/90 text-[#1a2d4a] shadow-lg opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white hover:scale-110"
+            className="absolute top-6 right-6 h-12 w-12 rounded-none bg-white/90 border-2 border-primary text-primary shadow-hard hover:bg-accent transition-all opacity-0 group-hover:opacity-100"
           >
-            <Expand className="h-4 w-4" />
+            <Expand className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Thumbnails */}
         {imageList.length > 1 && (
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
             {imageList.map((img, idx) => (
               <button
                 key={idx}
                 onClick={() => setSelectedIndex(idx)}
                 className={cn(
-                  "relative aspect-square h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all duration-200",
+                  "relative aspect-square h-24 w-24 flex-shrink-0 overflow-hidden rounded-none border-2 transition-all duration-300",
                   selectedIndex === idx
-                    ? "border-[#FCDD09] opacity-100 ring-2 ring-[#FCDD09]/30 shadow-md scale-105"
-                    : "border-gray-200 opacity-60 hover:opacity-100 hover:scale-105"
+                    ? "border-accent shadow-hard-navy scale-105 z-10"
+                    : "border-primary/10 opacity-50 hover:opacity-100 hover:border-primary/30"
                 )}
               >
                 <Image
@@ -117,17 +170,17 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
 
       {/* Fullscreen Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1a2d4a]/95 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-primary/95 backdrop-blur-md p-8">
           <Button
-            variant="ghost"
+            variant="outline"
             size="icon"
             onClick={() => setIsFullscreen(false)}
-            className="absolute top-4 right-4 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20"
+            className="absolute top-8 right-8 h-12 w-12 rounded-none bg-white text-primary border-4 border-accent shadow-hard-yellow hover:bg-accent"
           >
             <X className="h-6 w-6" />
           </Button>
 
-          <div className="relative h-[80vh] w-[90vw]">
+          <div className="relative h-full w-full max-w-6xl border-4 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             <Image
               src={imageList[selectedIndex]}
               alt={`${title} - Image ${selectedIndex + 1}`}
@@ -140,27 +193,27 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
           {imageList.length > 1 && (
             <>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={handlePrevious}
-                className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="absolute left-8 top-1/2 -translate-y-1/2 h-16 w-16 rounded-none bg-white/10 border-2 border-white/20 text-white hover:bg-accent hover:text-primary hover:border-accent transition-all"
               >
-                <ChevronLeft className="h-6 w-6" />
+                <ChevronLeft className="h-10 w-10" />
               </Button>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={handleNext}
-                className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 text-white hover:bg-white/20"
+                className="absolute right-8 top-1/2 -translate-y-1/2 h-16 w-16 rounded-none bg-white/10 border-2 border-white/20 text-white hover:bg-accent hover:text-primary hover:border-accent transition-all"
               >
-                <ChevronRight className="h-6 w-6" />
+                <ChevronRight className="h-10 w-10" />
               </Button>
             </>
           )}
 
           {/* Fullscreen Counter */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur-sm">
-            {selectedIndex + 1} / {imageList.length}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-accent text-primary px-6 py-2 text-xs font-mono font-bold uppercase tracking-widest shadow-hard-navy">
+            MANIFEST_OVERVIEW: {selectedIndex + 1} / {imageList.length}
           </div>
         </div>
       )}

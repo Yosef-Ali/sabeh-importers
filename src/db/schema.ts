@@ -86,6 +86,10 @@ export const notificationTypeEnum = pgEnum('notification_type', [
   'MESSAGE', 'LISTING', 'ORDER', 'REVIEW', 'SYSTEM', 'PRICE_DROP', 'SAVED_SEARCH',
 ]);
 
+export const subscriptionStatusEnum = pgEnum('subscription_status', [
+  'TRIALING', 'ACTIVE', 'PAST_DUE', 'CANCELLED', 'EXPIRED',
+]);
+
 // ============================================================
 // HELPER: reusable timestamp columns
 // ============================================================
@@ -185,6 +189,102 @@ export const sessions = pgTable('sessions', {
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   expires: timestamp('expires').notNull(),
 });
+
+// Email verification tokens (sent on register / resend request)
+export const emailVerifications = pgTable('email_verifications', {
+  id: uid(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').unique().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  usedAt: timestamp('used_at'),
+  ...timestamps,
+}, (t) => [
+  index('ev_user_idx').on(t.userId),
+  index('ev_token_idx').on(t.token),
+]);
+
+export const emailVerificationsRelations = relations(emailVerifications, ({ one }) => ({
+  user: one(users, { fields: [emailVerifications.userId], references: [users.id] }),
+}));
+
+// Password reset tokens
+export const passwordResetTokens = pgTable('password_reset_tokens', {
+  id: uid(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  token: text('token').unique().notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  usedAt: timestamp('used_at'),
+  ...timestamps,
+}, (t) => [
+  index('prt_user_idx').on(t.userId),
+  index('prt_token_idx').on(t.token),
+]);
+
+export const passwordResetTokensRelations = relations(passwordResetTokens, ({ one }) => ({
+  user: one(users, { fields: [passwordResetTokens.userId], references: [users.id] }),
+}));
+
+// ── Subscription plans (defined by admin) ─────────────────────────────────────
+export const plans = pgTable('plans', {
+  id: uid(),
+  name: text('name').notNull(),                    // "Free", "Pro", "Business"
+  nameAmharic: text('name_amharic'),
+  slug: text('slug').unique().notNull(),           // "free", "pro", "business"
+  price: decimal('price', { precision: 10, scale: 2 }).default('0').notNull(),
+  currency: currencyEnum('currency').default('ETB').notNull(),
+  durationDays: integer('duration_days').default(30).notNull(),
+  maxActiveListings: integer('max_active_listings').default(5).notNull(),
+  canPromote: boolean('can_promote').default(false).notNull(),
+  canFeature: boolean('can_feature').default(false).notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+  sortOrder: integer('sort_order').default(0),
+  ...timestamps,
+});
+
+export const plansRelations = relations(plans, ({ many }) => ({
+  subscriptions: many(subscriptions),
+}));
+
+// ── User subscriptions ─────────────────────────────────────────────────────────
+export const subscriptions = pgTable('subscriptions', {
+  id: uid(),
+  userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  planId: text('plan_id').notNull().references(() => plans.id),
+  status: subscriptionStatusEnum('status').default('ACTIVE').notNull(),
+  currentPeriodStart: timestamp('current_period_start').notNull(),
+  currentPeriodEnd: timestamp('current_period_end').notNull(),
+  cancelledAt: timestamp('cancelled_at'),
+  externalId: text('external_id'),           // Chapa/Stripe subscription ID
+  ...timestamps,
+}, (t) => [
+  index('sub_user_idx').on(t.userId),
+  index('sub_status_idx').on(t.status),
+]);
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+  user: one(users, { fields: [subscriptions.userId], references: [users.id] }),
+  plan: one(plans, { fields: [subscriptions.planId], references: [plans.id] }),
+}));
+
+// ── Subscription payments ──────────────────────────────────────────────────────
+export const subscriptionPayments = pgTable('subscription_payments', {
+  id: uid(),
+  subscriptionId: text('subscription_id').notNull().references(() => subscriptions.id),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  currency: currencyEnum('currency').default('ETB').notNull(),
+  status: paymentStatusEnum('status').default('PENDING').notNull(),
+  method: paymentMethodEnum('method'),
+  reference: text('reference'),              // bank/Chapa/Telebirr transaction ID
+  paidAt: timestamp('paid_at'),
+  ...timestamps,
+});
+
+export const subscriptionPaymentsRelations = relations(subscriptionPayments, ({ one }) => ({
+  subscription: one(subscriptions, {
+    fields: [subscriptionPayments.subscriptionId],
+    references: [subscriptions.id],
+  }),
+}));
 
 // ============================================================
 // 2. CATEGORIES (Dubizzle-style hierarchical)

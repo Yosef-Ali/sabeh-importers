@@ -19,11 +19,12 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui"],
-        montserrat: ["var(--font-montserrat)", "sans-serif"],
-        cormorant: ["var(--font-cormorant-garamond)", "serif"],
-        display: ["'Playfair Display'", "serif"],
-        body: ["'Lato'", "sans-serif"],
+        sans: ["var(--font-jakarta)", "var(--font-inter)", "ui-sans-serif", "system-ui"],
+        ui: ["var(--font-jakarta)", "var(--font-inter)", "ui-sans-serif", "system-ui"],
+        display: ["var(--font-rajdhani)", "sans-serif"],
+        headline: ["var(--font-bebas-neue)", "sans-serif"],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        amharic: ["var(--font-noto-ethiopic)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -34,6 +35,7 @@ const config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          navy: "#1a2d4a",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -50,6 +52,7 @@ const config = {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          yellow: "#FCDD09",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -59,42 +62,38 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Brand colors (use CSS vars: primary/accent instead)
-        // Proposal specific colors
-        proposal: {
-          navy: {
-            deep: "#0a1628",
-            primary: "#1a2d4a",
-            light: "#2d4a6f",
-          },
-          gold: {
-            primary: "#FCDD09",
-            light: "#e8d5a3",
-            dark: "#a08339",
-          },
-          cream: {
-            DEFAULT: "#faf8f5",
-            dark: "#f0ebe3",
-          },
-          text: {
-            dark: "#1a1a1a",
-            muted: "#5a5a5a",
-          },
+        // Unified Semantic Palette
+        navy: {
+          DEFAULT: "#1a2d4a",
+          deep: "#0a1628",
+          light: "#2d4a6f",
         },
-        // Sabeh Hybrid premium palette
-        "navy-deep": "#1a2d4a",
-        "dark-blue": "#0f1a2a",
-        cream: "#faf8f5",
         gold: {
           DEFAULT: "#FCDD09",
           light: "#FDE968",
-          dark: "#C4AB00",
+          dark: "#a08339",
+        },
+        cream: {
+          DEFAULT: "#faf8f5",
+          dark: "#f0ebe3",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        // Marketplace-specific variants
+        card: "8px",
+        button: "4px",
+        none: "0px",
+      },
+      boxShadow: {
+        hard: "4px 4px 0px rgba(0, 0, 0, 0.1)",
+        "hard-navy": "4px 4px 0px #0A192F",
+        "hard-yellow": "4px 4px 0px #FFD700",
+        // Marketplace card shadows
+        card: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+        "card-hover": "0 20px 25px -5px rgb(0 0 0 / 0.1)",
       },
       keyframes: {
         "accordion-down": {
@@ -115,4 +114,6 @@ const config = {
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
-export default config;
+import { withUt } from "uploadthing/tw";
+
+export default withUt(config);

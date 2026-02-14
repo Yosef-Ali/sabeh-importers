@@ -61,12 +61,12 @@ export function SavedSearchCard({ search }: SavedSearchCardProps) {
   }
 
   return (
-    <Card className="p-5 border-gray-200 hover:border-[#FCDD09]/50 transition-colors">
+    <Card className="p-5 border-gray-200 hover:border-gold/50 transition-colors">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-[#1a2d4a] truncate">{search.name}</h3>
+            <h3 className="font-bold text-navy truncate">{search.name}</h3>
             <p className="text-xs text-gray-500 mt-1">
               Created {formatDistanceToNow(new Date(search.createdAt), { addSuffix: true })}
             </p>
@@ -85,22 +85,22 @@ export function SavedSearchCard({ search }: SavedSearchCardProps) {
         {/* Filters */}
         <div className="flex flex-wrap gap-2">
           {search.query && (
-            <Badge variant="outline" className="text-xs border-[#FCDD09]/30">
+            <Badge variant="outline" className="text-xs border-gold/30">
               Search: "{search.query}"
             </Badge>
           )}
           {filters.minPrice && (
-            <Badge variant="outline" className="text-xs border-[#FCDD09]/30">
+            <Badge variant="outline" className="text-xs border-gold/30">
               Min: {filters.minPrice} ETB
             </Badge>
           )}
           {filters.maxPrice && (
-            <Badge variant="outline" className="text-xs border-[#FCDD09]/30">
+            <Badge variant="outline" className="text-xs border-gold/30">
               Max: {filters.maxPrice} ETB
             </Badge>
           )}
           {filters.condition && (
-            <Badge variant="outline" className="text-xs border-[#FCDD09]/30">
+            <Badge variant="outline" className="text-xs border-gold/30">
               {filters.condition}
             </Badge>
           )}
@@ -110,7 +110,7 @@ export function SavedSearchCard({ search }: SavedSearchCardProps) {
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <div className="flex items-center gap-2">
             {alertEnabled ? (
-              <Bell className="h-4 w-4 text-[#FCDD09]" />
+              <Bell className="h-4 w-4 text-gold" />
             ) : (
               <BellOff className="h-4 w-4 text-gray-400" />
             )}
@@ -123,7 +123,7 @@ export function SavedSearchCard({ search }: SavedSearchCardProps) {
         <Link href={`/search?${searchUrl.toString()}`}>
           <Button
             variant="outline"
-            className="w-full border-[#FCDD09]/30 text-[#1a2d4a] hover:bg-[#FCDD09]/10 hover:border-[#FCDD09]"
+            className="w-full border-gold/30 text-navy hover:bg-gold/10 hover:border-gold"
           >
             View Results
             <ExternalLink className="h-4 w-4 ml-2" />

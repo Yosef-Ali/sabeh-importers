@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/session";
 import { getUserConversations } from "@/lib/actions/messages";
 import { ConversationList } from "@/components/messages/conversation-list";
 import { Inbox } from "lucide-react";
@@ -9,35 +11,36 @@ export const metadata = {
 };
 
 export default async function MessagesPage() {
-  // In a real app, get userId from session
-  const userId = "1";
-  const conversations = await getUserConversations(userId);
+  const currentUser = await getCurrentUser();
+  if (!currentUser) redirect("/api/auth/clear-session");
+
+  const conversations = await getUserConversations(currentUser.id);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-[#1a2d4a]">Messages</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Messages</h1>
         <p className="text-muted-foreground">
           Chat with buyers and sellers about your listings
         </p>
       </div>
 
       {/* Conversations */}
-      <div className="rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-xl border bg-card shadow-sm overflow-hidden">
         {conversations.length === 0 ? (
           <div className="flex min-h-[400px] flex-col items-center justify-center p-12 text-center">
-            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#faf8f5] border border-[#FCDD09]/20">
-              <Inbox className="h-10 w-10 text-[#FCDD09]/60" />
+            <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted border border-accent/20">
+              <Inbox className="h-10 w-10 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-bold text-[#1a2d4a] mb-2">No messages yet</h3>
-            <p className="text-gray-600 max-w-sm">
+            <h3 className="text-xl font-bold mb-2">No messages yet</h3>
+            <p className="text-muted-foreground max-w-sm">
               When you start chatting with buyers or sellers, your conversations will appear here.
             </p>
           </div>
         ) : (
           <Suspense fallback={<ConversationListSkeleton />}>
-            <ConversationList conversations={conversations} currentUserId={userId} />
+            <ConversationList conversations={conversations} currentUserId={currentUser.id} />
           </Suspense>
         )}
       </div>
@@ -47,7 +50,7 @@ export default async function MessagesPage() {
 
 function ConversationListSkeleton() {
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-border">
       {[1, 2, 3].map((i) => (
         <div key={i} className="flex gap-4 p-4 animate-pulse">
           <div className="h-12 w-12 rounded-full bg-muted"></div>
