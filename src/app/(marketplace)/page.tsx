@@ -21,21 +21,22 @@ import { AppFeaturesSection } from "@/components/marketplace/app-features-sectio
 import { Button } from "@/components/ui/button";
 
 export default async function MarketplacePage() {
-  // Fetch "Verified Partners" (Premium/Featured) listings
-  const verifiedResult = await getListings({ 
-    limit: 3, 
-    sort: "newest",
-    featured: true 
-  });
-  
-  // Fetch "Fresh Feed" (Standard) listings
-  const freshResult = await getListings({ 
-    limit: 12, 
-    sort: "newest" 
-  });
+  let verifiedListings: any[] = [];
+  let recentListings: any[] = [];
 
-  const verifiedListings = verifiedResult.data;
-  const recentListings = freshResult.data;
+  try {
+    // Fetch "Verified Partners" (Premium/Featured) listings
+    const [verifiedResult, freshResult] = await Promise.all([
+      getListings({ limit: 3, sort: "newest", featured: true }),
+      getListings({ limit: 12, sort: "newest" }),
+    ]);
+
+    verifiedListings = verifiedResult.data;
+    recentListings = freshResult.data;
+  } catch (error) {
+    console.error("Homepage: Failed to fetch listings:", error);
+    // Render page with empty listings instead of crashing
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">

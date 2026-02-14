@@ -11,7 +11,9 @@ const pool =
   globalForDb.pool ??
   new Pool({
     connectionString: process.env.DATABASE_URL!,
-    max: 10, // max connections
+    max: 5, // Keep low for serverless
+    idleTimeoutMillis: 20000,
+    connectionTimeoutMillis: 10000,
   });
 
 if (process.env.NODE_ENV !== 'production') globalForDb.pool = pool;

@@ -251,38 +251,43 @@ export async function getListings({
   // Run data query and count query in parallel
   const whereClause = and(...conditions);
 
-  const [data, countResult] = await Promise.all([
-    db.query.listings.findMany({
-      where: whereClause,
-      limit: limit,
-      offset: offset,
-      orderBy: [orderBy],
-      with: {
-        seller: {
-          columns: {
-            name: true,
-            avatar: true,
-            id: true,
+  try {
+    const [data, countResult] = await Promise.all([
+      db.query.listings.findMany({
+        where: whereClause,
+        limit: limit,
+        offset: offset,
+        orderBy: [orderBy],
+        with: {
+          seller: {
+            columns: {
+              name: true,
+              avatar: true,
+              id: true,
+            },
+          },
+          category: {
+            columns: {
+              name: true,
+              slug: true,
+            },
           },
         },
-        category: {
-          columns: {
-            name: true,
-            slug: true,
-          },
-        },
-      },
-    }),
-    db
-      .select({ count: sql<number>`count(*)` })
-      .from(listings)
-      .where(whereClause),
-  ]);
+      }),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(listings)
+        .where(whereClause),
+    ]);
 
-  const total = Number(countResult[0]?.count ?? 0);
-  const totalPages = Math.ceil(total / limit);
+    const total = Number(countResult[0]?.count ?? 0);
+    const totalPages = Math.ceil(total / limit);
 
-  return { data, total, totalPages, page, limit };
+    return { data, total, totalPages, page, limit };
+  } catch (error) {
+    console.error("getListings failed:", error instanceof Error ? error.message : error);
+    return { data: [], total: 0, totalPages: 0, page, limit };
+  }
 }
 
 export async function getListing(id: string) {
