@@ -10,6 +10,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -78,6 +88,7 @@ export function ListingsTable({
   categories,
 }: ListingsTableProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [editingListing, setEditingListing] = useState<Listing | undefined>(undefined);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -86,31 +97,19 @@ export function ListingsTable({
     setIsSheetOpen(true);
   };
 
-  const handleDelete = async (listingId: string) => {
-    if (
-      !confirm(
-        language === "am"
-          ? "እርግጠኛ ነዎት ይህን ዝርዝር መሰረዝ ይፈልጋሉ?"
-          : "Are you sure you want to delete this listing?"
-      )
-    ) {
-      return;
-    }
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return;
 
     try {
-      setDeletingId(listingId);
+      setDeletingId(deleteTargetId);
       if (onDelete) {
-        await onDelete(listingId);
+        await onDelete(deleteTargetId);
       }
     } catch (error) {
       console.error("Error deleting listing:", error);
-      alert(
-        language === "am"
-          ? "ዝርዝሩን መሰረዝ አልተቻለም"
-          : "Failed to delete listing"
-      );
     } finally {
       setDeletingId(null);
+      setDeleteTargetId(null);
     }
   };
 
@@ -257,7 +256,7 @@ export function ListingsTable({
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                        onClick={() => handleDelete(listing.id)}
+                        onClick={() => setDeleteTargetId(listing.id)}
                         disabled={deletingId === listing.id}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -343,7 +342,7 @@ export function ListingsTable({
                       {language === "am" ? "አርትዕ" : "Edit"}
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => handleDelete(listing.id)}
+                      onClick={() => setDeleteTargetId(listing.id)}
                       disabled={deletingId === listing.id}
                       className="text-destructive"
                     >
@@ -382,6 +381,33 @@ export function ListingsTable({
         categories={categories}
         language={language}
       />
+
+      <AlertDialog open={!!deleteTargetId} onOpenChange={(open) => { if (!open) setDeleteTargetId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {language === "am" ? "ዝርዝር ሰርዝ" : "Delete Listing"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {language === "am"
+                ? "እርግጠኛ ነዎት ይህን ዝርዝር መሰረዝ ይፈልጋሉ? ይህ ተግባር ሊቀለበስ አይችልም።"
+                : "Are you sure you want to delete this listing? This action cannot be undone."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={!!deletingId}>
+              {language === "am" ? "ሰርዝ" : "Cancel"}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              disabled={!!deletingId}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deletingId ? "..." : language === "am" ? "አዎ፣ ሰርዝ" : "Yes, Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

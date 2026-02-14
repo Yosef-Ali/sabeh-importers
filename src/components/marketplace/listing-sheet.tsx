@@ -20,6 +20,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -31,11 +39,14 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { createListingSchema } from "@/lib/validations/listing";
 import { createListing, updateListing } from "@/lib/actions/marketplace";
+import { useAiStore } from "@/lib/store/ai-store";
+import { useCompletion } from "@ai-sdk/react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles, Info } from "lucide-react";
 
 // Extend schema for client-side form specific needs if any
 const formSchema = createListingSchema.extend({
@@ -73,6 +84,7 @@ export function ListingSheet({
     categoryId: "",
     city: "Addis Ababa",
     showPhone: true,
+    images: [],
     ...listing, // Override with listing data if editing
   };
 
@@ -105,6 +117,7 @@ export function ListingSheet({
         categoryId: "",
         city: "Addis Ababa",
         showPhone: true,
+        images: [],
       });
     }
   }, [listing, form]);
@@ -157,6 +170,84 @@ export function ListingSheet({
       setIsSubmitting(false);
     }
   }
+
+  // useCompletion for AI description streaming
+  const { 
+    complete: streamDescription, 
+    completion: streamingDescription, 
+    isLoading: isAiGenerating,
+    error: genError
+  } = useCompletion({
+    api: "/api/ai/description",
+    onFinish: (_prompt: string, completion: string) => {
+      form.setValue("description", completion, { shouldValidate: true });
+    }
+  });
+
+  // useAiStore sync
+  const { extractedText, analysisResult, clearAiStore } = useAiStore((state) => ({
+    extractedText: state.extractedText,
+    analysisResult: state.analysisResult,
+    clearAiStore: state.clear
+  }));
+
+  useEffect(() => {
+    if (extractedText) {
+      const current = form.getValues("description") || "";
+      form.setValue("description", current ? `${current}\n\n${extractedText}` : extractedText, { shouldValidate: true });
+      clearAiStore(); // Consume result
+      toast({ title: "AI Intelligence Applied", description: "Text extracted from image has been added to description." });
+    }
+  }, [extractedText, form, clearAiStore]);
+
+  useEffect(() => {
+    if (analysisResult) {
+      if (analysisResult.suggestedTitle) {
+        form.setValue("title", analysisResult.suggestedTitle, { shouldValidate: true });
+      }
+      if (analysisResult.description) {
+        const current = form.getValues("description") || "";
+        form.setValue("description", current ? `${current}\n\n${analysisResult.description}` : analysisResult.description, { shouldValidate: true });
+      }
+      // Note: We could also sync tags if form had a tags field
+      clearAiStore(); // Consume result
+      toast({ title: "AI Listing Enhanced", description: "Visual analysis data has been applied to your listing." });
+    }
+  }, [analysisResult, form, clearAiStore]);
+
+  // Effect to update form as description streams
+  useEffect(() => {
+    if (streamingDescription) {
+      form.setValue("description", streamingDescription, { shouldValidate: true });
+    }
+  }, [streamingDescription, form]);
+
+  const handleGenerateDescription = async () => {
+    const title = form.getValues("title");
+    if (!title || title.length < 3) {
+      toast({
+        variant: "destructive",
+        title: "Title required",
+        description: "Please enter a title first to generate a description.",
+      });
+      return;
+    }
+
+    const categoryName = categories.find(c => c.id === form.getValues("categoryId"))?.name;
+    await streamDescription("", {
+      body: {
+        title,
+        category: categoryName,
+        condition: form.getValues("condition"),
+        price: form.getValues("price"),
+        currency: form.getValues("currency"),
+      }
+    });
+
+    if (genError) {
+      toast({ variant: "destructive", title: "Error", description: genError.message });
+    }
+  };
 
   const isEdit = !!listing?.id;
 
@@ -304,12 +395,75 @@ export function ListingSheet({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Description</FormLabel>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGenerateDescription}
+                        disabled={isAiGenerating}
+                      >
+                        {isAiGenerating ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Sparkles className="mr-2 h-4 w-4" />
+                        )}
+                        Generate with AI
+                      </Button>
+                    </div>
+                  </div>
                   <FormControl>
                     <Textarea
                       placeholder="Describe your item..."
                       className="resize-none"
+                      rows={5}
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Image Upload */}
+            <FormField
+              control={form.control}
+              name="images"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel>Images</FormLabel>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-xs">
+                          <Info className="mr-1 h-3 w-3" />
+                          Photo Tips
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Tips for Better Listing Photos</DialogTitle>
+                          <DialogDescription>Follow these tips to make your listing stand out</DialogDescription>
+                        </DialogHeader>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                          <li>- Use natural lighting or well-lit environments</li>
+                          <li>- Show the item from multiple angles</li>
+                          <li>- Include close-ups of any defects or special features</li>
+                          <li>- Use a clean, uncluttered background</li>
+                          <li>- Avoid filters - show the true colors</li>
+                          <li>- Include size reference when relevant</li>
+                        </ul>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                  <FormControl>
+                    <ImageUpload
+                      value={field.value || []}
+                      onChange={field.onChange}
+                      endpoint="listingImage"
+                      maxFiles={10}
                     />
                   </FormControl>
                   <FormMessage />

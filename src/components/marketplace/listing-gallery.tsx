@@ -115,6 +115,45 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
           ) : (
              <PlaceholderImage title={title} category={category} className="h-full" />
           )}
+
+          {/* Navigation Arrows */}
+          {imageList.length > 1 && (
+            <>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handlePrevious}
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-none bg-white/80 border-2 border-primary/20 text-primary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:border-accent hover:text-primary"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleNext}
+                className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 rounded-none bg-white/80 border-2 border-primary/20 text-primary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:border-accent hover:text-primary"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </Button>
+            </>
+          )}
+
+          {/* Fullscreen Button */}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setIsFullscreen(true)}
+            className="absolute top-3 right-3 h-9 w-9 rounded-none bg-white/80 border-2 border-primary/20 text-primary opacity-0 group-hover:opacity-100 transition-opacity hover:bg-accent hover:border-accent hover:text-primary"
+          >
+            <Expand className="h-4 w-4" />
+          </Button>
+
+          {/* Image Counter */}
+          {imageList.length > 1 && (
+            <div className="absolute bottom-3 left-3 bg-primary/80 text-white px-3 py-1 text-xs font-mono font-bold">
+              {selectedIndex + 1} / {imageList.length}
+            </div>
+          )}
         </div>
 
         {/* Thumbnails */}

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Header } from "@/components/dashboard/header";
+import { AiChatAssistant } from "@/components/marketplace/ai-chat-assistant";
 import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
@@ -25,6 +26,8 @@ export default function DashboardLayout({
       >
         <div className="container mx-auto p-4 lg:p-6">{children}</div>
       </main>
+      
+      <AiChatAssistant />
     </div>
   );
 }
