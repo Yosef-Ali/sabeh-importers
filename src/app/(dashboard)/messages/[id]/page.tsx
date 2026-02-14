@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getConversation, markMessagesAsRead } from "@/lib/actions/messages";
+export const dynamic = "force-dynamic";
 import { MessageThread } from "@/components/messages/message-thread";
 import { MessageInput } from "@/components/messages/message-input";
 import { Button } from "@/components/ui/button";
