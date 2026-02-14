@@ -7,7 +7,12 @@ const globalForDb = globalThis as unknown as {
 };
 
 function createDb() {
-  const sql = neon(process.env.DATABASE_URL!);
+  const url = process.env.DATABASE_URL;
+  if (!url && process.env.NODE_ENV === 'production') {
+    // During build, we might not have the URL. Use a placeholder to avoid neon() throwing.
+    return drizzle(neon("postgres://build_time_placeholder") as any, { schema });
+  }
+  const sql = neon(url!);
   return drizzle(sql, { schema });
 }
 

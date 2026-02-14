@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getListing, deleteListing } from "@/lib/actions/marketplace";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
