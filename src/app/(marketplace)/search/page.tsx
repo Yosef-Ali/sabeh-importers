@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Search | Sabeh Marketplace",
   description: "Search for cars, property, electronics, and more on Sabeh Market.",

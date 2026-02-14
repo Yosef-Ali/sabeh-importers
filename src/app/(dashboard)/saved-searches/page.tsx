@@ -4,6 +4,8 @@ import { Bell, Search } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Saved Searches | Sabeh Market",
   description: "Manage your saved searches and price alerts",

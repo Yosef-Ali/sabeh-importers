@@ -2,6 +2,8 @@ import { getAdminStats, getPromotionStats } from "@/lib/actions/admin";
 import { Card } from "@/components/ui/card";
 import { Package, Users, AlertCircle, CheckCircle2, BadgeCheck, Star } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Admin Dashboard | Sabeh Market",
   description: "Admin dashboard for Sabeh Market",

@@ -2,6 +2,8 @@ import { getPendingVerifications } from "@/lib/actions/admin";
 import { BadgeCheck, FileText, User } from "lucide-react";
 import { VerificationReviewCard } from "@/components/admin/verification-review-card";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Verifications | Admin",
 };

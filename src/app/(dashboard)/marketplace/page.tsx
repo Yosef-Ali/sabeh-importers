@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default function MarketplacePage() {
   return (
     <div className="container mx-auto py-8">

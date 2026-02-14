@@ -2,6 +2,8 @@ import { getPendingListings } from "@/lib/actions/admin";
 import { ListingModerationCard } from "@/components/admin/listing-moderation-card";
 import { Package } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Listings Moderation | Admin",
   description: "Review and moderate listings",

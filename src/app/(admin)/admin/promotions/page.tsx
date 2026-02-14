@@ -3,6 +3,8 @@ import { PromotionToggleCard } from "@/components/admin/promotion-toggle-card";
 import { Star, TrendingUp, Clock } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Promotions | Admin",
 };

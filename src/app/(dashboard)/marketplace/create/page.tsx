@@ -1,6 +1,8 @@
 import { getCategories } from "@/lib/actions/marketplace";
 import { ListingWizardContainer } from "@/components/marketplace/listing-wizard/listing-wizard-container";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Create Listing | Sabeh Importers",
   description: "List your item for sale on Sabeh Importers marketplace",
