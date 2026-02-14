@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { seedDefaultPlans } from "@/lib/actions/plans";
 import { getSession } from "@/lib/session";
 
+export const dynamic = "force-dynamic";
+
 // GET /api/admin/seed-plans  — run once to insert default plans
 // Protected: ADMIN only
 export async function GET() {
