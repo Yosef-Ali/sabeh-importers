@@ -115,8 +115,7 @@ export function ListingGallery({ images, title, category }: ListingGalleryProps)
           ) : (
              <PlaceholderImage title={title} category={category} className="h-full" />
           )}
-
-          {/* ... (rest of the component) ... */}
+        </div>
 
         {/* Thumbnails */}
         {imageList.length > 1 && (
