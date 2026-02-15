@@ -10,7 +10,7 @@ export const createListingSchema = z.object({
   negotiable: z.boolean().default(true),
   categoryId: z.string().min(1, 'Category is required'),
   condition: z.enum(['NEW', 'LIKE_NEW', 'USED_GOOD', 'USED_FAIR', 'FOR_PARTS']).default('USED_GOOD'),
-  images: z.array(z.string().url()).optional(),
+  images: z.array(z.string().min(1)).optional(),
   location: z.string().optional(),
   city: z.string().optional(),
   region: z.string().optional(),

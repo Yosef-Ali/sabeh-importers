@@ -83,13 +83,25 @@ export function ListingSheet({
   };
 
   function normalizeListingValues(data: any): Partial<ListingFormValues> {
+    // Only pick known form fields to avoid extra DB fields (id, slug, etc.)
+    // that could interfere with validation
+    const rawImages = Array.isArray(data?.images) ? data.images : [];
+    // Filter out null/empty/non-string entries that would fail url() validation
+    const cleanImages = rawImages.filter(
+      (img: any) => typeof img === "string" && img.length > 0
+    );
+
     return {
-      ...emptyDefaults,
-      ...data,
+      title: data?.title || "",
+      description: data?.description || "",
       price: data?.price ? parseFloat(String(data.price)) : 0,
-      images: Array.isArray(data?.images) ? data.images : [],
+      currency: data?.currency || "ETB",
       negotiable: data?.negotiable ?? true,
+      condition: data?.condition || "USED_GOOD",
+      categoryId: data?.categoryId || "",
+      city: data?.city || "Addis Ababa",
       showPhone: data?.showPhone ?? true,
+      images: cleanImages,
     };
   }
 
@@ -160,12 +172,15 @@ export function ListingSheet({
   }
 
   function onFormError(errors: any) {
-    console.error("[ListingSheet] validation errors:", errors);
-    const fieldNames = Object.keys(errors).join(", ");
+    console.error("[ListingSheet] validation errors:", JSON.stringify(errors, null, 2));
+    console.log("[ListingSheet] current form values:", JSON.stringify(form.getValues(), null, 2));
+    const messages = Object.entries(errors)
+      .map(([key, val]: [string, any]) => `${key}: ${val?.message || "invalid"}`)
+      .join("; ");
     toast({
       variant: "destructive",
       title: "Validation Error",
-      description: `Please fix: ${fieldNames}`,
+      description: messages,
     });
   }
 
