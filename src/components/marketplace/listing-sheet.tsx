@@ -74,7 +74,7 @@ export function ListingSheet({
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const defaultValues: Partial<ListingFormValues> = {
+  const emptyDefaults: Partial<ListingFormValues> = {
     title: "",
     description: "",
     price: 0,
@@ -85,42 +85,29 @@ export function ListingSheet({
     city: "Addis Ababa",
     showPhone: true,
     images: [],
-    ...listing, // Override with listing data if editing
   };
 
-  // Convert price to number if it comes as string from DB
-  if (defaultValues.price && typeof defaultValues.price === 'string') {
-    defaultValues.price = parseFloat(defaultValues.price);
+  function normalizeListingValues(data: any): Partial<ListingFormValues> {
+    return {
+      ...emptyDefaults,
+      ...data,
+      price: data?.price ? parseFloat(String(data.price)) : 0,
+      images: Array.isArray(data?.images) ? data.images : [],
+      negotiable: data?.negotiable ?? true,
+      showPhone: data?.showPhone ?? true,
+    };
   }
 
   const form = useForm<ListingFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: listing ? normalizeListingValues(listing) : emptyDefaults,
   });
 
   // Reset form when listing changes (e.g., opening edit for different item)
   useEffect(() => {
-    if (listing) {
-      const resetValues = { ...listing };
-       if (resetValues.price && typeof resetValues.price === 'string') {
-        resetValues.price = parseFloat(resetValues.price);
-      }
-      form.reset(resetValues);
-    } else {
-       form.reset({
-        title: "",
-        description: "",
-        price: 0,
-        currency: "ETB",
-        negotiable: true,
-        condition: "USED_GOOD",
-        categoryId: "",
-        city: "Addis Ababa",
-        showPhone: true,
-        images: [],
-      });
-    }
-  }, [listing, form]);
+    form.reset(listing ? normalizeListingValues(listing) : emptyDefaults);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listing]);
 
   async function onSubmit(data: ListingFormValues) {
     setIsSubmitting(true);
