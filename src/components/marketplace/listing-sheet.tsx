@@ -107,6 +107,7 @@ export function ListingSheet({
   }, [listing]);
 
   async function onSubmit(data: ListingFormValues) {
+    console.log("[ListingSheet] onSubmit called with:", data);
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -122,10 +123,13 @@ export function ListingSheet({
 
       let result;
       if (listing?.id) {
+        console.log("[ListingSheet] calling updateListing for id:", listing.id);
         result = await updateListing(listing.id, formData);
       } else {
         result = await createListing(formData);
       }
+
+      console.log("[ListingSheet] server result:", result);
 
       if (result.error) {
         toast({
@@ -144,7 +148,7 @@ export function ListingSheet({
         router.refresh();
       }
     } catch (error) {
-      console.error(error);
+      console.error("[ListingSheet] submit error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -153,6 +157,16 @@ export function ListingSheet({
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  function onFormError(errors: any) {
+    console.error("[ListingSheet] validation errors:", errors);
+    const fieldNames = Object.keys(errors).join(", ");
+    toast({
+      variant: "destructive",
+      title: "Validation Error",
+      description: `Please fix: ${fieldNames}`,
+    });
   }
 
   // useCompletion for AI description streaming
@@ -246,7 +260,7 @@ export function ListingSheet({
         </SheetHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-6">
+          <form onSubmit={form.handleSubmit(onSubmit, onFormError)} className="space-y-6 py-6">
             <FormField
               control={form.control}
               name="title"
