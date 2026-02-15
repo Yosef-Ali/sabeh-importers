@@ -8,14 +8,34 @@ const globalForDb = globalThis as unknown as {
 
 function createDb() {
   const url = process.env.DATABASE_URL;
-  if (!url && process.env.NODE_ENV === 'production') {
-    // During build, we might not have the URL. Use a placeholder to avoid neon() throwing.
-    return drizzle(neon("postgresql://db:db@localhost:5432/db") as any, { schema });
+  if (!url) {
+    throw new Error(
+      'DATABASE_URL environment variable is not set. ' +
+      'Please add it to your Vercel project settings: ' +
+      'https://vercel.com/docs/environment-variables'
+    );
   }
-  const sql = neon(url!);
+  const sql = neon(url);
   return drizzle(sql, { schema });
 }
 
-export const db = globalForDb.db ?? createDb();
+// Use a lazy proxy so that neon() is NOT called at build time.
+// The real DB connection is created on the first property access at runtime.
+function createLazyDb(): NeonHttpDatabase<typeof schema> {
+  let instance: NeonHttpDatabase<typeof schema> | null = null;
 
-if (process.env.NODE_ENV !== 'production') globalForDb.db = db;
+  return new Proxy({} as NeonHttpDatabase<typeof schema>, {
+    get(_target, prop, receiver) {
+      if (!instance) {
+        instance = createDb();
+        // Cache for dev hot-reloads
+        if (process.env.NODE_ENV !== 'production') {
+          globalForDb.db = instance;
+        }
+      }
+      return Reflect.get(instance, prop, receiver);
+    },
+  });
+}
+
+export const db = globalForDb.db ?? createLazyDb();
