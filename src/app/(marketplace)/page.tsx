@@ -47,10 +47,7 @@ export default async function MarketplacePage() {
       {/* ──── 2. CATEGORY STRIP ──── */}
       <CategoryStrip />
 
-      {/* ──── 3. PARTNER LOGOS (Social Proof) ──── */}
-      <PartnerLogos />
-
-      {/* ──── 4. STATS (Authority Numbers) ──── */}
+      {/* ──── 3. STATS (Authority Numbers) ──── */}
       <StatsSection />
 
       {/* ──── 5. LISTINGS (Products First) ──── */}
@@ -136,7 +133,10 @@ export default async function MarketplacePage() {
       {/* ──── 9. MOBILE APP (Secondary CTA) ──── */}
       <AppFeaturesSection />
 
-      {/* ──── 10. FOOTER ──── */}
+      {/* ──── 10. PARTNER LOGOS ──── */}
+      <PartnerLogos />
+
+      {/* ──── 11. FOOTER ──── */}
       <EnhancedFooter />
     </div>
   );
