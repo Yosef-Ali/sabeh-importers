@@ -21,7 +21,7 @@ export const updateProfileSchema = z.object({
   nameAmharic: z.string().optional(),
   phone: z.string().optional(),
   bio: z.string().max(500).optional(),
-  avatar: z.string().url().optional(),
+  avatar: z.string().min(1).optional(),
 });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;
