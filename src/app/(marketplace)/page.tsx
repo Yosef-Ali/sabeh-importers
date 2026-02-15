@@ -1,10 +1,7 @@
 import Link from "next/link";
 export const dynamic = 'force-dynamic';
-import Image from "next/image";
 import { getListings } from "@/lib/actions/marketplace";
 import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
-import { Package } from "lucide-react";
-import { HeartButton } from "@/components/marketplace/heart-button";
 
 export const metadata = {
   title: "Sabeh Authority | Maritime Commerce Excellence",
@@ -18,6 +15,7 @@ import { MarketplaceListingCard } from "@/components/marketplace/marketplace-lis
 import { FeaturesSection } from "@/components/marketplace/features-section";
 import { PricingTiers } from "@/components/marketplace/pricing-tiers";
 import { AppFeaturesSection } from "@/components/marketplace/app-features-section";
+import { PartnerLogos } from "@/components/marketplace/partner-logos";
 import { Button } from "@/components/ui/button";
 
 export default async function MarketplacePage() {
@@ -40,22 +38,19 @@ export default async function MarketplacePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground font-sans">
-      
-      {/* ──── HERO SECTION ──── */}
+
+      {/* ──── 1. HERO SECTION ──── */}
       <HeroSearch />
 
-      {/* ──── CATEGORY STRIP ──── */}
+      {/* ──── 2. CATEGORY STRIP ──── */}
       <CategoryStrip />
 
-      {/* ──── TRUST FEATURES ──── */}
-      <FeaturesSection />
+      {/* ──── 3. PARTNER LOGOS (Social Proof) ──── */}
+      <PartnerLogos />
 
-      {/* ──── APP ADVERTISING ──── */}
-      <AppFeaturesSection />
-
-      {/* ──── MAIN CONTENT GRID ──── */}
+      {/* ──── 4. LISTINGS (Products First) ──── */}
       <main className="max-w-[1440px] mx-auto w-full px-6 py-12 grid grid-cols-12 gap-10 animate-fade-in-up">
-        
+
         {/* Sidebar Filters (Sticky) */}
         <aside className="col-span-3 hidden lg:block sticky top-24 h-fit">
           <SidebarFilters />
@@ -63,7 +58,7 @@ export default async function MarketplacePage() {
 
         {/* Main Feed Area */}
         <div className="col-span-12 lg:col-span-9 space-y-16">
-          
+
           {/* Verified Partners Carousel (Premium) */}
           {verifiedListings.length > 0 && (
             <section className="bg-accent/5 p-6 rounded-xl border border-accent/10">
@@ -78,10 +73,10 @@ export default async function MarketplacePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
                 {verifiedListings.map((listing) => (
-                  <MarketplaceListingCard 
-                    key={listing.id} 
-                    listing={listing} 
-                    variant="premium" 
+                  <MarketplaceListingCard
+                    key={listing.id}
+                    listing={listing}
+                    variant="premium"
                   />
                 ))}
               </div>
@@ -101,17 +96,17 @@ export default async function MarketplacePage() {
                 </select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 stagger-children">
               {recentListings.map((listing) => (
-                <MarketplaceListingCard 
-                  key={listing.id} 
-                  listing={listing} 
-                  variant="standard" 
+                <MarketplaceListingCard
+                  key={listing.id}
+                  listing={listing}
+                  variant="standard"
                 />
               ))}
             </div>
-            
+
             <div className="mt-16 flex justify-center">
               <Link href="/search">
                 <Button className="bg-transparent border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-bold uppercase tracking-widest text-sm px-10 py-6 rounded-sm shadow-none hover:shadow-lg transition-all duration-300 hover-lift">
@@ -124,10 +119,16 @@ export default async function MarketplacePage() {
         </div>
       </main>
 
-      {/* ──── PRICING TIERS ──── */}
+      {/* ──── 5. TRUST FEATURES ──── */}
+      <FeaturesSection />
+
+      {/* ──── 6. PRICING TIERS ──── */}
       <PricingTiers />
 
-      {/* ──── ENHANCED FOOTER ──── */}
+      {/* ──── 7. MOBILE APP (Secondary CTA) ──── */}
+      <AppFeaturesSection />
+
+      {/* ──── 8. FOOTER ──── */}
       <EnhancedFooter />
     </div>
   );
