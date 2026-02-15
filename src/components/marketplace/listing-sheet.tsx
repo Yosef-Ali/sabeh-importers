@@ -184,12 +184,10 @@ export function ListingSheet({
     }
   });
 
-  // useAiStore sync
-  const { extractedText, analysisResult, clearAiStore } = useAiStore((state) => ({
-    extractedText: state.extractedText,
-    analysisResult: state.analysisResult,
-    clearAiStore: state.clear
-  }));
+  // useAiStore sync — use individual selectors to avoid new-object-every-render
+  const extractedText = useAiStore((s) => s.extractedText);
+  const analysisResult = useAiStore((s) => s.analysisResult);
+  const clearAiStore = useAiStore((s) => s.clear);
 
   useEffect(() => {
     if (extractedText) {
@@ -198,7 +196,8 @@ export function ListingSheet({
       clearAiStore(); // Consume result
       toast({ title: "AI Intelligence Applied", description: "Text extracted from image has been added to description." });
     }
-  }, [extractedText, form, clearAiStore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extractedText]);
 
   useEffect(() => {
     if (analysisResult) {
@@ -209,18 +208,19 @@ export function ListingSheet({
         const current = form.getValues("description") || "";
         form.setValue("description", current ? `${current}\n\n${analysisResult.description}` : analysisResult.description, { shouldValidate: true });
       }
-      // Note: We could also sync tags if form had a tags field
       clearAiStore(); // Consume result
       toast({ title: "AI Listing Enhanced", description: "Visual analysis data has been applied to your listing." });
     }
-  }, [analysisResult, form, clearAiStore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [analysisResult]);
 
   // Effect to update form as description streams
   useEffect(() => {
     if (streamingDescription) {
       form.setValue("description", streamingDescription, { shouldValidate: true });
     }
-  }, [streamingDescription, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [streamingDescription]);
 
   const handleGenerateDescription = async () => {
     const title = form.getValues("title");
