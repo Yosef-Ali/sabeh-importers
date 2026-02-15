@@ -59,17 +59,20 @@ export const ImageUpload = ({
           key={`dropzone-${value.length}`}
           endpoint={endpoint}
           onClientUploadComplete={(res) => {
-            const newUrls = res?.map((file) => file.url) || [];
+            const newUrls = res?.map((file) => (file as any).ufsUrl ?? file.url) || [];
             onChange([...value, ...newUrls]);
             toast.success("Images uploaded successfully");
           }}
           onUploadError={(error: Error) => {
             toast.error(`ERROR! ${error.message}`);
           }}
+          config={{
+            mode: "auto",
+          }}
           appearance={{
-            container: "border-2 border-dashed border-border bg-muted/20 hover:bg-muted/30 transition-colors p-8 rounded-lg",
-            label: "text-muted-foreground hover:text-primary transition-colors",
-            button: "bg-primary text-primary-foreground hover:bg-primary/90 transition-colors ut-uploading:bg-primary/70",
+            container: "border-2 border-dashed border-border bg-muted/20 hover:bg-muted/30 transition-colors p-8 rounded-lg cursor-pointer",
+            label: "text-muted-foreground hover:text-primary transition-colors cursor-pointer",
+            button: "bg-primary text-primary-foreground hover:bg-primary/90 transition-colors ut-uploading:bg-primary/70 ut-readying:bg-primary/50",
             allowedContent: "text-muted-foreground/80 text-xs",
           }}
           content={{
