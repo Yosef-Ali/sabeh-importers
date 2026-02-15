@@ -171,6 +171,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 category={listing.category?.name || category.name}
                 negotiable={listing.negotiable ?? true}
                 sellerName={listing.seller?.name}
+                sellerVerified={(listing.seller as any)?.verificationStatus === "VERIFIED"}
                 createdAt={listing.createdAt ? String(listing.createdAt) : undefined}
               />
             ))}

@@ -264,6 +264,7 @@ export async function getListings({
               name: true,
               avatar: true,
               id: true,
+              verificationStatus: true,
             },
           },
           category: {

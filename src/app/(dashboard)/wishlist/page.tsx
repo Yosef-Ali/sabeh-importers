@@ -64,6 +64,7 @@ export default async function WishlistPage() {
               category={listing.category?.name || "Category"}
               negotiable={listing.negotiable ?? true}
               sellerName={listing.seller?.name}
+              sellerVerified={(listing.seller as any)?.verificationStatus === "VERIFIED"}
               createdAt={listing.createdAt ? String(listing.createdAt) : undefined}
             />
           ))}

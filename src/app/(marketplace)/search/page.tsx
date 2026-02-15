@@ -272,6 +272,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       category={listing.category?.name || "Uncategorized"}
                       negotiable={listing.negotiable ?? true}
                       sellerName={listing.seller?.name || undefined}
+                      sellerVerified={(listing.seller as any)?.verificationStatus === "VERIFIED"}
                       createdAt={listing.createdAt ? String(listing.createdAt) : undefined}
                     />
                   ))}

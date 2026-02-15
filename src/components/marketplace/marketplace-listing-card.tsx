@@ -32,12 +32,14 @@ export function MarketplaceListingCard({
         className
       )}>
         {/* Pro Badge */}
-        <div className="absolute top-3 left-3 z-10">
-          <span className="bg-accent text-navy px-3 py-1 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 rounded-full shadow-md">
-            <ShieldCheck className="h-3 w-3" />
-            Verified Partner
-          </span>
-        </div>
+        {listing.seller?.verificationStatus === "VERIFIED" && (
+          <div className="absolute top-3 left-3 z-10">
+            <span className="bg-accent text-navy px-3 py-1 text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 rounded-full shadow-md">
+              <ShieldCheck className="h-3 w-3" />
+              Verified Seller
+            </span>
+          </div>
+        )}
 
         <Link href={`/listings/${listing.id}`} className="block h-full flex flex-col">
           {/* Image Area */}
@@ -124,7 +126,12 @@ export function MarketplaceListingCard({
 
           <div className="mt-auto pt-3 flex items-center justify-between text-[11px] text-muted-foreground font-mono border-t border-border/40">
             <span className="truncate max-w-[60%]">{location}</span>
-            <span>{timeDisplay}</span>
+            <div className="flex items-center gap-1.5">
+              {listing.seller?.verificationStatus === "VERIFIED" && (
+                <CheckCircle2 className="h-3 w-3 text-accent" />
+              )}
+              <span>{timeDisplay}</span>
+            </div>
           </div>
         </div>
       </Link>

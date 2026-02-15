@@ -26,6 +26,7 @@ export async function ListingFeed() {
           condition={listing.condition || "USED_GOOD"}
           category={listing.category?.name || "Uncategorized"}
           sellerName={listing.seller?.name || undefined}
+          sellerVerified={listing.seller?.verificationStatus === "VERIFIED"}
           createdAt={listing.createdAt ? String(listing.createdAt) : undefined}
         />
       ))}
