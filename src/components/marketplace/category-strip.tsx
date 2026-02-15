@@ -17,7 +17,7 @@ const CATEGORIES = [
 
 export function CategoryStrip() {
   return (
-    <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div className="bg-card border-b border-border sticky top-16 z-40">
       <div className="max-w-[1440px] mx-auto overflow-x-auto hide-scrollbar">
         <div className="flex min-w-max">
           {CATEGORIES.map((category) => (
@@ -27,24 +27,24 @@ export function CategoryStrip() {
               className={cn(
                 "flex items-center gap-3 px-6 py-4 border-b-2 transition-colors group",
                 category.active
-                  ? "border-navy bg-cream"
-                  : "border-transparent hover:bg-gray-50 hover:border-gray-200"
+                  ? "border-accent bg-accent/5"
+                  : "border-transparent hover:bg-muted hover:border-border"
               )}
             >
-              <category.icon 
+              <category.icon
                 className={cn(
                   "h-5 w-5 transition-colors",
-                  category.active 
-                    ? "text-navy" 
-                    : "text-gray-400 group-hover:text-navy"
-                )} 
+                  category.active
+                    ? "text-foreground"
+                    : "text-muted-foreground group-hover:text-foreground"
+                )}
               />
-              <span 
+              <span
                 className={cn(
                   "font-display font-medium transition-colors",
-                  category.active 
-                    ? "text-navy font-bold" 
-                    : "text-gray-500 group-hover:text-navy"
+                  category.active
+                    ? "text-foreground font-bold"
+                    : "text-muted-foreground group-hover:text-foreground"
                 )}
               >
                 {category.label}

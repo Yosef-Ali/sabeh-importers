@@ -16,6 +16,8 @@ import { FeaturesSection } from "@/components/marketplace/features-section";
 import { PricingTiers } from "@/components/marketplace/pricing-tiers";
 import { AppFeaturesSection } from "@/components/marketplace/app-features-section";
 import { PartnerLogos } from "@/components/marketplace/partner-logos";
+import { StatsSection } from "@/components/marketplace/stats-section";
+import { CtaBanner } from "@/components/marketplace/cta-banner";
 import { Button } from "@/components/ui/button";
 
 export default async function MarketplacePage() {
@@ -48,7 +50,10 @@ export default async function MarketplacePage() {
       {/* ──── 3. PARTNER LOGOS (Social Proof) ──── */}
       <PartnerLogos />
 
-      {/* ──── 4. LISTINGS (Products First) ──── */}
+      {/* ──── 4. STATS (Authority Numbers) ──── */}
+      <StatsSection />
+
+      {/* ──── 5. LISTINGS (Products First) ──── */}
       <main className="max-w-[1440px] mx-auto w-full px-6 py-12 grid grid-cols-12 gap-10 animate-fade-in-up">
 
         {/* Sidebar Filters (Sticky) */}
@@ -119,16 +124,19 @@ export default async function MarketplacePage() {
         </div>
       </main>
 
-      {/* ──── 5. TRUST FEATURES ──── */}
+      {/* ──── 6. CTA BANNER ──── */}
+      <CtaBanner />
+
+      {/* ──── 7. TRUST FEATURES ──── */}
       <FeaturesSection />
 
-      {/* ──── 6. PRICING TIERS ──── */}
+      {/* ──── 8. PRICING TIERS ──── */}
       <PricingTiers />
 
-      {/* ──── 7. MOBILE APP (Secondary CTA) ──── */}
+      {/* ──── 9. MOBILE APP (Secondary CTA) ──── */}
       <AppFeaturesSection />
 
-      {/* ──── 8. FOOTER ──── */}
+      {/* ──── 10. FOOTER ──── */}
       <EnhancedFooter />
     </div>
   );
