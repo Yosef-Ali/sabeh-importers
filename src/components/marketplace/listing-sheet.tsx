@@ -40,7 +40,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { ImageUpload } from "@/components/ui/image-upload";
-import { createListingSchema } from "@/lib/validations/listing";
+import { createListingSchema, updateListingSchema } from "@/lib/validations/listing";
 import { createListing, updateListing } from "@/lib/actions/marketplace";
 import { useAiStore } from "@/lib/store/ai-store";
 import { useCompletion } from "@ai-sdk/react";
@@ -48,12 +48,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Loader2, Sparkles, Info } from "lucide-react";
 
-// Extend schema for client-side form specific needs if any
-const formSchema = createListingSchema.extend({
-  // Override or add fields if necessary for the form specifically
-});
-
-export type ListingFormValues = z.infer<typeof formSchema>;
+export type ListingFormValues = z.infer<typeof createListingSchema>;
 
 interface ListingSheetProps {
   open: boolean;
@@ -98,8 +93,10 @@ export function ListingSheet({
     };
   }
 
+  const isEdit = !!listing?.id;
+
   const form = useForm<ListingFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(isEdit ? updateListingSchema : createListingSchema),
     defaultValues: listing ? normalizeListingValues(listing) : emptyDefaults,
   });
 
@@ -236,8 +233,6 @@ export function ListingSheet({
     }
   };
 
-  const isEdit = !!listing?.id;
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
@@ -273,7 +268,7 @@ export function ListingSheet({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
@@ -298,7 +293,7 @@ export function ListingSheet({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Condition</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select condition" />
@@ -339,7 +334,7 @@ export function ListingSheet({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Currency</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Currency" />
