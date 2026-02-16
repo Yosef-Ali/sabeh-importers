@@ -41,18 +41,40 @@ const CATEGORIES = [
   "Business & Industrial",
 ];
 
+const TEXT_LENGTHS = [
+  { value: "short", label: "Short (~50 words)" },
+  { value: "medium", label: "Medium (~150 words)" },
+  { value: "long", label: "Long (~300 words)" },
+];
+
+const ASPECT_RATIOS = [
+  { value: "1:1", label: "1:1 (Square)" },
+  { value: "3:4", label: "3:4 (Portrait)" },
+  { value: "4:3", label: "4:3 (Landscape)" },
+  { value: "9:16", label: "9:16 (Story)" },
+  { value: "16:9", label: "16:9 (Wide)" },
+];
+
+const IMAGE_SIZES = [
+  { value: "1K", label: "1K (Standard)" },
+  { value: "2K", label: "2K (High)" },
+];
+
 export function AIGeneratorClient() {
   // Text generation state
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
   const [price, setPrice] = useState("");
+  const [outputLength, setOutputLength] = useState("medium");
 
   // Image generation state
   const [imagePrompt, setImagePrompt] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState("image/png");
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState("1:1");
+  const [imageSize, setImageSize] = useState("1K");
 
   // Reference image state
   const [refImage, setRefImage] = useState<string | null>(null);
@@ -78,7 +100,7 @@ export function AIGeneratorClient() {
     }
 
     await streamDescription("", {
-      body: { title, category, condition, price, currency: "ETB" },
+      body: { title, category, condition, price, currency: "ETB", outputLength },
     });
   }
 
@@ -125,6 +147,8 @@ export function AIGeneratorClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: imagePrompt,
+          aspectRatio,
+          imageSize,
           ...(refImage && { referenceImage: refImage, referenceImageMimeType: refImageMimeType }),
         }),
       });
@@ -230,6 +254,22 @@ export function AIGeneratorClient() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="outputLength">Output Length</Label>
+              <Select value={outputLength} onValueChange={setOutputLength}>
+                <SelectTrigger id="outputLength" className="w-[220px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {TEXT_LENGTHS.map((l) => (
+                    <SelectItem key={l.value} value={l.value}>
+                      {l.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <Button
               onClick={handleGenerateText}
               disabled={isTextLoading}
@@ -287,6 +327,40 @@ export function AIGeneratorClient() {
                 onChange={(e) => setImagePrompt(e.target.value)}
                 className="min-h-[100px]"
               />
+            </div>
+
+            {/* Size & Quality Options */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="aspectRatio">Aspect Ratio</Label>
+                <Select value={aspectRatio} onValueChange={setAspectRatio}>
+                  <SelectTrigger id="aspectRatio">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ASPECT_RATIOS.map((r) => (
+                      <SelectItem key={r.value} value={r.value}>
+                        {r.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="imageSize">Resolution</Label>
+                <Select value={imageSize} onValueChange={setImageSize}>
+                  <SelectTrigger id="imageSize">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {IMAGE_SIZES.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>
+                        {s.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Reference Image Upload */}

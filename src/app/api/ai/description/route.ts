@@ -8,7 +8,7 @@ function getAI() {
 
 export async function POST(req: Request) {
   const ai = getAI();
-  const { title, category, condition, price, currency } = await req.json();
+  const { title, category, condition, price, currency, outputLength } = await req.json();
 
   if (!title) {
     return new Response("Missing title", { status: 400 });
@@ -22,7 +22,13 @@ export async function POST(req: Request) {
     FOR_PARTS: "For Parts",
   };
 
-  const prompt = `Write a compelling marketplace listing description for the following item. Keep it concise (2-3 paragraphs), highlight key selling points, and make it appealing to buyers. Do not use markdown formatting.
+  const lengthGuide: Record<string, string> = {
+    short: "Keep it very brief (1 short paragraph, ~50 words).",
+    medium: "Keep it concise (2-3 paragraphs, ~150 words).",
+    long: "Write a detailed description (4-5 paragraphs, ~300 words) covering all selling points.",
+  };
+
+  const prompt = `Write a compelling marketplace listing description for the following item. ${lengthGuide[outputLength] || lengthGuide.medium} Highlight key selling points and make it appealing to buyers. Do not use markdown formatting.
 
 Title: ${title}
 ${category ? `Category: ${category}` : ""}

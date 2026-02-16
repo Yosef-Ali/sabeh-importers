@@ -8,7 +8,7 @@ function getAI() {
 
 export async function POST(req: Request) {
   const ai = getAI();
-  const { prompt, referenceImage, referenceImageMimeType } = await req.json();
+  const { prompt, referenceImage, referenceImageMimeType, aspectRatio, imageSize } = await req.json();
 
   if (!prompt) {
     return new Response(JSON.stringify({ error: "Missing prompt" }), { status: 400 });
@@ -36,6 +36,10 @@ export async function POST(req: Request) {
       ],
       config: {
         responseModalities: ["TEXT", "IMAGE"],
+        imageConfig: {
+          ...(aspectRatio && { aspectRatio }),
+          ...(imageSize && { imageSize }),
+        },
       },
     });
 
