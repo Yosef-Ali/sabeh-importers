@@ -1,13 +1,9 @@
-import { GoogleGenAI } from "@google/genai";
+import { streamText } from "ai";
+import { google } from "@ai-sdk/google";
 
 export const dynamic = "force-dynamic";
 
-function getAI() {
-  return new GoogleGenAI({ apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY! });
-}
-
 export async function POST(req: Request) {
-  const ai = getAI();
   const { title, category, condition, price, currency, outputLength } = await req.json();
 
   if (!title) {
@@ -39,27 +35,10 @@ By prioritizing Amharic-speaking buyers as well, ensure the tone reflects "Sabeh
 
 Write the description directly without any preamble.`;
 
-  try {
-    const stream = await ai.models.generateContentStream({
-      model: "gemini-3-pro-preview", // Use Pro for creative writing
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-    });
+  const result = streamText({
+    model: google("gemini-2.0-flash"),
+    prompt,
+  });
 
-    const bodyStream = new ReadableStream({
-      async start(controller) {
-        for await (const chunk of stream) {
-          const text = chunk.text;
-          if (text) {
-            controller.enqueue(new TextEncoder().encode(text));
-          }
-        }
-        controller.close();
-      },
-    });
-
-    return new Response(bodyStream);
-  } catch (error) {
-    console.error("Gemini 3 Description Error:", error);
-    return new Response(JSON.stringify({ error: "Failed to generate description" }), { status: 500 });
-  }
+  return result.toTextStreamResponse();
 }

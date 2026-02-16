@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCompletion } from "@ai-sdk/react";
 import { toast } from "sonner";
-import { Loader2, Copy, Download, Sparkles, ImageIcon, Type, Upload, X, LayoutGrid } from "lucide-react";
+import { Loader2, Copy, Download, Sparkles, ImageIcon, Type, Upload, X, LayoutGrid, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,9 +55,11 @@ const ASPECT_RATIOS = [
   { value: "16:9", label: "16:9 (Wide)" },
 ];
 
-const IMAGE_SIZES = [
-  { value: "1K", label: "1K (Standard)" },
-  { value: "2K", label: "2K (High)" },
+const IMAGE_STYLES: { value: string; label: string }[] = [
+  { value: "product", label: "Product Photo" },
+  { value: "lifestyle", label: "Lifestyle" },
+  { value: "minimal", label: "Minimal / Clean" },
+  { value: "dramatic", label: "Dramatic" },
 ];
 
 const SAMPLE_PROMPTS = [
@@ -136,6 +138,8 @@ const SAMPLE_PROMPTS = [
 ];
 
 export function AIGeneratorClient() {
+  const [activeTab, setActiveTab] = useState("create");
+
   // Text generation state
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -143,12 +147,17 @@ export function AIGeneratorClient() {
   const [price, setPrice] = useState("");
   const [outputLength, setOutputLength] = useState("medium");
 
-  // Image generation state
+  // Image generation state (shared between Create Ad and Image Studio)
   const [imagePrompt, setImagePrompt] = useState("");
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [imageSize, setImageSize] = useState("1K");
+
+  const [imageStyle, setImageStyle] = useState("product");
+
+  // Create Ad tab image
+  const [adImageUrl, setAdImageUrl] = useState<string | null>(null);
+  const [isAdImageLoading, setIsAdImageLoading] = useState(false);
 
   // Reference image state
   const [refImage, setRefImage] = useState<string | null>(null);
@@ -162,10 +171,48 @@ export function AIGeneratorClient() {
     isLoading: isTextLoading,
   } = useCompletion({
     api: "/api/ai/description",
+    streamProtocol: "text",
     onError: () => {
       toast.error("Failed to generate description");
     },
   });
+
+  async function generateImageFromPrompt(
+    prompt: string,
+    onSuccess: (url: string) => void,
+    onLoading: (loading: boolean) => void,
+  ) {
+    onLoading(true);
+    try {
+      const res = await fetch("/api/ai/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          aspectRatio,
+          ...(refImage && { referenceImage: refImage, referenceImageMimeType: refImageMimeType }),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to generate image");
+      }
+
+      if (!data.image) {
+        throw new Error("No image data in response");
+      }
+
+      onSuccess(data.image);
+      toast.success("Image generated successfully");
+    } catch (err: any) {
+      console.error("Image generation error:", err);
+      toast.error(err.message || "Failed to generate image");
+    } finally {
+      onLoading(false);
+    }
+  }
 
   async function handleGenerateText() {
     if (!title || title.length < 3) {
@@ -176,6 +223,34 @@ export function AIGeneratorClient() {
     await streamDescription("", {
       body: { title, category, condition, price, currency: "ETB", outputLength },
     });
+  }
+
+  async function handleGenerateAll() {
+    if (!title || title.length < 3) {
+      toast.error("Please enter a title (at least 3 characters)");
+      return;
+    }
+
+    // Generate text first
+    const result = await streamDescription("", {
+      body: { title, category, condition, price, currency: "ETB", outputLength },
+    });
+
+    // Then generate image using the description + style
+    if (result) {
+      const styleHints: Record<string, string> = {
+        product: "Professional product photography, clean white background, soft studio lighting",
+        lifestyle: "Lifestyle photography, natural setting, warm tones, real-world context",
+        minimal: "Minimalist composition, clean background, simple elegant layout",
+        dramatic: "Dramatic lighting, bold contrast, cinematic product shot",
+      };
+      const styledPrompt = `${result}\n\nImage style: ${styleHints[imageStyle] || styleHints.product}`;
+      await generateImageFromPrompt(
+        styledPrompt,
+        setAdImageUrl,
+        setIsAdImageLoading,
+      );
+    }
   }
 
   function handleCopyText() {
@@ -212,73 +287,42 @@ export function AIGeneratorClient() {
       return;
     }
 
-    setIsImageLoading(true);
-    // Revoke previous blob URL to free memory
-    if (generatedImageUrl) URL.revokeObjectURL(generatedImageUrl);
+    const styleHints: Record<string, string> = {
+      product: "Professional product photography, clean white background, soft studio lighting",
+      lifestyle: "Lifestyle photography, natural setting, warm tones, real-world context",
+      minimal: "Minimalist composition, clean background, simple elegant layout",
+      dramatic: "Dramatic lighting, bold contrast, cinematic product shot",
+    };
+    const styledPrompt = `${imagePrompt}\n\nImage style: ${styleHints[imageStyle] || styleHints.product}`;
+
     setGeneratedImageUrl(null);
-
-    try {
-      const res = await fetch("/api/ai/generate-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: imagePrompt,
-          aspectRatio,
-          imageSize,
-          ...(refImage && { referenceImage: refImage, referenceImageMimeType: refImageMimeType }),
-        }),
-      });
-
-      const text = await res.text();
-
-      if (!res.ok) {
-        let errMsg = "Failed to generate image";
-        try { errMsg = JSON.parse(text).error || errMsg; } catch {}
-        throw new Error(errMsg);
-      }
-
-      const data = JSON.parse(text);
-      if (!data.image) {
-        throw new Error("No image data in response");
-      }
-
-      // Convert base64 to blob URL for reliable rendering
-      const binaryStr = atob(data.image);
-      const bytes = new Uint8Array(binaryStr.length);
-      for (let i = 0; i < binaryStr.length; i++) {
-        bytes[i] = binaryStr.charCodeAt(i);
-      }
-      const blob = new Blob([bytes], { type: data.mimeType || "image/png" });
-      const blobUrl = URL.createObjectURL(blob);
-      setGeneratedImageUrl(blobUrl);
-      toast.success("Image generated successfully");
-    } catch (err: any) {
-      console.error("Image generation error:", err);
-      toast.error(err.message || "Failed to generate image");
-    } finally {
-      setIsImageLoading(false);
-    }
+    await generateImageFromPrompt(
+      styledPrompt,
+      setGeneratedImageUrl,
+      setIsImageLoading,
+    );
   }
 
-  function handleDownloadImage() {
-    if (!generatedImageUrl) return;
+  function handleDownloadImage(url: string) {
     const link = document.createElement("a");
-    link.href = generatedImageUrl;
+    link.href = url;
     link.download = "ai-generated.png";
     link.click();
     toast.success("Image downloaded");
   }
 
+  const isGeneratingAll = isTextLoading || isAdImageLoading;
+
   return (
-    <Tabs defaultValue="text" className="w-full">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
       <TabsList>
-        <TabsTrigger value="text" className="gap-2">
-          <Type className="h-4 w-4" />
-          Generate Ad Text
+        <TabsTrigger value="create" className="gap-2">
+          <Wand2 className="h-4 w-4" />
+          Create Ad
         </TabsTrigger>
         <TabsTrigger value="image" className="gap-2">
           <ImageIcon className="h-4 w-4" />
-          Generate Ad Image
+          Image Studio
         </TabsTrigger>
         <TabsTrigger value="gallery" className="gap-2">
           <LayoutGrid className="h-4 w-4" />
@@ -286,13 +330,13 @@ export function AIGeneratorClient() {
         </TabsTrigger>
       </TabsList>
 
-      {/* Text Generation Tab */}
-      <TabsContent value="text" className="space-y-4">
+      {/* Create Ad Tab - Generates both text + image */}
+      <TabsContent value="create" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Generate Ad Description</CardTitle>
+            <CardTitle>Create Ad</CardTitle>
             <CardDescription>
-              Enter listing details and AI will write a compelling description.
+              Enter listing details and AI will generate both a description and product image.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -348,67 +392,191 @@ export function AIGeneratorClient() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="outputLength">Output Length</Label>
-              <Select value={outputLength} onValueChange={setOutputLength}>
-                <SelectTrigger id="outputLength" className="w-[220px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {TEXT_LENGTHS.map((l) => (
-                    <SelectItem key={l.value} value={l.value}>
-                      {l.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-2">
+                <Label htmlFor="outputLength">Text Length</Label>
+                <Select value={outputLength} onValueChange={setOutputLength}>
+                  <SelectTrigger id="outputLength">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TEXT_LENGTHS.map((l) => (
+                      <SelectItem key={l.value} value={l.value}>
+                        {l.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="adAspectRatio">Image Ratio</Label>
+                <Select value={aspectRatio} onValueChange={setAspectRatio}>
+                  <SelectTrigger id="adAspectRatio">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ASPECT_RATIOS.map((r) => (
+                      <SelectItem key={r.value} value={r.value}>
+                        {r.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="adImageStyle">Image Style</Label>
+                <Select value={imageStyle} onValueChange={setImageStyle}>
+                  <SelectTrigger id="adImageStyle">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {IMAGE_STYLES.map((s) => (
+                      <SelectItem key={s.value} value={s.value}>
+                        {s.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            <Button
-              onClick={handleGenerateText}
-              disabled={isTextLoading}
-              className="gap-2"
-            >
-              {isTextLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Sparkles className="h-4 w-4" />
-              )}
-              {isTextLoading ? "Generating..." : "Generate Description"}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                onClick={handleGenerateText}
+                disabled={isGeneratingAll}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                {isTextLoading && !isAdImageLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Type className="h-4 w-4" />
+                )}
+                Text Only
+              </Button>
+              <Button
+                onClick={handleGenerateAll}
+                disabled={isGeneratingAll}
+                className="gap-2"
+              >
+                {isGeneratingAll ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Sparkles className="h-4 w-4" />
+                )}
+                {isTextLoading
+                  ? "Writing description..."
+                  : isAdImageLoading
+                    ? "Generating image..."
+                    : "Generate Ad"}
+              </Button>
+            </div>
 
-            {completion && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label>Generated Description</Label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleCopyText}
-                    className="gap-1.5 text-xs"
-                  >
-                    <Copy className="h-3.5 w-3.5" />
-                    Copy
-                  </Button>
+            {/* Results */}
+            {(completion || adImageUrl || isAdImageLoading) && (
+              <>
+                <div className="border-t pt-4">
+                  <p className="text-sm font-medium text-muted-foreground mb-3">Results</p>
                 </div>
-                <Textarea
-                  readOnly
-                  value={completion}
-                  className="min-h-[200px] resize-y"
-                />
-              </div>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  {/* Generated Text */}
+                  {completion && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-base">Ad Description</Label>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleCopyText}
+                          className="gap-1.5 text-xs"
+                        >
+                          <Copy className="h-3.5 w-3.5" />
+                          Copy
+                        </Button>
+                      </div>
+                      <Textarea
+                        readOnly
+                        value={completion}
+                        className="min-h-[250px] resize-y bg-muted/30"
+                      />
+                      {!adImageUrl && !isAdImageLoading && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5"
+                          onClick={() => {
+                            const styleHints: Record<string, string> = {
+                              product: "Professional product photography, clean white background, soft studio lighting",
+                              lifestyle: "Lifestyle photography, natural setting, warm tones, real-world context",
+                              minimal: "Minimalist composition, clean background, simple elegant layout",
+                              dramatic: "Dramatic lighting, bold contrast, cinematic product shot",
+                            };
+                            const styledPrompt = `${completion}\n\nImage style: ${styleHints[imageStyle] || styleHints.product}`;
+                            generateImageFromPrompt(
+                              styledPrompt,
+                              setAdImageUrl,
+                              setIsAdImageLoading,
+                            );
+                          }}
+                        >
+                          <ImageIcon className="h-3.5 w-3.5" />
+                          Generate Image from Description
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Generated Image */}
+                  {(adImageUrl || isAdImageLoading) && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-base">Ad Image</Label>
+                        {adImageUrl && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDownloadImage(adImageUrl)}
+                            className="gap-1.5 text-xs"
+                          >
+                            <Download className="h-3.5 w-3.5" />
+                            Download
+                          </Button>
+                        )}
+                      </div>
+                      {isAdImageLoading ? (
+                        <div className="flex min-h-[250px] items-center justify-center rounded-lg border border-dashed bg-muted/30">
+                          <div className="flex flex-col items-center gap-3 text-muted-foreground">
+                            <Loader2 className="h-10 w-10 animate-spin" />
+                            <p className="text-sm font-medium">Generating image...</p>
+                            <p className="text-xs">This may take up to 30 seconds</p>
+                          </div>
+                        </div>
+                      ) : adImageUrl ? (
+                        <div className="overflow-hidden rounded-lg border bg-muted/30">
+                          <img
+                            src={adImageUrl}
+                            alt="AI Generated Ad"
+                            className="mx-auto max-h-[400px] w-auto object-contain"
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
       </TabsContent>
 
-      {/* Image Generation Tab */}
+      {/* Image Studio Tab - Standalone image generation */}
       <TabsContent value="image" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Generate Ad Image</CardTitle>
+            <CardTitle>Image Studio</CardTitle>
             <CardDescription>
-              Describe the image you want and AI will generate it.
+              Write a custom prompt to generate any image. Supports Amharic and English.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -423,7 +591,6 @@ export function AIGeneratorClient() {
               />
             </div>
 
-            {/* Size & Quality Options */}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="aspectRatio">Aspect Ratio</Label>
@@ -441,13 +608,13 @@ export function AIGeneratorClient() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="imageSize">Resolution</Label>
-                <Select value={imageSize} onValueChange={setImageSize}>
-                  <SelectTrigger id="imageSize">
+                <Label htmlFor="studioStyle">Image Style</Label>
+                <Select value={imageStyle} onValueChange={setImageStyle}>
+                  <SelectTrigger id="studioStyle">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {IMAGE_SIZES.map((s) => (
+                    {IMAGE_STYLES.map((s) => (
                       <SelectItem key={s.value} value={s.value}>
                         {s.label}
                       </SelectItem>
@@ -513,7 +680,7 @@ export function AIGeneratorClient() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={handleDownloadImage}
+                    onClick={() => handleDownloadImage(generatedImageUrl)}
                     className="gap-1.5 text-xs"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -532,13 +699,14 @@ export function AIGeneratorClient() {
           </CardContent>
         </Card>
       </TabsContent>
+
       {/* Prompt Gallery Tab */}
       <TabsContent value="gallery" className="space-y-4">
         <Card>
           <CardHeader>
-            <CardTitle>Prompt Gallery / የጥያቄ ማዕከል</CardTitle>
+            <CardTitle>Prompt Gallery</CardTitle>
             <CardDescription>
-              Sample prompts for generating product images. Click &quot;Use Prompt&quot; to load it into the image generator.
+              Sample prompts for generating product images. Click &quot;Use Prompt&quot; to load it into Image Studio.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -576,7 +744,8 @@ export function AIGeneratorClient() {
                       className="gap-1.5 text-xs"
                       onClick={() => {
                         setImagePrompt(sample.prompt);
-                        toast.success("Prompt loaded — switch to Generate Ad Image tab");
+                        setActiveTab("image");
+                        toast.success("Prompt loaded into Image Studio");
                       }}
                     >
                       <Sparkles className="h-3 w-3" />
