@@ -36,23 +36,23 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
   }
 
   return (
-    <div className="flex items-center gap-4 px-5 py-4 hover:bg-muted/60 transition-colors">
+    <div className="flex items-center gap-4 px-5 py-4 hover:bg-muted/30 transition-colors">
       {/* Listing info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <Link
             href={`/listings/${listing.id}`}
             target="_blank"
-            className="font-semibold text-foreground hover:text-accent transition-colors truncate flex items-center gap-1.5"
+            className="font-display font-semibold text-primary hover:text-accent transition-colors truncate flex items-center gap-1.5"
           >
             {listing.title}
             <ExternalLink className="h-3.5 w-3.5 flex-shrink-0" />
           </Link>
         </div>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-xs text-muted-foreground font-mono mt-0.5">
           {listing.category?.name} · {listing.seller?.name}
           {listing.promotedUntil && (
-            <span className="ml-2 text-amber-600 dark:text-amber-400">
+            <span className="ml-2 text-amber-600">
               Expires {new Date(listing.promotedUntil).toLocaleDateString()}
             </span>
           )}
@@ -64,10 +64,10 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
         <button
           onClick={togglePromoted}
           disabled={loading}
-          className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-50
+          className={`flex items-center gap-1.5 rounded-button px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
             ${promoted
-              ? "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:hover:bg-blue-900"
-              : "bg-muted text-muted-foreground hover:bg-muted/80"
+              ? "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
+              : "bg-primary/5 text-muted-foreground border-primary/10 hover:bg-primary/10"
             }`}
         >
           <TrendingUp className="h-3.5 w-3.5" />
@@ -78,10 +78,10 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
         <button
           onClick={toggleFeatured}
           disabled={loading}
-          className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-50
+          className={`flex items-center gap-1.5 rounded-button px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
             ${featured
-              ? "bg-accent/20 text-foreground hover:bg-accent/30"
-              : "bg-muted text-muted-foreground hover:bg-muted/80"
+              ? "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200"
+              : "bg-primary/5 text-muted-foreground border-primary/10 hover:bg-primary/10"
             }`}
         >
           <Star className="h-3.5 w-3.5" />

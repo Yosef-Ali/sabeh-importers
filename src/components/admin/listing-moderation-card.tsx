@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, ExternalLink } from "lucide-react";
@@ -49,10 +48,10 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
   }
 
   return (
-    <Card className="p-6 border-border">
+    <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card">
       <div className="flex gap-6">
         {/* Image */}
-        <div className="relative h-32 w-32 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
+        <div className="relative h-32 w-32 flex-shrink-0 rounded-card overflow-hidden bg-muted border border-border">
           {listing.images && listing.images.length > 0 ? (
             <Image
               src={listing.images[0]}
@@ -61,7 +60,7 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
+            <div className="flex h-full items-center justify-center text-muted-foreground font-mono text-sm">
               No image
             </div>
           )}
@@ -71,12 +70,12 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
         <div className="flex-1 min-w-0 space-y-3">
           <div>
             <div className="flex items-start justify-between gap-4 mb-2">
-              <h3 className="font-bold text-lg text-foreground line-clamp-1">
+              <h3 className="font-display font-bold text-lg text-primary line-clamp-1">
                 {listing.title}
               </h3>
               <Badge
                 variant={listing.status === "PENDING_REVIEW" ? "warning" : "outline"}
-                className="flex-shrink-0"
+                className="flex-shrink-0 font-mono"
               >
                 {listing.status}
               </Badge>
@@ -84,8 +83,8 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
             <p className="text-muted-foreground text-sm line-clamp-2">{listing.description}</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-            <span className="font-bold text-foreground">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground font-mono">
+            <span className="font-bold text-primary font-display">
               {Number(listing.price).toLocaleString()} ETB
             </span>
             <span>•</span>
@@ -100,7 +99,7 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
             <Button
               onClick={handleApprove}
               disabled={isProcessing}
-              className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white"
+              className="bg-green-600 hover:bg-green-700 text-white font-display font-bold rounded-button"
             >
               <Check className="h-4 w-4 mr-2" />
               Approve
@@ -109,13 +108,13 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
               onClick={handleReject}
               disabled={isProcessing}
               variant="outline"
-              className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950"
+              className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 font-display font-bold rounded-button"
             >
               <X className="h-4 w-4 mr-2" />
               Reject
             </Button>
             <Link href={`/listings/${listing.id}`} target="_blank">
-              <Button variant="outline" className="border-border">
+              <Button variant="outline" className="border-primary/10 rounded-button font-display">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View
               </Button>
@@ -123,6 +122,6 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

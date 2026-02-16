@@ -34,20 +34,20 @@ export function ReportCard({ report }: ReportCardProps) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+    <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <p className="font-bold text-foreground">
+          <p className="font-display font-bold text-primary">
             Report by{" "}
-            <span className="text-foreground">{report.reporter?.name ?? "Unknown"}</span>
-            <span className="text-muted-foreground font-normal"> ({report.reporter?.email})</span>
+            <span className="text-primary">{report.reporter?.name ?? "Unknown"}</span>
+            <span className="text-muted-foreground font-normal font-mono text-sm"> ({report.reporter?.email})</span>
           </p>
           {report.listing && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground font-mono">
               Regarding listing:{" "}
               <Link
                 href={`/listings/${report.listing.id}`}
-                className="text-foreground font-semibold hover:text-accent inline-flex items-center gap-1"
+                className="text-primary font-display font-semibold hover:text-accent inline-flex items-center gap-1"
                 target="_blank"
               >
                 {report.listing.title}
@@ -55,19 +55,19 @@ export function ReportCard({ report }: ReportCardProps) {
               </Link>
             </p>
           )}
-          <p className="text-xs text-muted-foreground/70">
+          <p className="text-xs text-muted-foreground/70 font-mono">
             Submitted {new Date(report.createdAt).toLocaleString()}
           </p>
         </div>
-        <span className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 px-3 py-1 text-xs font-bold uppercase">
+        <span className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-button text-xs font-mono font-bold border bg-red-100 text-red-700 border-red-200 uppercase">
           <Flag className="h-3 w-3" />
           {report.status}
         </span>
       </div>
 
       {report.reason && (
-        <div className="rounded-lg bg-muted border border-border p-4 text-sm text-foreground">
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Reason</p>
+        <div className="rounded-card bg-primary/5 border-2 border-primary/10 p-4 text-sm text-foreground">
+          <p className="text-xs font-mono font-bold text-primary uppercase tracking-wider mb-1">Reason</p>
           {report.reason}
         </div>
       )}
@@ -76,26 +76,26 @@ export function ReportCard({ report }: ReportCardProps) {
         <p className="text-sm text-muted-foreground">{report.description}</p>
       )}
 
-      <div className="space-y-3 pt-2 border-t border-border">
+      <div className="space-y-3 pt-2 border-t-2 border-primary/10">
         <textarea
           value={resolution}
           onChange={(e) => setResolution(e.target.value)}
           placeholder="Resolution note (required)…"
           rows={2}
-          className="w-full rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+          className="w-full rounded-card border-2 border-primary/10 bg-white dark:bg-card text-foreground placeholder:text-muted-foreground px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent resize-none"
         />
         <div className="flex gap-3">
           <button
             onClick={() => handleResolve("RESOLVED")}
             disabled={loading}
-            className="rounded-lg bg-primary text-primary-foreground px-5 py-2 text-sm font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="rounded-button bg-primary text-primary-foreground px-5 py-2 text-sm font-display font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {loading ? "…" : "Mark Resolved"}
           </button>
           <button
             onClick={() => handleResolve("DISMISSED")}
             disabled={loading}
-            className="rounded-lg border border-border bg-card px-5 py-2 text-sm font-bold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+            className="rounded-button border-2 border-primary/10 bg-white dark:bg-card px-5 py-2 text-sm font-display font-bold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
           >
             Dismiss
           </button>

@@ -27,8 +27,8 @@ export default async function AdminVerificationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Seller Verifications</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-3xl font-display font-bold text-primary">Seller Verifications</h1>
+        <p className="text-muted-foreground font-mono text-sm mt-1">
           {verifications.length} pending verification{verifications.length !== 1 && "s"} — documents are admin-only
         </p>
       </div>
@@ -46,18 +46,18 @@ export default async function AdminVerificationsPage() {
       </div>
 
       {verifications.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card p-12 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center bg-white dark:bg-card rounded-card border-2 border-dashed border-primary/20 p-12 text-center">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted border border-accent/20">
             <BadgeCheck className="h-10 w-10 text-accent/60" />
           </div>
-          <h3 className="text-xl font-bold text-foreground mb-2">All reviewed!</h3>
-          <p className="text-muted-foreground max-w-sm">No pending verification documents.</p>
+          <h3 className="text-xl font-display font-bold text-primary mb-2">All reviewed!</h3>
+          <p className="text-muted-foreground font-mono text-sm max-w-sm">No pending verification documents.</p>
         </div>
       ) : (
         <div className="space-y-8">
           {govIdVerifications.length > 0 && (
             <section>
-              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
+              <h2 className="text-sm font-mono font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
                 <User className="h-4 w-4" /> Government IDs ({govIdVerifications.length})
               </h2>
               <div className="grid grid-cols-1 gap-4">
@@ -70,7 +70,7 @@ export default async function AdminVerificationsPage() {
 
           {bizLicVerifications.length > 0 && (
             <section>
-              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
+              <h2 className="text-sm font-mono font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2">
                 <FileText className="h-4 w-4" /> Business Licenses ({bizLicVerifications.length})
               </h2>
               <div className="grid grid-cols-1 gap-4">
@@ -83,7 +83,7 @@ export default async function AdminVerificationsPage() {
 
           {otherVerifications.length > 0 && (
             <section>
-              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4">
+              <h2 className="text-sm font-mono font-bold text-muted-foreground uppercase tracking-widest mb-4">
                 Other ({otherVerifications.length})
               </h2>
               <div className="grid grid-cols-1 gap-4">

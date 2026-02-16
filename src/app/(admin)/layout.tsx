@@ -78,7 +78,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
         {navItems.map((item) => {
           const isActive =
             item.href === "/admin"
@@ -90,14 +90,14 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-accent text-accent-foreground font-semibold shadow-sm"
+                  ? "bg-primary/10 text-primary font-semibold"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 isCollapsed && "justify-center px-2"
               )}
             >
-              <span className={cn(isActive && "text-accent-foreground")}>
+              <span className={cn(isActive && "text-primary")}>
                 {item.icon}
               </span>
               {!isCollapsed && item.title}
