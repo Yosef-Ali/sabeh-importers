@@ -33,10 +33,12 @@ import {
 import { createPlan, updatePlan } from "@/lib/actions/plans";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 // Schema matching your Drizzle model
 const planSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  nameAmharic: z.string().optional(),
   slug: z.string().min(1, "Slug is required"),
   price: z.coerce.number().min(0),
   currency: z.enum(["ETB", "USD"]),
@@ -61,12 +63,14 @@ interface PlanSheetProps {
 
 export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProps) {
   const { toast } = useToast();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<PlanFormValues>({
     resolver: zodResolver(planSchema),
     defaultValues: {
       name: plan?.name || "",
+      nameAmharic: plan?.nameAmharic || "",
       slug: plan?.slug || "",
       price: plan?.price ? Number(plan.price) : 0,
       currency: plan?.currency || "ETB",
@@ -86,7 +90,7 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
     if (plan) {
       form.reset({
         name: plan.name,
-
+        nameAmharic: plan.nameAmharic || "",
         slug: plan.slug,
         price: Number(plan.price),
         currency: plan.currency as "ETB" | "USD",
@@ -102,6 +106,7 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
     } else {
       form.reset({
         name: "",
+        nameAmharic: "",
         slug: "",
         price: 0,
         currency: "ETB",
@@ -122,6 +127,7 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
     try {
       const payload = {
         name: data.name,
+        nameAmharic: data.nameAmharic || null,
         slug: data.slug,
         price: data.price.toString(),
         currency: data.currency,
@@ -144,8 +150,9 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
          await createPlan(payload);
          toast({ title: "Plan created", description: `${data.name} has been created.` });
       }
-      onSuccess();
       onOpenChange(false);
+      router.refresh();
+      onSuccess();
     } catch (error) {
        console.error(error);
        toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
@@ -154,9 +161,6 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
     }
   }
 
-  // Pre-fill form when plan changes (if opening for edit)
-  // Note: react-hook-form reset() would be better in a useEffect if plan prop changes dynamically
-  
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="overflow-y-auto sm:max-w-md">
@@ -179,6 +183,21 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
                   <FormControl>
                     <Input placeholder="e.g. Starter" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="nameAmharic"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name (Amharic)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. መደበኛ" {...field} />
+                  </FormControl>
+                  <FormDescription>Shown on the pricing page.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -219,7 +238,7 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Currency</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select currency" />

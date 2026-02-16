@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Plus, Check, X, Shield, Star, TrendingUp } from "lucide-react";
+import { Edit, Plus } from "lucide-react";
 import { PlanSheet } from "./plan-sheet";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,7 +20,7 @@ interface PlansTableProps {
 }
 
 export function PlansTable({ initialPlans }: PlansTableProps) {
-  const [plans, setPlans] = useState(initialPlans); // In a real app, use router refresh to sync data
+  const router = useRouter();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
@@ -32,10 +33,6 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
     setSelectedPlan(null);
     setIsSheetOpen(true);
   };
-
-  // Simplistic refresh - in Next.js Server Actions, usually just revalidatePath is enough and page reloads, 
-  // but to prevent full reload flicker we rely on router.refresh() usually.
-  // For now, we trust the server action revalidation.
 
   return (
     <div>
@@ -68,9 +65,17 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
               <TableCell>{plan.durationDays} days</TableCell>
               <TableCell>{plan.maxActiveListings} listings</TableCell>
               <TableCell>
-                <div className="flex gap-2">
-                   {plan.canPromote && <Badge variant="secondary" className="gap-1"><TrendingUp className="h-3 w-3" /> Prom</Badge>}
-                   {plan.canFeature && <Badge variant="secondary" className="gap-1"><Star className="h-3 w-3" /> Feat</Badge>}
+                <div className="flex flex-wrap gap-1 max-w-[200px]">
+                   {plan.features?.length > 0 ? (
+                     plan.features.slice(0, 3).map((f: string, i: number) => (
+                       <Badge key={i} variant="outline" className="text-xs">{f}</Badge>
+                     ))
+                   ) : (
+                     <span className="text-xs text-muted-foreground">—</span>
+                   )}
+                   {plan.features?.length > 3 && (
+                     <Badge variant="outline" className="text-xs">+{plan.features.length - 3}</Badge>
+                   )}
                 </div>
               </TableCell>
               <TableCell>
@@ -90,14 +95,12 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
         </TableBody>
       </Table>
 
-      <PlanSheet 
-         open={isSheetOpen} 
-         onOpenChange={setIsSheetOpen} 
+      <PlanSheet
+         open={isSheetOpen}
+         onOpenChange={setIsSheetOpen}
          plan={selectedPlan}
          onSuccess={() => {
-             // In a client component getting server data as props, we need to refresh the page to see updates
-             // or keep local state in sync. For simplicity:
-             window.location.reload(); 
+             router.refresh();
          }}
       />
     </div>

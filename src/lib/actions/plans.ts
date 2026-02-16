@@ -3,40 +3,46 @@
 import { db } from "@/lib/db";
 import { plans } from "@/db/schema";
 import { eq, asc } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
+
+function revalidateAllPlanPages() {
+  revalidatePath("/admin/plans");
+  revalidatePath("/pricing");
+  revalidatePath("/dashboard");
+  revalidatePath("/", "layout");
+}
 
 export async function getPlans() {
+  noStore();
   const allPlans = await db.select().from(plans).orderBy(asc(plans.sortOrder), asc(plans.price));
-  return allPlans as unknown as (typeof plans.$inferSelect & { features: string[] })[];
+  return allPlans;
 }
 
 export async function getActivePlans() {
+  noStore();
   const activePlans = await db
     .select()
     .from(plans)
     .where(eq(plans.isActive, true))
     .orderBy(asc(plans.sortOrder), asc(plans.price));
-  return activePlans as unknown as (typeof plans.$inferSelect & { features: string[] })[];
+  return activePlans;
 }
 
 export async function updatePlan(id: string, data: Partial<typeof plans.$inferInsert>) {
   await db.update(plans).set(data).where(eq(plans.id, id));
-  revalidatePath("/admin/plans");
-  revalidatePath("/pricing"); // Assuming a public pricing page exists
+  revalidateAllPlanPages();
   return { success: true };
 }
 
 export async function createPlan(data: typeof plans.$inferInsert) {
   await db.insert(plans).values(data);
-  revalidatePath("/admin/plans");
-  revalidatePath("/pricing");
+  revalidateAllPlanPages();
   return { success: true };
 }
 
 export async function deletePlan(id: string) {
   await db.update(plans).set({ isActive: false }).where(eq(plans.id, id));
-  revalidatePath("/admin/plans");
-  revalidatePath("/pricing");
+  revalidateAllPlanPages();
   return { success: true };
 }
 
@@ -112,7 +118,6 @@ export async function seedDefaultPlans() {
     }
   }
 
-  revalidatePath("/admin/plans");
-  revalidatePath("/pricing");
+  revalidateAllPlanPages();
   return { success: true, created, updated };
 }
