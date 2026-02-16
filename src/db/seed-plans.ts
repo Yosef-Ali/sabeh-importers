@@ -61,7 +61,7 @@ async function seedPlans() {
     // Upsert plans
     await db.insert(schema.plans).values(plan as any).onConflictDoUpdate({
       target: schema.plans.id,
-      set: plan,
+      set: plan as any,
     });
     console.log(`  ✓ Upserted plan: ${plan.name}`);
   }
