@@ -228,16 +228,23 @@ export function AIGeneratorClient() {
         }),
       });
 
+      const text = await res.text();
+
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Failed to generate image");
+        let errMsg = "Failed to generate image";
+        try { errMsg = JSON.parse(text).error || errMsg; } catch {}
+        throw new Error(errMsg);
       }
 
-      const data = await res.json();
+      const data = JSON.parse(text);
+      if (!data.image) {
+        throw new Error("No image data in response");
+      }
       setGeneratedImage(data.image);
       setImageMimeType(data.mimeType || "image/png");
       toast.success("Image generated successfully");
     } catch (err: any) {
+      console.error("Image generation error:", err);
       toast.error(err.message || "Failed to generate image");
     } finally {
       setIsImageLoading(false);
