@@ -574,6 +574,18 @@ export const reports = pgTable('reports', {
   ...softDelete,
 });
 
+export const reportsRelations = relations(reports, ({ one }) => ({
+  reporter: one(users, {
+    fields: [reports.reporterId],
+    references: [users.id],
+    relationName: 'reporter',
+  }),
+  listing: one(listings, {
+    fields: [reports.listingId],
+    references: [listings.id],
+  }),
+}));
+
 // ============================================================
 // 8. DISPUTES
 // ============================================================

@@ -49,10 +49,10 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
   }
 
   return (
-    <Card className="p-6 border-gray-200">
+    <Card className="p-6 border-border">
       <div className="flex gap-6">
         {/* Image */}
-        <div className="relative h-32 w-32 flex-shrink-0 rounded-lg overflow-hidden bg-[#faf8f5]">
+        <div className="relative h-32 w-32 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
           {listing.images && listing.images.length > 0 ? (
             <Image
               src={listing.images[0]}
@@ -61,7 +61,7 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-gray-400">
+            <div className="flex h-full items-center justify-center text-muted-foreground">
               No image
             </div>
           )}
@@ -71,7 +71,7 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
         <div className="flex-1 min-w-0 space-y-3">
           <div>
             <div className="flex items-start justify-between gap-4 mb-2">
-              <h3 className="font-bold text-lg text-[#1a2d4a] line-clamp-1">
+              <h3 className="font-bold text-lg text-foreground line-clamp-1">
                 {listing.title}
               </h3>
               <Badge
@@ -81,11 +81,11 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
                 {listing.status}
               </Badge>
             </div>
-            <p className="text-gray-700 text-sm line-clamp-2">{listing.description}</p>
+            <p className="text-muted-foreground text-sm line-clamp-2">{listing.description}</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-            <span className="font-bold text-[#1a2d4a]">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <span className="font-bold text-foreground">
               {Number(listing.price).toLocaleString()} ETB
             </span>
             <span>•</span>
@@ -100,7 +100,7 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
             <Button
               onClick={handleApprove}
               disabled={isProcessing}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white"
             >
               <Check className="h-4 w-4 mr-2" />
               Approve
@@ -109,13 +109,13 @@ export function ListingModerationCard({ listing }: ListingModerationCardProps) {
               onClick={handleReject}
               disabled={isProcessing}
               variant="outline"
-              className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400"
+              className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950"
             >
               <X className="h-4 w-4 mr-2" />
               Reject
             </Button>
             <Link href={`/listings/${listing.id}`} target="_blank">
-              <Button variant="outline" className="border-gray-300">
+              <Button variant="outline" className="border-border">
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View
               </Button>
