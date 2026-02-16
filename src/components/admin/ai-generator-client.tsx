@@ -145,8 +145,7 @@ export function AIGeneratorClient() {
 
   // Image generation state
   const [imagePrompt, setImagePrompt] = useState("");
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [imageMimeType, setImageMimeType] = useState("image/png");
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [aspectRatio, setAspectRatio] = useState("1:1");
   const [imageSize, setImageSize] = useState("1K");
@@ -214,7 +213,9 @@ export function AIGeneratorClient() {
     }
 
     setIsImageLoading(true);
-    setGeneratedImage(null);
+    // Revoke previous blob URL to free memory
+    if (generatedImageUrl) URL.revokeObjectURL(generatedImageUrl);
+    setGeneratedImageUrl(null);
 
     try {
       const res = await fetch("/api/ai/generate-image", {
@@ -240,8 +241,16 @@ export function AIGeneratorClient() {
       if (!data.image) {
         throw new Error("No image data in response");
       }
-      setGeneratedImage(data.image);
-      setImageMimeType(data.mimeType || "image/png");
+
+      // Convert base64 to blob URL for reliable rendering
+      const binaryStr = atob(data.image);
+      const bytes = new Uint8Array(binaryStr.length);
+      for (let i = 0; i < binaryStr.length; i++) {
+        bytes[i] = binaryStr.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: data.mimeType || "image/png" });
+      const blobUrl = URL.createObjectURL(blob);
+      setGeneratedImageUrl(blobUrl);
       toast.success("Image generated successfully");
     } catch (err: any) {
       console.error("Image generation error:", err);
@@ -252,11 +261,10 @@ export function AIGeneratorClient() {
   }
 
   function handleDownloadImage() {
-    if (!generatedImage) return;
-    const ext = imageMimeType.split("/")[1] || "png";
+    if (!generatedImageUrl) return;
     const link = document.createElement("a");
-    link.href = `data:${imageMimeType};base64,${generatedImage}`;
-    link.download = `ai-generated.${ext}`;
+    link.href = generatedImageUrl;
+    link.download = "ai-generated.png";
     link.click();
     toast.success("Image downloaded");
   }
@@ -498,7 +506,7 @@ export function AIGeneratorClient() {
               {isImageLoading ? "Generating..." : "Generate Image"}
             </Button>
 
-            {generatedImage && (
+            {generatedImageUrl && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Label>Generated Image</Label>
@@ -514,7 +522,7 @@ export function AIGeneratorClient() {
                 </div>
                 <div className="overflow-hidden rounded-lg border bg-muted/50">
                   <img
-                    src={`data:${imageMimeType};base64,${generatedImage}`}
+                    src={generatedImageUrl}
                     alt="AI Generated"
                     className="mx-auto max-h-[512px] w-auto object-contain"
                   />
