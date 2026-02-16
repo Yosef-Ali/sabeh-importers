@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCompletion } from "@ai-sdk/react";
 import { toast } from "sonner";
-import { Loader2, Copy, Download, Sparkles, ImageIcon, Type, Upload, X } from "lucide-react";
+import { Loader2, Copy, Download, Sparkles, ImageIcon, Type, Upload, X, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,6 +58,81 @@ const ASPECT_RATIOS = [
 const IMAGE_SIZES = [
   { value: "1K", label: "1K (Standard)" },
   { value: "2K", label: "2K (High)" },
+];
+
+const SAMPLE_PROMPTS = [
+  {
+    prompt: "ለሽያጭ የተዘጋጀ አዲስ iPhone 15 Pro Max ፣ ንጹህ ነጭ ዳራ ላይ ፣ ፕሮፌሽናል የምርት ፎቶ ፣ ለስላሳ ብርሃን",
+    label: "iPhone ምርት ፎቶ",
+    category: "Electronics",
+    emoji: "📱",
+  },
+  {
+    prompt: "ዘመናዊ የኢትዮጵያ ቤት ውስጣዊ ዲዛይን ፣ ባህላዊ ጥበብ ያለው ሳሎን ፣ ሞቃት ብርሃን ፣ ምቹ ቤት",
+    label: "የቤት ውስጥ ዲዛይን",
+    category: "Property",
+    emoji: "🏠",
+  },
+  {
+    prompt: "አዲስ Toyota Land Cruiser 300 ፣ በአዲስ አበባ ጎዳና ላይ ፣ ፀሐያማ ቀን ፣ ፕሮፌሽናል የመኪና ፎቶ",
+    label: "Toyota መኪና ማስታወቂያ",
+    category: "Vehicles",
+    emoji: "🚗",
+  },
+  {
+    prompt: "ባህላዊ የኢትዮጵያ ልብስ ፣ ነጭ የጥጥ ቀሚስ ከጥለት ጋር ፣ ሞዴል ለብሳ ፣ ንጹህ ዳራ ፣ ፋሽን ፎቶ",
+    label: "ባህላዊ ልብስ",
+    category: "Fashion",
+    emoji: "👗",
+  },
+  {
+    prompt: "ዘመናዊ የቢሮ ዕቃ ፣ ዴስክ እና ወንበር ፣ ሚኒማሊስት ዲዛይን ፣ ብሩህ ክፍል ፣ ፕሮፌሽናል ፎቶ",
+    label: "የቢሮ ዕቃ",
+    category: "Furniture",
+    emoji: "🪑",
+  },
+  {
+    prompt: "የኢትዮጵያ ቡና ስነ-ስርዓት ዕቃዎች ፣ ጀበና ፣ ሲኒ ፣ ረከቦት ፣ ባህላዊ ዳራ ፣ ሞቃት ብርሃን",
+    label: "የቡና ዕቃዎች",
+    category: "Home & Garden",
+    emoji: "☕",
+  },
+  {
+    prompt: "የልጆች አልባሳት ስብስብ ፣ ቀለማት ያሏቸው ልብሶች ፣ ደስተኛ ዲዛይን ፣ ንጹህ ነጭ ዳራ ፣ የምርት ፎቶ",
+    label: "የልጆች ልብስ",
+    category: "Baby & Kids",
+    emoji: "👶",
+  },
+  {
+    prompt: "Samsung Galaxy S24 Ultra ፣ ከስክሪን ጋር ፣ ጨለማ ዳራ ፣ ኒዮን ብርሃን ፣ ቴክ ፕሮዳክት ፎቶግራፊ",
+    label: "Samsung ስልክ",
+    category: "Electronics",
+    emoji: "📲",
+  },
+  {
+    prompt: "Professional gym equipment set, dumbbells and bench, modern fitness studio background, dramatic lighting",
+    label: "Gym Equipment",
+    category: "Sports & Leisure",
+    emoji: "💪",
+  },
+  {
+    prompt: "የኢትዮጵያ ማር ፣ በባህላዊ ማሰሮ ውስጥ ፣ ከአበባ ጋር ፣ ተፈጥሯዊ ብርሃን ፣ organic food photography",
+    label: "የማር ምርት",
+    category: "Business & Industrial",
+    emoji: "🍯",
+  },
+  {
+    prompt: "ዘመናዊ laptop ከአክሰሰሪዎች ጋር ፣ ዴስክ ላይ ፣ minimal workspace ፣ ለስላሳ ብርሃን ፣ top-down view",
+    label: "ላፕቶፕ ወርክስፔስ",
+    category: "Electronics",
+    emoji: "💻",
+  },
+  {
+    prompt: "የኢትዮጵያ ጌጣጌጥ ስብስብ ፣ የወርቅ ቀለበቶች ፣ አንገትላ ፣ ጆሮ ጌጥ ፣ ቬልቬት ዳራ ፣ luxury product photo",
+    label: "ጌጣጌጥ",
+    category: "Fashion",
+    emoji: "💍",
+  },
 ];
 
 export function AIGeneratorClient() {
@@ -189,6 +264,10 @@ export function AIGeneratorClient() {
         <TabsTrigger value="image" className="gap-2">
           <ImageIcon className="h-4 w-4" />
           Generate Ad Image
+        </TabsTrigger>
+        <TabsTrigger value="gallery" className="gap-2">
+          <LayoutGrid className="h-4 w-4" />
+          Prompt Gallery
         </TabsTrigger>
       </TabsList>
 
@@ -435,6 +514,63 @@ export function AIGeneratorClient() {
                 </div>
               </div>
             )}
+          </CardContent>
+        </Card>
+      </TabsContent>
+      {/* Prompt Gallery Tab */}
+      <TabsContent value="gallery" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Prompt Gallery / የጥያቄ ማዕከል</CardTitle>
+            <CardDescription>
+              Sample prompts for generating product images. Click &quot;Use Prompt&quot; to load it into the image generator.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {SAMPLE_PROMPTS.map((sample, i) => (
+                <div
+                  key={i}
+                  className="group flex flex-col gap-3 rounded-lg border bg-card p-4 transition-colors hover:border-primary/50 hover:shadow-sm"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{sample.emoji}</span>
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm truncate">{sample.label}</p>
+                      <p className="text-xs text-muted-foreground">{sample.category}</p>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                    {sample.prompt}
+                  </p>
+                  <div className="mt-auto flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-xs"
+                      onClick={() => {
+                        navigator.clipboard.writeText(sample.prompt);
+                        toast.success("Prompt copied");
+                      }}
+                    >
+                      <Copy className="h-3 w-3" />
+                      Copy
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="gap-1.5 text-xs"
+                      onClick={() => {
+                        setImagePrompt(sample.prompt);
+                        toast.success("Prompt loaded — switch to Generate Ad Image tab");
+                      }}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Use Prompt
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </TabsContent>
