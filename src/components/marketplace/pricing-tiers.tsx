@@ -1,12 +1,43 @@
 "use client";
 
 import Link from "next/link";
-import { CheckCircle2, ShieldCheck, XCircle } from "lucide-react";
+import { CheckCircle2, ShieldCheck, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { subscribeToPlan } from "@/lib/actions/subscription";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { cn } from "@/lib/utils";
 
-export function PricingTiers() {
+interface PricingTiersProps {
+  isFreeMode?: boolean;
+}
+
+export function PricingTiers({ isFreeMode = false }: PricingTiersProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleSubscribe = (planId: string) => {
+    startTransition(async () => {
+      try {
+        const result = await subscribeToPlan(planId);
+        if (result.error) {
+          toast.error(result.error);
+          if (result.error.includes("logged in")) {
+            router.push("/login?callbackUrl=/");
+          }
+        } else if (result.success && result.redirectUrl) {
+          toast.success("Successfully subscribed!");
+          router.push(result.redirectUrl);
+        }
+      } catch (error) {
+        toast.error("Something went wrong. Please try again.");
+      }
+    });
+  };
+
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-background" id="pricing">
       <div className="max-w-[1440px] mx-auto px-8">
         <div className="mb-16">
           <h2 className="font-amharic text-4xl font-bold uppercase text-foreground mb-4">
@@ -14,6 +45,7 @@ export function PricingTiers() {
           </h2>
           <p className="text-xl text-muted-foreground font-amharic max-w-3xl">
             ተሽከርካሪዎች፣ ማሽነሪዎች እና የንግድ እቃዎች በቀላሉ መሸጥ የሚችሉበት አስተማማኝ መድረክ።
+            {isFreeMode && <span className="block mt-2 text-accent font-bold animate-pulse">*** አሁን ለተወሰነ ጊዜ በነጻ! (Limited Time Free Offer) ***</span>}
           </p>
           <div className="w-24 h-2 bg-gold mt-6" />
         </div>
@@ -42,11 +74,14 @@ export function PricingTiers() {
                 <XCircle className="h-5 w-5" /> የባለሙያ ማረጋገጫ የለውም
               </li>
             </ul>
-            <Link href="/dashboard/marketplace/create" className="mt-auto">
-              <Button variant="outline" className="w-full border-2 border-foreground text-foreground font-bold uppercase tracking-widest hover:bg-foreground hover:text-background h-12 rounded-none">
-                ይጀምሩ
+             <Button 
+                onClick={() => handleSubscribe("plan_free")}
+                variant="outline" 
+                className="w-full border-2 border-foreground text-foreground font-bold uppercase tracking-widest hover:bg-foreground hover:text-background h-12 rounded-none mt-auto"
+                disabled={isPending}
+              >
+                {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : "ይጀምሩ"}
               </Button>
-            </Link>
           </div>
 
           {/* Officer - Class B */}
@@ -61,7 +96,9 @@ export function PricingTiers() {
                 </span>
                 <h3 className="font-display text-3xl font-bold uppercase text-foreground">መደበኛ</h3>
               </div>
-              <span className="font-mono text-2xl font-bold text-foreground">500 ብር</span>
+              <span className={cn("font-mono text-2xl font-bold text-foreground", isFreeMode && "text-accent")}>
+                {isFreeMode ? "0 ብር (ቅናሽ)" : "500 ብር"}
+              </span>
             </div>
             <ul className="space-y-4 mb-12 flex-grow">
               <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-foreground">
@@ -77,11 +114,13 @@ export function PricingTiers() {
                 የተረጋገጠ አቅራቢ (Badge)
               </li>
             </ul>
-            <Link href="/pricing" className="mt-auto">
-              <Button className="w-full bg-foreground text-background font-bold uppercase tracking-widest hover:bg-foreground/80 h-12 rounded-none shadow-md">
-                ይህንን ይምረጡ
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => handleSubscribe("plan_pro")}
+              className="w-full bg-foreground text-background font-bold uppercase tracking-widest hover:bg-foreground/80 h-12 rounded-none shadow-md mt-auto"
+              disabled={isPending}
+            >
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : (isFreeMode ? "በነጻ ይጀምሩ" : "ይህንን ይምረጡ")}
+            </Button>
           </div>
 
           {/* Captain - Class A */}
@@ -96,9 +135,27 @@ export function PricingTiers() {
                 </span>
                 <h3 className="font-display text-3xl font-bold uppercase text-white">ፕሪሚየም</h3>
               </div>
-              <span className="font-mono text-2xl font-bold text-gold">2,000 ብር</span>
+              <span className={cn("font-mono text-2xl font-bold text-gold", isFreeMode && "text-white")}>
+                {isFreeMode ? "0 ብር (ቅናሽ)" : "2,000 ብር"}
+              </span>
             </div>
             <ul className="space-y-4 mb-12 flex-grow">
+              <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-white">
+                <CheckCircle2 className="text-gold h-5 w-5" />
+                ሁሉም ጥቅማጥቅሞች
+              </li>
+              <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-white">
+                <CheckCircle2 className="text-gold h-5 w-5" />
+                ያልተገደበ ዝርዝር
+              </li>
+              <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-white">
+                <CheckCircle2 className="text-gold h-5 w-5" />
+                የመጀመሪያ ደረጃ ድጋፍ
+              </li>
+              <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-white">
+                <ShieldCheck className="text-gold h-5 w-5" />
+                ወርቃማ ባጅ (Gold Badge)
+              </li>
               <li className="flex items-center gap-3 text-sm font-bold uppercase tracking-tight text-white">
                 <ShieldCheck className="text-gold h-5 w-5" />
                 ያልተገደበ ጊዜ
@@ -116,11 +173,13 @@ export function PricingTiers() {
                 ፕሮፌሽናል ፎቶግራፍ
               </li>
             </ul>
-            <Link href="/pricing" className="mt-auto">
-              <Button className="w-full bg-gold text-navy font-bold uppercase tracking-widest hover:bg-white hover:text-navy h-12 rounded-none shadow-hard-navy border-2 border-transparent hover:border-gold transition-all">
-                አሁን ይቀላቀሉ
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => handleSubscribe("plan_business")}
+              className="w-full bg-gold text-navy font-bold uppercase tracking-widest hover:bg-gold/90 h-12 rounded-none shadow-md mt-auto"
+              disabled={isPending}
+            >
+              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : (isFreeMode ? "በነጻ ይጀምሩ" : "ይህንን ይምረጡ")}
+            </Button>
           </div>
         </div>
       </div>

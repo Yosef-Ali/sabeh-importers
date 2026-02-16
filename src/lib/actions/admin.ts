@@ -108,6 +108,7 @@ export async function getAllUsers(page = 1, limit = 20, search?: string) {
         name: true,
         email: true,
         phone: true,
+        avatar: true,
         role: true,
         isActive: true,
         isEmailVerified: true,

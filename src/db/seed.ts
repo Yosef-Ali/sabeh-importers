@@ -417,7 +417,7 @@ async function seed() {
       condition: 'USED_GOOD' as const,
       location: 'Kality, Addis Ababa',
       city: 'Addis Ababa',
-      images: ['https://picsum.photos/seed/si-excavator/800/600'],
+      images: ['/images/products/industrial/komatsu-pc200.webp'],
       isFeatured: false,
       isPromoted: true,
       attributes: { year: 2021, hours: 2500 },

@@ -19,8 +19,12 @@ import { PartnerLogos } from "@/components/marketplace/partner-logos";
 import { StatsSection } from "@/components/marketplace/stats-section";
 import { CtaBanner } from "@/components/marketplace/cta-banner";
 import { Button } from "@/components/ui/button";
+import { getSystemSettings } from "@/lib/actions/settings";
 
 export default async function MarketplacePage() {
+  const settings = await getSystemSettings();
+  const isFreeMode = settings.isFreeSubscriptionMode;
+
   let verifiedListings: any[] = [];
   let recentListings: any[] = [];
 
@@ -128,7 +132,7 @@ export default async function MarketplacePage() {
       <FeaturesSection />
 
       {/* ──── 8. PRICING TIERS ──── */}
-      <PricingTiers />
+      <PricingTiers isFreeMode={isFreeMode} />
 
       {/* ──── 9. MOBILE APP (Secondary CTA) ──── */}
       <AppFeaturesSection />

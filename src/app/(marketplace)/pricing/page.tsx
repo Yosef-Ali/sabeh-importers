@@ -4,13 +4,20 @@ import { Button } from "@/components/ui/button";
 import { PricingTierCard, PRICING_TIERS } from "@/components/marketplace/listing-wizard/pricing-tier-card";
 import { Check, Zap, TrendingUp, Award } from "lucide-react";
 
+import { getSystemSettings } from "@/lib/actions/settings";
+import { subscribeToPlan } from "@/lib/actions/subscription";
+import { toast } from "sonner";
+
 export const metadata = {
   title: "Pricing Plans | Sabeh Importers",
   description:
     "Choose the perfect plan to showcase your listings and reach more buyers on Sabeh Importers marketplace.",
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const settings = await getSystemSettings();
+  const isFreeMode = settings.isFreeSubscriptionMode;
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -18,17 +25,17 @@ export default function PricingPage() {
         <div className="absolute inset-0 bg-grid-blueprint opacity-20" />
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-button border-2 border-accent bg-accent/10 px-4 py-2 text-sm font-bold font-mono text-accent uppercase tracking-widest shadow-hard">
-              <Zap className="h-4 w-4" />
-              Simple, Transparent Pricing
-            </div>
+            {isFreeMode && (
+              <div className="mb-6 inline-flex items-center gap-2 rounded-button border-2 border-accent bg-accent/20 px-4 py-2 text-sm font-bold font-mono text-accent uppercase tracking-widest shadow-hard animate-pulse">
+                <Zap className="h-4 w-4" />
+                Limited Time Offer: All Plans Free!
+              </div>
+            )}
             <h1 className="mb-6 text-4xl md:text-6xl font-display font-bold text-white tracking-tight">
               Boost Your Listings
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-mono leading-relaxed max-w-2xl mx-auto">
-              Choose the plan that fits your selling needs. From free basic
-              listings to premium features that put your products in front of
-              thousands of buyers.
+              Choose the plan that fits your selling needs. {isFreeMode ? "Start for free today!" : "From free basic listings to premium features."}
             </p>
           </div>
         </div>
@@ -42,8 +49,13 @@ export default function PricingPage() {
               key={tier.id}
               tier={tier}
               selected={false}
-              onSelect={() => {}}
+              onSelect={async () => {
+                "use server";
+                // This needs to be handled by a client wrapper or form action.
+                // Since PricingTierCard is a client component, we'll pass the action or handle it there.
+              }} 
               language="en"
+              isFreeMode={isFreeMode}
             />
           ))}
         </div>

@@ -15,11 +15,18 @@ interface PricingTier {
   recommended?: boolean;
 }
 
+import { subscribeToPlan } from "@/lib/actions/subscription";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
+
 interface PricingTierCardProps {
   tier: PricingTier;
   selected: boolean;
-  onSelect: () => void;
+  onSelect?: () => void;
   language?: "en" | "am";
+  isFreeMode?: boolean;
 }
 
 const TIER_ICONS = {
@@ -39,17 +46,55 @@ export function PricingTierCard({
   selected,
   onSelect,
   language = "en",
+  isFreeMode = false,
 }: PricingTierCardProps) {
   const Icon = TIER_ICONS[tier.id];
-  const isFree = tier.price === 0;
+  const isFree = tier.price === 0 || isFreeMode;
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  function handleSelect() {
+    if (onSelect) {
+      onSelect();
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        // Map slug to plan ID (assuming slug matches id for now, but in DB seed it was plan_free, plan_pro, etc.)
+        // Mapping: deckhand -> plan_free, officer -> plan_pro, captain -> plan_business
+        const planIdMap = {
+          deckhand: "plan_free",
+          officer: "plan_pro",
+          captain: "plan_business",
+        };
+        const planId = planIdMap[tier.id];
+        
+        const result = await subscribeToPlan(planId);
+        
+        if (result.error) {
+          toast.error(result.error);
+          if (result.error.includes("logged in")) {
+             router.push("/login?callbackUrl=/pricing");
+          }
+        } else if (result.success && result.redirectUrl) {
+          toast.success("Successfully subscribed!");
+          router.push(result.redirectUrl);
+        }
+      } catch (error) {
+        toast.error("Something went wrong. Please try again.");
+      }
+    });
+  }
 
   return (
     <div
-      onClick={onSelect}
+      onClick={handleSelect}
       className={cn(
         "relative bg-white rounded-card border-2 p-6 cursor-pointer transition-all shadow-card hover:shadow-card-hover",
         selected ? "border-accent shadow-hard-navy" : TIER_COLORS[tier.id],
-        tier.recommended && "ring-2 ring-accent ring-offset-4"
+        tier.recommended && "ring-2 ring-accent ring-offset-4",
+        isPending && "opacity-70 pointer-events-none"
       )}
     >
       {/* Recommended Badge */}
@@ -93,9 +138,16 @@ export function PricingTierCard({
       {/* Price */}
       <div className="mb-4">
         {isFree ? (
-          <div className="text-3xl font-display font-bold text-primary">
-            {language === "am" ? "ነፃ" : "FREE"}
-          </div>
+           <div className="flex flex-col">
+             <div className="text-3xl font-display font-bold text-primary">
+               {language === "am" ? "ነፃ" : "FREE"}
+             </div>
+             {isFreeMode && tier.price > 0 && (
+               <span className="text-sm text-muted-foreground line-through font-mono">
+                 ETB {tier.price.toLocaleString()}
+               </span>
+             )}
+           </div>
         ) : (
           <>
             <div className="text-3xl font-display font-bold text-primary">
@@ -136,19 +188,21 @@ export function PricingTierCard({
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          onSelect();
+          handleSelect();
         }}
         variant={selected ? "accent" : "outline"}
-        className="w-full font-display font-bold"
+        className="w-full font-display font-bold gap-2"
         size="lg"
+        disabled={isPending}
       >
+        {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
         {selected
           ? language === "am"
             ? "ተመርጧል"
             : "Selected"
-          : language === "am"
-          ? "ምረጥ"
-          : "Select Plan"}
+          : isFreeMode 
+            ? language === "am" ? "በነጻ ይጀምሩ" : "Start for Free"
+            : language === "am" ? "ምረጥ" : "Select Plan"}
       </Button>
     </div>
   );

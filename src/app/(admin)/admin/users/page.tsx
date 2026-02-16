@@ -1,8 +1,9 @@
 import { getAllUsers } from "@/lib/actions/admin";
-import { ShieldOff, ShieldCheck } from "lucide-react";
+import { ShieldOff, ShieldCheck, User as UserIcon } from "lucide-react";
 import { UserBanButton } from "@/components/admin/user-ban-button";
 import { VerifyEmailButton } from "@/components/admin/verify-email-button";
 import { InviteUserButton } from "@/components/admin/invite-user-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const metadata = {
   title: "User Management | Admin",
@@ -65,10 +66,18 @@ export default async function AdminUsersPage({
                 className="hover:bg-muted/30 transition-colors"
               >
                 <td className="px-4 py-4">
-                  <div>
-                    <p className="font-medium text-foreground font-display">{user.name}</p>
-                    <p className="text-xs text-muted-foreground font-mono">{user.email}</p>
-                    {user.phone && <p className="text-xs text-muted-foreground/70 font-mono">{user.phone}</p>}
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10 border-2 border-primary/10">
+                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarFallback className="bg-primary/5 text-primary font-display font-bold">
+                        {user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-foreground font-display">{user.name}</p>
+                      <p className="text-xs text-muted-foreground font-mono">{user.email}</p>
+                      {user.phone && <p className="text-xs text-muted-foreground/70 font-mono">{user.phone}</p>}
+                    </div>
                   </div>
                 </td>
                 <td className="px-4 py-4">

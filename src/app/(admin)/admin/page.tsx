@@ -13,67 +13,71 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-display font-bold text-primary">Dashboard Overview</h1>
-        <p className="text-muted-foreground font-mono text-sm mt-1">Monitor platform activity and performance</p>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-xs font-mono font-bold text-accent uppercase tracking-[0.2em]">
+          <span>Admin (Sabeh) Dashboard</span>
+          <div className="h-px flex-1 bg-accent/20" />
+        </div>
+        <h1 className="text-3xl font-display font-bold text-primary">Platform Overview</h1>
+        <p className="text-muted-foreground font-mono text-sm">Monitor platform activity and performance</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all">
+        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/5 p-6 shadow-sm hover:shadow-card transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-button flex items-center justify-center shadow-hard">
-              <Users className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-blue-500/10 rounded-button flex items-center justify-center text-2xl">
+              👤
             </div>
             <div className="text-right">
-              <div className="text-3xl font-display font-bold text-primary">
+              <div className="text-3xl font-display font-bold text-primary tabular-nums">
                 {stats.totalUsers.toLocaleString()}
               </div>
             </div>
           </div>
-          <div className="text-sm font-mono text-muted-foreground uppercase tracking-wide">Total Users</div>
+          <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider font-bold">Total Users</div>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all">
+        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/5 p-6 shadow-sm hover:shadow-card transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-green-600 rounded-button flex items-center justify-center shadow-hard">
-              <CheckCircle2 className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-green-500/10 rounded-button flex items-center justify-center text-2xl">
+              ✅
             </div>
             <div className="text-right">
-              <div className="text-3xl font-display font-bold text-primary">
+              <div className="text-3xl font-display font-bold text-primary tabular-nums">
                 {stats.activeListings.toLocaleString()}
               </div>
             </div>
           </div>
-          <div className="text-sm font-mono text-muted-foreground uppercase tracking-wide">Active Listings</div>
+          <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider font-bold">Active Listings</div>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all">
+        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/5 p-6 shadow-sm hover:shadow-card transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-accent rounded-button flex items-center justify-center shadow-hard">
-              <Package className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-amber-500/10 rounded-button flex items-center justify-center text-2xl">
+              📦
             </div>
             <div className="text-right">
-              <div className="text-3xl font-display font-bold text-primary">
+              <div className="text-3xl font-display font-bold text-primary tabular-nums">
                 {stats.pendingListings.toLocaleString()}
               </div>
             </div>
           </div>
-          <div className="text-sm font-mono text-muted-foreground uppercase tracking-wide">Pending Review</div>
+          <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider font-bold">Pending Review</div>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all">
+        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/5 p-6 shadow-sm hover:shadow-card transition-all">
           <div className="flex items-center justify-between mb-4">
-            <div className="w-12 h-12 bg-red-600 rounded-button flex items-center justify-center shadow-hard">
-              <AlertCircle className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-red-500/10 rounded-button flex items-center justify-center text-2xl">
+              🚨
             </div>
             <div className="text-right">
-              <div className="text-3xl font-display font-bold text-primary">
+              <div className="text-3xl font-display font-bold text-primary tabular-nums">
                 {stats.pendingReports.toLocaleString()}
               </div>
             </div>
           </div>
-          <div className="text-sm font-mono text-muted-foreground uppercase tracking-wide">Pending Reports</div>
+          <div className="text-xs font-mono text-muted-foreground uppercase tracking-wider font-bold">Pending Reports</div>
         </div>
       </div>
 

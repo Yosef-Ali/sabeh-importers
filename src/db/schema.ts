@@ -13,6 +13,15 @@ import {
 import { relations } from 'drizzle-orm';
 
 // ============================================================
+// SYSTEM SETTINGS
+// ============================================================
+export const systemSettings = pgTable('system_settings', {
+  id: text('id').primaryKey(), // Single row, fixed ID e.g. 'default'
+  isFreeSubscriptionMode: boolean('is_free_subscription_mode').default(false).notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// ============================================================
 // ENUMS — Dubizzle-style marketplace + ERP
 // ============================================================
 

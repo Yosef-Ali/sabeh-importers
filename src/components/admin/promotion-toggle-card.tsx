@@ -37,6 +37,22 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
 
   return (
     <div className="flex items-center gap-4 px-5 py-4 hover:bg-muted/30 transition-colors">
+      {/* Listing image */}
+      <div className="h-12 w-12 rounded-md bg-muted overflow-hidden flex-shrink-0 border border-border">
+        {listing.images && listing.images.length > 0 ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={listing.images[0]}
+            alt={listing.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="h-full w-full flex items-center justify-center">
+            <span className="text-muted-foreground text-[10px] font-mono">No Image</span>
+          </div>
+        )}
+      </div>
+
       {/* Listing info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">

@@ -55,16 +55,20 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-accent uppercase tracking-[0.2em]">
+            <span>Seller Dashboard</span>
+            <div className="h-px w-12 bg-accent/20" />
+          </div>
+          <h1 className="text-3xl font-display font-bold text-primary">
             Welcome back, {currentUser.name.split(" ")[0]}
           </h1>
-          <p className="text-muted-foreground mt-0.5">
+          <p className="text-muted-foreground font-mono text-sm">
             Here&apos;s what&apos;s happening with your listings.
           </p>
         </div>
         <Link href="/marketplace/create">
-          <Button className="gap-2">
+          <Button className="gap-2 font-display font-bold">
             <Plus className="h-4 w-4" />
             Post a Listing
           </Button>
@@ -73,59 +77,59 @@ export default async function DashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Listings</p>
-                <p className="text-3xl font-bold mt-1 tabular-nums">{stats.total}</p>
+                <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Total Listings</p>
+                <p className="text-3xl font-display font-bold mt-1 tabular-nums text-primary">{stats.total}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Package className="h-6 w-6 text-primary" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-primary/5 text-2xl">
+                📦
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Active</p>
-                <p className="text-3xl font-bold mt-1 tabular-nums text-green-600">{stats.active}</p>
+                <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Active</p>
+                <p className="text-3xl font-display font-bold mt-1 tabular-nums text-green-600">{stats.active}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle2 className="h-6 w-6 text-green-600" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-green-500/10 text-2xl">
+                ✅
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Views</p>
-                <p className="text-3xl font-bold mt-1 tabular-nums">{stats.totalViews.toLocaleString()}</p>
+                <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Total Views</p>
+                <p className="text-3xl font-display font-bold mt-1 tabular-nums text-primary">{stats.totalViews.toLocaleString()}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-                <Eye className="h-6 w-6 text-blue-600" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-blue-500/10 text-2xl">
+                👁️
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Unread Messages</p>
-                <p className={cn("text-3xl font-bold mt-1 tabular-nums", unreadCount > 0 && "text-accent")}>
+                <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Unread Messages</p>
+                <p className={cn("text-3xl font-display font-bold mt-1 tabular-nums", unreadCount > 0 ? "text-accent" : "text-primary")}>
                   {unreadCount}
                 </p>
               </div>
-              <div className={cn("flex h-12 w-12 items-center justify-center rounded-full", unreadCount > 0 ? "bg-accent/20" : "bg-muted")}>
-                <MessageCircle className={cn("h-6 w-6", unreadCount > 0 ? "text-accent" : "text-muted-foreground")} />
+              <div className={cn("flex h-12 w-12 items-center justify-center rounded-button text-2xl", unreadCount > 0 ? "bg-accent/10" : "bg-primary/5")}>
+                💬
               </div>
             </div>
           </CardContent>
