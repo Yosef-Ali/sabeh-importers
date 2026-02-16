@@ -32,8 +32,25 @@ import {
 } from "@/components/ui/select";
 import { createPlan, updatePlan } from "@/lib/actions/plans";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2, GripVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 // Schema matching your Drizzle model
 const planSchema = z.object({
@@ -314,48 +331,8 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
               )}
             />
 
-            {/* Features Editor */}
-            <div>
-               <FormLabel>Features (Bullet Points)</FormLabel>
-               <div className="space-y-2 mt-2">
-                   {form.watch("features")?.map((feat, index) => (
-                       <div key={index} className="flex gap-2">
-                           <Input 
-                               value={feat} 
-                               onChange={(e) => {
-                                   const newFeatures = [...(form.getValues("features") || [])];
-                                   newFeatures[index] = e.target.value;
-                                   form.setValue("features", newFeatures);
-                               }} 
-                           />
-                           <Button 
-                               type="button" 
-                               variant="ghost" 
-                               size="icon"
-                               onClick={() => {
-                                   const newFeatures = [...(form.getValues("features") || [])];
-                                   newFeatures.splice(index, 1);
-                                   form.setValue("features", newFeatures);
-                               }}
-                           >
-                               <Trash2 className="h-4 w-4 text-destructive" />
-                           </Button>
-                       </div>
-                   ))}
-                   <Button
-                       type="button"
-                       variant="outline"
-                       size="sm"
-                       onClick={() => {
-                           const current = form.getValues("features") || [];
-                           form.setValue("features", [...current, ""]);
-                       }}
-                       className="mt-2"
-                   >
-                       <Plus className="h-3 w-3 mr-2" /> Add Feature
-                   </Button>
-               </div>
-            </div>
+            {/* Features Editor - Draggable */}
+            <DraggableFeatures form={form} />
 
             <div className="space-y-3 pt-2">
                 <FormField
@@ -414,5 +391,101 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
         </Form>
       </SheetContent>
     </Sheet>
+  );
+}
+
+// ── Draggable Features List ─────────────────────────────────────────────────
+
+function DraggableFeatures({ form }: { form: ReturnType<typeof useForm<PlanFormValues>> }) {
+  const features = form.watch("features") || [];
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  // Each feature needs a stable id for dnd-kit
+  const featureIds = features.map((_: string, i: number) => `feat-${i}`);
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = featureIds.indexOf(active.id as string);
+    const newIndex = featureIds.indexOf(over.id as string);
+    form.setValue("features", arrayMove(features, oldIndex, newIndex));
+  }
+
+  return (
+    <div>
+      <FormLabel>Features (Bullet Points)</FormLabel>
+      <div className="space-y-2 mt-2">
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={featureIds} strategy={verticalListSortingStrategy}>
+            {features.map((feat: string, index: number) => (
+              <SortableFeatureItem
+                key={featureIds[index]}
+                id={featureIds[index]}
+                value={feat}
+                onChange={(val) => {
+                  const next = [...features];
+                  next[index] = val;
+                  form.setValue("features", next);
+                }}
+                onRemove={() => {
+                  const next = [...features];
+                  next.splice(index, 1);
+                  form.setValue("features", next);
+                }}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => form.setValue("features", [...features, ""])}
+          className="mt-2"
+        >
+          <Plus className="h-3 w-3 mr-2" /> Add Feature
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function SortableFeatureItem({
+  id,
+  value,
+  onChange,
+  onRemove,
+}: {
+  id: string;
+  value: string;
+  onChange: (val: string) => void;
+  onRemove: () => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="flex items-center gap-2">
+      <button
+        type="button"
+        className="cursor-grab active:cursor-grabbing p-1 text-muted-foreground hover:text-foreground touch-none"
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="h-4 w-4" />
+      </button>
+      <Input value={value} onChange={(e) => onChange(e.target.value)} className="flex-1" />
+      <Button type="button" variant="ghost" size="icon" onClick={onRemove}>
+        <Trash2 className="h-4 w-4 text-destructive" />
+      </Button>
+    </div>
   );
 }

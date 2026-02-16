@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -16,7 +17,7 @@ import { PlanSheet } from "./plan-sheet";
 import { Badge } from "@/components/ui/badge";
 
 interface PlansTableProps {
-  initialPlans: any[]; // ToDo: strict type
+  initialPlans: any[];
 }
 
 export function PlansTable({ initialPlans }: PlansTableProps) {
@@ -35,74 +36,105 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
   };
 
   return (
-    <div>
-      <div className="p-4 border-b flex justify-end">
-          <Button onClick={handleCreate} className="gap-2">
+    <>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-base font-medium">All Plans</CardTitle>
+          <Button onClick={handleCreate} size="sm" className="gap-2">
             <Plus className="h-4 w-4" /> Create Plan
           </Button>
-      </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Sort</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Limits</TableHead>
-            <TableHead>Features</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {initialPlans.map((plan) => (
-            <TableRow key={plan.id}>
-              <TableCell className="font-medium text-muted-foreground">{plan.sortOrder}</TableCell>
-              <TableCell className="font-display font-bold text-primary">{plan.name}</TableCell>
-              <TableCell>
-                {plan.price} <span className="text-xs text-muted-foreground">{plan.currency}</span>
-              </TableCell>
-              <TableCell>{plan.durationDays} days</TableCell>
-              <TableCell>{plan.maxActiveListings} listings</TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-1 max-w-[200px]">
-                   {plan.features?.length > 0 ? (
-                     plan.features.slice(0, 3).map((f: string, i: number) => (
-                       <Badge key={i} variant="outline" className="text-xs">{f}</Badge>
-                     ))
-                   ) : (
-                     <span className="text-xs text-muted-foreground">—</span>
-                   )}
-                   {plan.features?.length > 3 && (
-                     <Badge variant="outline" className="text-xs">+{plan.features.length - 3}</Badge>
-                   )}
-                </div>
-              </TableCell>
-              <TableCell>
-                {plan.isActive ? (
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">Active</Badge>
-                ) : (
-                    <Badge variant="outline" className="text-muted-foreground">Inactive</Badge>
-                )}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" size="icon" onClick={() => handleEdit(plan)}>
-                  <Edit className="h-4 w-4 text-muted-foreground" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[50px] pl-6">#</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Duration</TableHead>
+                <TableHead>Limits</TableHead>
+                <TableHead>Features</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right pr-6">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {initialPlans.map((plan) => (
+                <TableRow key={plan.id}>
+                  <TableCell className="pl-6 text-muted-foreground">
+                    {plan.sortOrder}
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <span className="font-medium text-sm">{plan.name}</span>
+                      {plan.nameAmharic && (
+                        <span className="block text-xs text-muted-foreground">{plan.nameAmharic}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium tabular-nums">
+                      {Number(plan.price).toLocaleString()}
+                    </span>
+                    <span className="text-xs text-muted-foreground ml-1">{plan.currency}</span>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {plan.durationDays} days
+                  </TableCell>
+                  <TableCell className="text-muted-foreground tabular-nums">
+                    {plan.maxActiveListings} listings
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1 max-w-[220px]">
+                      {plan.features?.length > 0 ? (
+                        <>
+                          {plan.features.slice(0, 2).map((f: string, i: number) => (
+                            <Badge key={i} variant="outline" className="text-[11px] font-normal">
+                              {f}
+                            </Badge>
+                          ))}
+                          {plan.features.length > 2 && (
+                            <Badge variant="outline" className="text-[11px] font-normal">
+                              +{plan.features.length - 2}
+                            </Badge>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-sm text-muted-foreground">—</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {plan.isActive ? (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 font-normal">
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="font-normal">
+                        Inactive
+                      </Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right pr-6">
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(plan)}>
+                      <Edit className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       <PlanSheet
-         open={isSheetOpen}
-         onOpenChange={setIsSheetOpen}
-         plan={selectedPlan}
-         onSuccess={() => {
-             router.refresh();
-         }}
+        open={isSheetOpen}
+        onOpenChange={setIsSheetOpen}
+        plan={selectedPlan}
+        onSuccess={() => {
+          router.refresh();
+        }}
       />
-    </div>
+    </>
   );
 }

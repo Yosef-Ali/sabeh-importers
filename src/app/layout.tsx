@@ -58,7 +58,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${plusJakartaSans.variable} ${rajdhani.variable} ${bebasNeue.variable} ${notoSansEthiopic.variable}`}
+        className={`${inter.variable} ${plusJakartaSans.variable} ${rajdhani.variable} ${bebasNeue.variable} ${notoSansEthiopic.variable} font-sans antialiased`}
       >
         <Providers>
           {children}
