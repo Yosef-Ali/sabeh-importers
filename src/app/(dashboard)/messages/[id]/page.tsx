@@ -1,6 +1,6 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getConversation, markMessagesAsRead } from "@/lib/actions/messages";
-export const dynamic = "force-dynamic";
+import { getSession } from "@/lib/session";
 import { MessageThread } from "@/components/messages/message-thread";
 import { MessageInput } from "@/components/messages/message-input";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Phone, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+
+export const dynamic = "force-dynamic";
 
 interface ConversationPageProps {
   params: {
@@ -22,8 +24,9 @@ export async function generateMetadata() {
 }
 
 export default async function ConversationPage({ params }: ConversationPageProps) {
-  // In a real app, get userId from session
-  const userId = "1";
+  const session = getSession();
+  if (!session) redirect("/login");
+  const userId = session.userId;
 
   const conversation = await getConversation(params.id, userId);
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { toggleUserBan } from "@/lib/actions/admin";
+import { toast } from "sonner";
 
 interface UserBanButtonProps {
   userId: string;
@@ -21,9 +22,15 @@ export function UserBanButton({ userId, isActive, userName }: UserBanButtonProps
     );
     if (!confirmed) return;
     setLoading(true);
-    await toggleUserBan(userId, !active);
-    setActive(!active);
-    setLoading(false);
+    try {
+      await toggleUserBan(userId, !active);
+      setActive(!active);
+      toast.success(active ? `${userName} has been banned.` : `${userName} has been unbanned.`);
+    } catch {
+      toast.error("Failed to update user status.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

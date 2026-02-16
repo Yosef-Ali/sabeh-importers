@@ -1,6 +1,12 @@
-import { neon } from '@neondatabase/serverless';
+import { neon, neonConfig } from '@neondatabase/serverless';
 import { drizzle, NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import * as schema from '@/db/schema';
+
+// Fix for custom Neon hostname format
+neonConfig.fetchEndpoint = (host) => {
+  const protocol = host === 'localhost' ? 'http' : 'https';
+  return `${protocol}://${host}/sql`;
+};
 
 const globalForDb = globalThis as unknown as {
   db: NeonHttpDatabase<typeof schema> | undefined;

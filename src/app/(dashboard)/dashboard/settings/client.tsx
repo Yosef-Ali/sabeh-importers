@@ -10,6 +10,7 @@ import {
   Palette,
   Webhook,
   CreditCard,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,9 +34,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { VerificationUploadForm } from "@/components/dashboard/settings/verification-upload-form";
 
-export default function SettingsPage() {
+interface Props {
+  verificationMethods: any[];
+  userVerifications: any[];
+}
+
+export function SettingsClient({ verificationMethods, userVerifications }: Props) {
   const user = useAuthStore((s) => s.user);
+
+  if (!user) return null;
 
   return (
     <div className="space-y-6">
@@ -45,9 +54,10 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6">
           <TabsTrigger value="general">General</TabsTrigger>
           <TabsTrigger value="company">Company</TabsTrigger>
+          <TabsTrigger value="verification">Verification</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
@@ -247,6 +257,16 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Verification Settings - NEW */}
+        <TabsContent value="verification" className="space-y-4">
+           {/* Passing correct props. `verifications` matches the prop name in VerificationUploadForm */}
+          <VerificationUploadForm 
+            userId={user.id} 
+            methods={verificationMethods} 
+            verifications={userVerifications} 
+          />
         </TabsContent>
 
         {/* Notification Settings */}

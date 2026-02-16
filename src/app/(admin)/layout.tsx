@@ -16,10 +16,12 @@ import {
   ChevronLeft,
   Menu,
   CreditCard,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AdminHeader } from "@/components/admin/header";
 
 const navItems = [
   {
@@ -56,6 +58,11 @@ const navItems = [
     title: "Plans",
     href: "/admin/plans",
     icon: <CreditCard className="h-[18px] w-[18px]" />,
+  },
+  {
+    title: "AI Generator",
+    href: "/admin/ai-generator",
+    icon: <Sparkles className="h-[18px] w-[18px]" />,
   },
 ];
 
@@ -187,13 +194,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </Sheet>
 
       {/* Main Content */}
+      <AdminHeader isCollapsed={isCollapsed} />
       <main
         className={cn(
-          "min-h-screen transition-all duration-300 p-6 lg:p-8",
-          isCollapsed ? "lg:pl-[calc(68px+2rem)]" : "lg:pl-[calc(240px+2rem)]"
+          "min-h-screen pt-16 transition-all duration-300",
+          isCollapsed ? "lg:pl-[68px]" : "lg:pl-[240px]"
         )}
       >
-        {children}
+        <div className="container mx-auto p-4 lg:p-6">{children}</div>
       </main>
     </div>
   );

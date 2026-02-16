@@ -189,6 +189,45 @@ export async function resolveReport(
 // documentUrl is only returned by this server action — never exposed publicly
 // ─────────────────────────────────────────
 
+export async function getUnverifiedSellers() {
+  const data = await db.query.users.findMany({
+    where: and(
+      eq(users.role, "SELLER"),
+      or(
+        eq(users.verificationStatus, "UNVERIFIED"),
+        eq(users.verificationStatus, "PENDING"),
+      ),
+    ),
+    orderBy: [desc(users.createdAt)],
+    columns: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      avatar: true,
+      companyName: true,
+      businessLicense: true,
+      tinNumber: true,
+      verificationStatus: true,
+      createdAt: true,
+    },
+  });
+  return data;
+}
+
+export async function verifySellerDirect(
+  userId: string,
+  decision: "VERIFIED" | "REJECTED",
+) {
+  await db
+    .update(users)
+    .set({ verificationStatus: decision })
+    .where(eq(users.id, userId));
+
+  revalidatePath("/admin/verifications");
+  return { success: true };
+}
+
 export async function getPendingVerifications() {
   const data = await db.query.userVerifications.findMany({
     where: eq(userVerifications.status, "PENDING"),

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { reviewVerification } from "@/lib/actions/admin";
 import { ShieldCheck, ShieldX, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 interface VerificationReviewCardProps {
   verification: any;
@@ -16,17 +17,20 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
   const [showDoc, setShowDoc] = useState(false);
 
   async function handleDecision(decision: "VERIFIED" | "REJECTED") {
-    const confirmed = window.confirm(
-      decision === "VERIFIED"
-        ? `Approve verification for ${verification.user?.name}?`
-        : `Reject verification for ${verification.user?.name}?`
-    );
-    if (!confirmed) return;
     setLoading(true);
-    // ADMIN_ID placeholder — in production, read from session
-    await reviewVerification(verification.id, decision, "admin", notes || undefined);
-    setDone(true);
-    setLoading(false);
+    try {
+      await reviewVerification(verification.id, decision, "admin", notes || undefined);
+      setDone(true);
+      if (decision === "VERIFIED") {
+        toast.success(`${verification.user?.name}'s verification has been approved.`);
+      } else {
+        toast.error(`${verification.user?.name}'s verification has been rejected.`);
+      }
+    } catch {
+      toast.error("Failed to process verification. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (done) {

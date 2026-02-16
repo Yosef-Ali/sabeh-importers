@@ -36,14 +36,20 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base font-medium">All Plans</CardTitle>
-          <Button onClick={handleCreate} size="sm" className="gap-2">
-            <Plus className="h-4 w-4" /> Create Plan
-          </Button>
-        </CardHeader>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-display font-bold text-primary">Subscription Plans</h1>
+          <p className="text-muted-foreground font-mono text-sm mt-1">
+            Manage pricing tiers and features for sellers.
+          </p>
+        </div>
+        <Button onClick={handleCreate} className="gap-2 font-display font-bold">
+          <Plus className="h-4 w-4" /> Create Plan
+        </Button>
+      </div>
+
+      <Card className="border-2 border-primary/10 shadow-card">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
@@ -135,6 +141,6 @@ export function PlansTable({ initialPlans }: PlansTableProps) {
           router.refresh();
         }}
       />
-    </>
+    </div>
   );
 }

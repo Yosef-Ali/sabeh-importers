@@ -35,8 +35,8 @@ export default async function AdminPromotionsPage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-600 rounded-button flex items-center justify-center shadow-hard">
-            <TrendingUp className="h-6 w-6 text-white" />
+          <div className="w-12 h-12 bg-blue-500/10 rounded-button flex items-center justify-center shadow-sm">
+            <TrendingUp className="h-6 w-6 text-blue-600" />
           </div>
           <div>
             <p className="text-xs font-mono text-muted-foreground uppercase font-bold tracking-wide">Promoted</p>
@@ -44,8 +44,8 @@ export default async function AdminPromotionsPage() {
           </div>
         </div>
         <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-accent rounded-button flex items-center justify-center shadow-hard">
-            <Star className="h-6 w-6 text-white" />
+          <div className="w-12 h-12 bg-accent/10 rounded-button flex items-center justify-center shadow-sm">
+            <Star className="h-6 w-6 text-accent" />
           </div>
           <div>
             <p className="text-xs font-mono text-muted-foreground uppercase font-bold tracking-wide">Featured</p>
@@ -53,8 +53,8 @@ export default async function AdminPromotionsPage() {
           </div>
         </div>
         <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-amber-500 rounded-button flex items-center justify-center shadow-hard">
-            <Clock className="h-6 w-6 text-white" />
+          <div className="w-12 h-12 bg-amber-500/10 rounded-button flex items-center justify-center shadow-sm">
+            <Clock className="h-6 w-6 text-amber-600" />
           </div>
           <div>
             <p className="text-xs font-mono text-muted-foreground uppercase font-bold tracking-wide">With Expiry</p>

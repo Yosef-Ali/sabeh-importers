@@ -31,7 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createPlan, updatePlan } from "@/lib/actions/plans";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Loader2, Plus, Trash2, GripVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -79,7 +79,6 @@ interface PlanSheetProps {
 }
 
 export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProps) {
-  const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -161,18 +160,18 @@ export function PlanSheet({ open, onOpenChange, plan, onSuccess }: PlanSheetProp
       if (plan) {
          // Update
          await updatePlan(plan.id, payload);
-         toast({ title: "Plan updated", description: `${data.name} has been updated.` });
+         toast.success(`${data.name} has been updated.`);
       } else {
          // Create
          await createPlan(payload);
-         toast({ title: "Plan created", description: `${data.name} has been created.` });
+         toast.success(`${data.name} has been created.`);
       }
       onOpenChange(false);
       router.refresh();
       onSuccess();
     } catch (error) {
        console.error(error);
-       toast({ title: "Error", description: "Something went wrong.", variant: "destructive" });
+       toast.error("Something went wrong.");
     } finally {
       setLoading(false);
     }

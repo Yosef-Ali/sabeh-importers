@@ -1,4 +1,6 @@
 import { getUserSavedSearches } from "@/lib/actions/saved-searches";
+import { getSession } from "@/lib/session";
+import { redirect } from "next/navigation";
 import { SavedSearchCard } from "@/components/marketplace/saved-search-card";
 import { Bell, Search } from "lucide-react";
 import Link from "next/link";
@@ -12,8 +14,9 @@ export const metadata = {
 };
 
 export default async function SavedSearchesPage() {
-  // In a real app, get userId from session
-  const userId = "1";
+  const session = getSession();
+  if (!session) redirect("/login");
+  const userId = session.userId;
   const savedSearches = await getUserSavedSearches(userId);
 
   return (

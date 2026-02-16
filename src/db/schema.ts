@@ -150,24 +150,24 @@ export const users = pgTable('users', {
   index('users_role_idx').on(table.role),
 ]);
 
-export const usersRelations = relations(users, ({ many }) => ({
-  listings: many(listings),
-  reviews: many(reviews, { relationName: 'reviewee' }),
-  writtenReviews: many(reviews, { relationName: 'reviewer' }),
-  buyerConversations: many(conversations, { relationName: 'buyer' }),
-  sellerConversations: many(conversations, { relationName: 'seller' }),
-  wishlists: many(wishlists),
-  savedSearches: many(savedSearches),
-  notifications: many(notifications),
-  orders: many(orders, { relationName: 'orderCreator' }),
-  verifications: many(userVerifications),
-}));
+
+
+// User Verification Methods (Admin configurable)
+export const verificationMethods = pgTable('verification_methods', {
+  id: uid(),
+  name: text('name').notNull(),         // "National ID", "Passport", "Business License"
+  description: text('description'),     // "Upload a clear copy of..."
+  isRequired: boolean('is_required').default(false).notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+  ...timestamps,
+});
 
 // User Verification (ID, phone, email — like Dubizzle's trust badges)
 export const userVerifications = pgTable('user_verifications', {
   id: uid(),
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  type: text('type').notNull(), // 'email', 'phone', 'government_id', 'business_license'
+  type: text('type').notNull(), // 'email', 'phone' OR id from verification_methods
+  methodId: text('method_id').references(() => verificationMethods.id), // Link to dynamic method if applicable
   documentUrl: text('document_url'),
   status: verificationStatusEnum('status').default('PENDING').notNull(),
   verifiedAt: timestamp('verified_at'),
@@ -177,12 +177,9 @@ export const userVerifications = pgTable('user_verifications', {
   ...timestamps,
 });
 
-export const userVerificationsRelations = relations(userVerifications, ({ one }) => ({
-  user: one(users, {
-    fields: [userVerifications.userId],
-    references: [users.id],
-  }),
-}));
+
+
+
 
 // NextAuth Accounts (for OAuth)
 export const accounts = pgTable('accounts', {
@@ -620,27 +617,7 @@ export const disputes = pgTable('disputes', {
   ...softDelete,
 });
 
-export const disputesRelations = relations(disputes, ({ one }) => ({
-  order: one(orders, {
-    fields: [disputes.orderId],
-    references: [orders.id],
-  }),
-  initiator: one(users, {
-    fields: [disputes.initiatorId],
-    references: [users.id],
-    relationName: 'initiator',
-  }),
-  respondent: one(users, {
-    fields: [disputes.respondentId],
-    references: [users.id],
-    relationName: 'respondent',
-  }),
-  resolver: one(users, {
-    fields: [disputes.resolvedBy],
-    references: [users.id],
-    relationName: 'resolver',
-  }),
-}));
+
 
 // ============================================================
 // 8. NOTIFICATIONS
@@ -1008,3 +985,53 @@ export const settings = pgTable('settings', {
 // LEGACY COMPAT: re-export old name for existing code
 // ============================================================
 export const listingCategories = categories;
+
+export const usersRelations = relations(users, ({ many }) => ({
+  listings: many(listings),
+  reviews: many(reviews, { relationName: 'reviewee' }),
+  writtenReviews: many(reviews, { relationName: 'reviewer' }),
+  buyerConversations: many(conversations, { relationName: 'buyer' }),
+  sellerConversations: many(conversations, { relationName: 'seller' }),
+  wishlists: many(wishlists),
+  savedSearches: many(savedSearches),
+  notifications: many(notifications),
+  orders: many(orders, { relationName: 'orderCreator' }),
+  verifications: many(userVerifications),
+}));
+
+export const userVerificationsRelations = relations(userVerifications, ({ one }) => ({
+  user: one(users, {
+    fields: [userVerifications.userId],
+    references: [users.id],
+  }),
+  method: one(verificationMethods, {
+    fields: [userVerifications.methodId],
+    references: [verificationMethods.id],
+  }),
+}));
+
+export const verificationMethodsRelations = relations(verificationMethods, ({ many }) => ({
+  verifications: many(userVerifications),
+}));
+
+export const disputesRelations = relations(disputes, ({ one }) => ({
+  order: one(orders, {
+    fields: [disputes.orderId],
+    references: [orders.id],
+  }),
+  initiator: one(users, {
+    fields: [disputes.initiatorId],
+    references: [users.id],
+    relationName: 'initiator',
+  }),
+  respondent: one(users, {
+    fields: [disputes.respondentId],
+    references: [users.id],
+    relationName: 'respondent',
+  }),
+  resolver: one(users, {
+    fields: [disputes.resolvedBy],
+    references: [users.id],
+    relationName: 'resolver',
+  }),
+}));

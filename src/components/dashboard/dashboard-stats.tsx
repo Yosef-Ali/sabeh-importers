@@ -16,28 +16,32 @@ const STAT_CARDS = [
     label: "Total Listings",
     labelAm: "ጠቅላላ ዝርዝሮች",
     icon: Package,
-    color: "bg-primary",
+    bgClass: "bg-primary/10",
+    textClass: "text-primary",
   },
   {
     key: "active",
     label: "Active",
     labelAm: "ንቁ",
     icon: CheckCircle,
-    color: "bg-green-600",
+    bgClass: "bg-green-500/10",
+    textClass: "text-green-600",
   },
   {
     key: "totalViews",
     label: "Total Views",
     labelAm: "ጠቅላላ እይታዎች",
     icon: Eye,
-    color: "bg-blue-600",
+    bgClass: "bg-blue-500/10",
+    textClass: "text-blue-600",
   },
   {
     key: "unreadMessages",
     label: "Messages",
     labelAm: "መልዕክቶች",
     icon: MessageSquare,
-    color: "bg-accent",
+    bgClass: "bg-amber-500/10",
+    textClass: "text-amber-600",
   },
 ] as const;
 
@@ -58,9 +62,9 @@ export function DashboardStats({
           >
             <div className="flex items-center justify-between mb-4">
               <div
-                className={`w-12 h-12 ${card.color} rounded-button flex items-center justify-center shadow-hard`}
+                className={`w-12 h-12 ${card.bgClass} rounded-button flex items-center justify-center`}
               >
-                <Icon className="h-6 w-6 text-white" />
+                <Icon className={`h-6 w-6 ${card.textClass}`} />
               </div>
               <div className="text-right">
                 <div className="text-3xl font-display font-bold text-primary">

@@ -30,11 +30,11 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth";
 import { logoutAction } from "@/lib/actions/auth";
 
-interface HeaderProps {
+interface AdminHeaderProps {
   isCollapsed: boolean;
 }
 
-export function Header({ isCollapsed }: HeaderProps) {
+export function AdminHeader({ isCollapsed }: AdminHeaderProps) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [language, setLanguage] = React.useState<"en" | "am">("en");
@@ -60,7 +60,7 @@ export function Header({ isCollapsed }: HeaderProps) {
           <Input
             type="search"
             placeholder={
-              language === "en" ? "Search products, orders..." : "ፈልግ..."
+              language === "en" ? "Search users, listings..." : "ፈልግ..."
             }
             className="w-[300px] pl-9"
           />
@@ -117,51 +117,38 @@ export function Header({ isCollapsed }: HeaderProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[300px]">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuLabel>Admin Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="max-h-[300px] overflow-auto">
               <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
                 <div className="flex w-full items-center justify-between">
-                  <span className="font-medium">New Order</span>
-                  <Badge variant="success" className="text-[10px]">
-                    New
+                  <span className="font-medium">New User Verification</span>
+                  <Badge variant="warning" className="text-[10px]">
+                    Action Required
                   </Badge>
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  Order #SAB-2601-0042 received
+                  Abebe K. uploaded ID documents
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  2 minutes ago
+                  10 minutes ago
                 </span>
               </DropdownMenuItem>
               <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
                 <div className="flex w-full items-center justify-between">
-                  <span className="font-medium">Low Stock Alert</span>
-                  <Badge variant="warning" className="text-[10px]">
-                    Alert
+                  <span className="font-medium">Listing Reported</span>
+                  <Badge variant="destructive" className="text-[10px]">
+                    Urgent
                   </Badge>
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  5 products below minimum stock
+                  "Toyota Corolla" reported as spam
                 </span>
                 <span className="text-xs text-muted-foreground">
                   1 hour ago
                 </span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="flex flex-col items-start gap-1 p-3">
-                <span className="font-medium">WhatsApp Message</span>
-                <span className="text-xs text-muted-foreground">
-                  New message from +251 91 234 5678
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  3 hours ago
-                </span>
-              </DropdownMenuItem>
             </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="justify-center text-primary">
-              View all notifications
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -171,8 +158,8 @@ export function Header({ isCollapsed }: HeaderProps) {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 {user?.avatar && <AvatarImage src={user.avatar} alt={user.name} />}
-                <AvatarFallback className="bg-navy text-white font-bold text-sm">
-                  {user?.name?.[0]?.toUpperCase() ?? "?"}
+                <AvatarFallback className="bg-primary text-primary-foreground font-bold text-sm">
+                  {user?.name?.[0]?.toUpperCase() ?? "A"}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -180,29 +167,21 @@ export function Header({ isCollapsed }: HeaderProps) {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user?.name ?? "Loading…"}</p>
+                <p className="text-sm font-medium leading-none">{user?.name ?? "Admin"}</p>
                 <p className="text-xs leading-none text-muted-foreground">
                   {user?.email ?? ""}
                 </p>
-                {user?.role && (
-                  <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
-                    {user.role}
-                  </p>
-                )}
+                <p className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider">
+                  {user?.role ?? "ADMIN"}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {(user?.role === "ADMIN" || user?.role === "MANAGER") && (
-              <DropdownMenuItem onClick={() => router.push("/admin")}>
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                <span>Admin Panel</span>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+            <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>User Dashboard</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
+            <DropdownMenuItem onClick={() => router.push("/admin/settings")}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>

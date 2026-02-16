@@ -59,7 +59,11 @@ export function middleware(request: NextRequest) {
         return response;
       }
     }
-    // All other auth pages: send logged-in users to dashboard
+    // All other auth pages: redirect based on role
+    const adminRoles = ["ADMIN", "MANAGER"];
+    if (adminRoles.includes(role!)) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { verifyUserEmail } from "@/lib/actions/admin";
 import { MailCheck } from "lucide-react";
+import { toast } from "sonner";
 
 interface VerifyEmailButtonProps {
   userId: string;
@@ -27,9 +28,15 @@ export function VerifyEmailButton({ userId, isEmailVerified, userName }: VerifyE
     const confirmed = window.confirm(`Verify email for ${userName}? They will be able to log in.`);
     if (!confirmed) return;
     setLoading(true);
-    await verifyUserEmail(userId);
-    setVerified(true);
-    setLoading(false);
+    try {
+      await verifyUserEmail(userId);
+      setVerified(true);
+      toast.success(`Email verified for ${userName}.`);
+    } catch {
+      toast.error("Failed to verify email.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
