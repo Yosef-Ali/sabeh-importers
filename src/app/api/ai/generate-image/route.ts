@@ -8,10 +8,21 @@ function getAI() {
 
 export async function POST(req: Request) {
   const ai = getAI();
-  const { prompt } = await req.json();
+  const { prompt, referenceImage, referenceImageMimeType } = await req.json();
 
   if (!prompt) {
     return new Response(JSON.stringify({ error: "Missing prompt" }), { status: 400 });
+  }
+
+  // Build parts: text prompt + optional reference image
+  const parts: any[] = [{ text: prompt }];
+  if (referenceImage) {
+    parts.push({
+      inlineData: {
+        mimeType: referenceImageMimeType || "image/jpeg",
+        data: referenceImage,
+      },
+    });
   }
 
   try {
@@ -20,7 +31,7 @@ export async function POST(req: Request) {
       contents: [
         {
           role: "user",
-          parts: [{ text: prompt }],
+          parts,
         },
       ],
       config: {
@@ -29,12 +40,12 @@ export async function POST(req: Request) {
     });
 
     // Find the image part in the response
-    const parts = response.candidates?.[0]?.content?.parts;
-    if (!parts) {
+    const responseParts = response.candidates?.[0]?.content?.parts;
+    if (!responseParts) {
       return new Response(JSON.stringify({ error: "No response from model" }), { status: 500 });
     }
 
-    const imagePart = parts.find((p: any) => p.inlineData?.mimeType?.startsWith("image/"));
+    const imagePart = responseParts.find((p: any) => p.inlineData?.mimeType?.startsWith("image/"));
     if (!imagePart?.inlineData) {
       return new Response(JSON.stringify({ error: "No image generated" }), { status: 500 });
     }

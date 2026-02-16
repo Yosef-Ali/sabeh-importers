@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCompletion } from "@ai-sdk/react";
 import { toast } from "sonner";
-import { Loader2, Copy, Download, Sparkles, ImageIcon, Type } from "lucide-react";
+import { Loader2, Copy, Download, Sparkles, ImageIcon, Type, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,6 +54,11 @@ export function AIGeneratorClient() {
   const [imageMimeType, setImageMimeType] = useState("image/png");
   const [isImageLoading, setIsImageLoading] = useState(false);
 
+  // Reference image state
+  const [refImage, setRefImage] = useState<string | null>(null);
+  const [refImageMimeType, setRefImageMimeType] = useState("image/jpeg");
+  const [refImageName, setRefImageName] = useState("");
+
   // Text generation via useCompletion
   const {
     complete: streamDescription,
@@ -83,6 +88,28 @@ export function AIGeneratorClient() {
     toast.success("Copied to clipboard");
   }
 
+  function handleRefImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error("Image must be under 4MB");
+      return;
+    }
+    setRefImageName(file.name);
+    setRefImageMimeType(file.type);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(",")[1];
+      setRefImage(base64);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearRefImage() {
+    setRefImage(null);
+    setRefImageName("");
+  }
+
   async function handleGenerateImage() {
     if (!imagePrompt.trim()) {
       toast.error("Please enter an image prompt");
@@ -96,7 +123,10 @@ export function AIGeneratorClient() {
       const res = await fetch("/api/ai/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: imagePrompt }),
+        body: JSON.stringify({
+          prompt: imagePrompt,
+          ...(refImage && { referenceImage: refImage, referenceImageMimeType: refImageMimeType }),
+        }),
       });
 
       if (!res.ok) {
@@ -257,6 +287,42 @@ export function AIGeneratorClient() {
                 onChange={(e) => setImagePrompt(e.target.value)}
                 className="min-h-[100px]"
               />
+            </div>
+
+            {/* Reference Image Upload */}
+            <div className="space-y-2">
+              <Label>Reference Image (optional)</Label>
+              {refImage ? (
+                <div className="relative inline-block">
+                  <img
+                    src={`data:${refImageMimeType};base64,${refImage}`}
+                    alt="Reference"
+                    className="h-32 w-auto rounded-lg border object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearRefImage}
+                    className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                  <p className="mt-1 text-xs text-muted-foreground truncate max-w-[200px]">{refImageName}</p>
+                </div>
+              ) : (
+                <label className="flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/20 px-4 py-3 text-sm text-muted-foreground hover:bg-muted/40 transition-colors w-fit">
+                  <Upload className="h-4 w-4" />
+                  Upload reference image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleRefImageSelect}
+                  />
+                </label>
+              )}
+              <p className="text-xs text-muted-foreground">
+                Upload a product photo for AI to use as reference when generating.
+              </p>
             </div>
 
             <Button
