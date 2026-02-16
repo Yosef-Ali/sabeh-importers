@@ -68,7 +68,7 @@ export default async function AdminUsersPage({
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border-2 border-primary/10">
-                      <AvatarImage src={user.avatar} alt={user.name} />
+                      <AvatarImage src={user.avatar || undefined} alt={user.name} />
                       <AvatarFallback className="bg-primary/5 text-primary font-display font-bold">
                         {user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase()}
                       </AvatarFallback>
