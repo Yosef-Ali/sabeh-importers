@@ -1,134 +1,129 @@
-# Sabeh Importers Management System
+# Sabeh Importers — Marketplace Platform
 
 <div align="center">
-  <h3>ሳቤህ ኢምፖርተርስ</h3>
-  <p>A comprehensive import & distribution management system for Ethiopian businesses</p>
+  <h3>ሳቤህ ማርኬትፕሌስ</h3>
+  <p>A full-featured marketplace and import management platform for Ethiopian businesses</p>
 </div>
 
 ---
 
-## 🌟 Features
+## Features
 
-### Core Modules
+### Marketplace
 
-- **📦 Inventory Management** - Track stock levels across multiple warehouses
-- **🛒 Order Management** - Process sales orders with multi-currency support
-- **👥 Customer CRM** - Manage retail, wholesale, and distributor relationships
-- **🚚 Distributor Portal** - Onboard and manage distribution partners
-- **📱 WhatsApp Integration** - Automated sales funnel and customer support
-- **📊 Reports & Analytics** - Business insights and performance metrics
-- **📚 Digital Catalog** - Create and share product catalogs
+- **Listings** — Create, edit, and manage product listings with image uploads
+- **Seller Profiles** — Verified seller cards with ratings and verification badges
+- **Search & Filters** — Category browsing, saved searches, wishlist
+- **Messaging** — Real-time buyer/seller chat
+- **AI-Powered Listings** — Auto-generate descriptions and analyze product images via Gemini
+
+### Admin Dashboard
+
+- **Dashboard Overview** — Stats and analytics at a glance
+- **Listings Moderation** — Review, approve, or reject listings
+- **User Management** — Ban, verify email, manage roles
+- **Verification System** — Review seller verification documents with configurable methods
+- **Promotions** — Feature and promote listings
+- **Reports** — Handle flagged content
+- **Plans** — Subscription plan CRUD with Amharic features support (draggable editor)
+- **AI Generator** — Generate ad text (streaming) and product images using Gemini API
 
 ### Ethiopian Market Features
 
-- **🇪🇹 Bilingual Support** - English and Amharic (አማርኛ)
-- **💰 Multi-Currency** - ETB and USD handling
-- **📲 Mobile Payments** - Telebirr, CBE Birr integration
-- **📡 Offline-First** - Works with intermittent connectivity
-- **📱 SMS Fallback** - For areas without WhatsApp
+- **Bilingual Support** — English and Amharic (አማርኛ)
+- **Multi-Currency** — ETB and USD handling
+- **Mobile Payments** — Telebirr, CBE Birr integration
+- **WhatsApp Integration** — Automated sales funnel and customer support
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | **Frontend** | Next.js 14, React 18, TypeScript |
 | **Styling** | Tailwind CSS, shadcn/ui |
 | **Database** | PostgreSQL (Neon) |
-| **ORM** | Prisma |
+| **ORM** | Drizzle ORM |
 | **Auth** | NextAuth.js |
-| **State** | Zustand, React Query |
+| **AI** | Google Gemini (`@google/genai`), Vercel AI SDK (`ai`, `@ai-sdk/react`) |
+| **File Uploads** | UploadThing |
+| **State** | Zustand |
 | **Forms** | React Hook Form, Zod |
 | **Charts** | Recharts |
+| **Notifications** | Sonner (toasts) |
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL database (or Neon account)
-- npm or yarn
+- PostgreSQL database (Neon recommended)
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-repo/sabeh-importers.git
-   cd sabeh-importers
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` with your configuration:
-   ```env
-   DATABASE_URL="postgresql://..."
-   NEXTAUTH_SECRET="your-secret"
-   NEXTAUTH_URL="http://localhost:3000"
-   ```
-
-4. **Initialize database**
-   ```bash
-   npm run db:generate
-   npm run db:push
-   ```
-
-5. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-   Open [http://localhost:3000](http://localhost:3000)
+```bash
+git clone https://github.com/Yosef-Ali/sabeh-importers.git
+cd sabeh-importers
+npm install
+cp .env.example .env   # Edit with your credentials
+npm run db:push         # Push Drizzle schema to database
+npm run dev             # http://localhost:3000
+```
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 sabeh-importers/
-├── prisma/
-│   └── schema.prisma       # Database schema
 ├── src/
 │   ├── app/
-│   │   ├── (auth)/         # Authentication pages
-│   │   │   ├── login/
-│   │   │   └── register/
-│   │   ├── (dashboard)/    # Main application
-│   │   │   ├── dashboard/
-│   │   │   ├── products/
-│   │   │   ├── inventory/
-│   │   │   ├── orders/
-│   │   │   ├── customers/
-│   │   │   ├── distributors/
-│   │   │   ├── whatsapp/
-│   │   │   ├── reports/
-│   │   │   └── settings/
-│   │   ├── api/            # API routes
-│   │   ├── layout.tsx
-│   │   └── page.tsx
+│   │   ├── (auth)/              # Login, register
+│   │   ├── (admin)/admin/       # Admin dashboard
+│   │   │   ├── ai-generator/    # AI text & image generator
+│   │   │   ├── listings/        # Listing moderation
+│   │   │   ├── users/           # User management
+│   │   │   ├── verifications/   # Seller verification review
+│   │   │   ├── promotions/      # Listing promotions
+│   │   │   ├── reports/         # Flagged content
+│   │   │   ├── plans/           # Subscription plans CRUD
+│   │   │   └── settings/        # Admin settings
+│   │   ├── (dashboard)/         # Seller/buyer dashboard
+│   │   │   ├── dashboard/       # Overview + settings
+│   │   │   ├── marketplace/     # Browse listings
+│   │   │   ├── my-listings/     # Manage own listings
+│   │   │   ├── messages/        # Chat threads
+│   │   │   ├── saved-searches/  # Saved search alerts
+│   │   │   ├── wishlist/        # Wishlisted items
+│   │   │   └── onboarding/      # New user onboarding
+│   │   └── api/
+│   │       ├── ai/              # AI endpoints
+│   │       │   ├── analyze/     # Image analysis (Gemini)
+│   │       │   ├── description/ # Streaming text generation
+│   │       │   ├── generate-image/ # Image generation (gemini-2.5-flash-image)
+│   │       │   └── ocr/         # OCR extraction
+│   │       ├── auth/            # NextAuth routes
+│   │       ├── listings/        # Listing CRUD
+│   │       ├── chat/            # Messaging
+│   │       ├── uploadthing/     # File upload handler
+│   │       └── whatsapp/        # WhatsApp webhook
 │   ├── components/
-│   │   ├── ui/             # shadcn/ui components
-│   │   ├── dashboard/      # Dashboard components
-│   │   ├── forms/          # Form components
-│   │   └── tables/         # Table components
+│   │   ├── ui/                  # shadcn/ui primitives
+│   │   ├── admin/               # Admin-specific components
+│   │   ├── dashboard/           # Dashboard components
+│   │   └── marketplace/         # Marketplace components
+│   ├── db/
+│   │   └── schema.ts            # Drizzle schema (PostgreSQL)
 │   ├── lib/
-│   │   └── utils.ts        # Utility functions
-│   ├── hooks/              # Custom React hooks
-│   ├── store/              # Zustand stores
-│   └── types/              # TypeScript types
+│   │   ├── actions/             # Server actions
+│   │   ├── validations/         # Zod schemas
+│   │   └── store/               # Zustand stores
+│   └── hooks/                   # Custom React hooks
+├── scripts/                     # Utility scripts
 ├── public/
-│   └── images/
-├── .env.example
 ├── package.json
 ├── tailwind.config.ts
 └── tsconfig.json
@@ -136,96 +131,57 @@ sabeh-importers/
 
 ---
 
-## 🔐 Authentication
+## Authentication & Roles
 
-The system uses NextAuth.js for authentication with support for:
-- Email/Password login
-- Role-based access control (Admin, Manager, Staff, Distributor)
+NextAuth.js with role-based access control:
 
-### User Roles
-
-| Role | Permissions |
-|------|-------------|
-| **Admin** | Full system access |
-| **Manager** | All except settings |
-| **Staff** | Orders, inventory, customers |
+| Role | Access |
+|------|--------|
+| **Admin** | Full admin dashboard, all management |
+| **Manager** | Listings, users, reports |
+| **Staff** | Listings, orders |
+| **Seller** | Own listings, messages, dashboard |
+| **Buyer** | Browse, wishlist, messages |
 | **Distributor** | Limited portal access |
 
 ---
 
-## 📱 WhatsApp Integration
+## AI Features
 
-### Setting Up WhatsApp Business API
+The platform integrates Google Gemini for AI-powered capabilities:
 
-1. Create a Meta Business Account
-2. Set up WhatsApp Business API
-3. Add credentials to `.env`:
-   ```env
-   WHATSAPP_API_URL="https://graph.facebook.com/v18.0"
-   WHATSAPP_ACCESS_TOKEN="your-token"
-   WHATSAPP_PHONE_NUMBER_ID="your-phone-id"
-   ```
+| Feature | Endpoint | Model |
+|---------|----------|-------|
+| **Ad Text Generation** | `/api/ai/description` | `gemini-3-pro-preview` (streaming) |
+| **Image Analysis** | `/api/ai/analyze` | `gemini-3-flash-preview` |
+| **Image Generation** | `/api/ai/generate-image` | `gemini-2.5-flash-image` |
+| **OCR Extraction** | `/api/ai/ocr` | Gemini vision |
 
-### WhatsApp Sales Funnel
+The **AI Generator** admin page (`/admin/ai-generator`) provides a UI with two tabs:
+- **Generate Ad Text** — Input title, category, condition, price; streams a marketplace description
+- **Generate Ad Image** — Input a text prompt; generates a product/ad image with download
 
-```
-Customer Inquiry → Auto-Response → Catalog Link
-        ↓
-   Order Placement → Confirmation → Payment Link
-        ↓
-   Delivery Tracking → Feedback Collection
-```
+Requires `GOOGLE_GENERATIVE_AI_API_KEY` in `.env`.
 
 ---
 
-## 💳 Payment Integrations
+## Database Schema (Drizzle ORM)
 
-### Telebirr Setup
-```env
-TELEBIRR_APP_ID="your-app-id"
-TELEBIRR_APP_KEY="your-app-key"
-TELEBIRR_SHORT_CODE="your-short-code"
-```
+Key tables defined in `src/db/schema.ts`:
 
-### CBE Birr Setup
-```env
-CBE_BIRR_API_KEY="your-api-key"
-CBE_BIRR_MERCHANT_ID="your-merchant-id"
-```
-
----
-
-## 🌍 Localization
-
-The app supports:
-- **English** (default)
-- **Amharic** (አማርኛ)
-
-### Adding Translations
-
-Amharic text is supported via:
-- `nameAmharic` fields in database
-- `font-amharic` CSS class for proper rendering
-- Noto Sans Ethiopic font
+- **users** — Accounts with roles (Admin, Seller, Buyer, etc.)
+- **categories** — Hierarchical product categories with Amharic names
+- **listings** — Marketplace listings with images, pricing, conditions
+- **orders** — Sales orders with items and payment tracking
+- **messages / conversations** — Buyer/seller messaging
+- **subscriptions / plans** — Subscription tiers with features
+- **saved_searches** — Search alerts for buyers
+- **wishlists** — Saved listings
+- **verifications** — Seller identity verification documents
 
 ---
 
-## 📊 Database Schema
-
-### Key Models
-
-- **User** - System users with roles
-- **Product** - Product catalog with pricing tiers
-- **Inventory** - Stock tracking per warehouse
-- **Customer** - Customer profiles (retail/wholesale)
-- **Distributor** - Distribution partners
-- **Order** - Sales orders with items
-- **Payment** - Payment transactions
-- **WhatsAppChat** - Customer conversations
-
----
-
-## 🧪 Development
+## Development
 
 ### Available Scripts
 
@@ -234,20 +190,14 @@ npm run dev          # Start development server
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
-npm run db:generate  # Generate Prisma client
+npm run db:generate  # Generate Drizzle client
 npm run db:push      # Push schema to database
-npm run db:studio    # Open Prisma Studio
+npm run db:studio    # Open Drizzle Studio
 ```
-
-### Code Style
-
-- ESLint + Prettier for formatting
-- TypeScript strict mode
-- Import aliases using `@/*`
 
 ---
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 
@@ -256,61 +206,46 @@ npm run db:studio    # Open Prisma Studio
 3. Add environment variables
 4. Deploy
 
-### Docker
+---
 
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/ai/description` | Stream ad description (Gemini) |
+| POST | `/api/ai/generate-image` | Generate product image (Gemini) |
+| POST | `/api/ai/analyze` | Analyze product image |
+| POST | `/api/ai/ocr` | Extract text from image |
+| GET/POST | `/api/listings` | List / create listings |
+| GET/POST | `/api/orders` | List / create orders |
+| GET | `/api/categories` | List categories |
+| POST | `/api/chat` | Send message |
+| POST | `/api/uploadthing` | File upload handler |
+| POST | `/api/whatsapp/webhook` | WhatsApp webhook |
+| GET/POST | `/api/admin/*` | Admin management endpoints |
+
+---
+
+## Environment Variables
+
+```env
+DATABASE_URL="postgresql://..."
+NEXTAUTH_SECRET="..."
+NEXTAUTH_URL="http://localhost:3000"
+GOOGLE_GENERATIVE_AI_API_KEY="..."
+UPLOADTHING_SECRET="..."
+UPLOADTHING_APP_ID="..."
 ```
 
 ---
 
-## 📝 API Documentation
+## License
 
-### Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/products` | List products |
-| POST | `/api/products` | Create product |
-| GET | `/api/orders` | List orders |
-| POST | `/api/orders` | Create order |
-| GET | `/api/customers` | List customers |
-| POST | `/api/whatsapp/webhook` | WhatsApp webhook |
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit changes
-4. Push to branch
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is proprietary software for Sabeh Importers.
-
----
-
-## 📞 Support
-
-For support, contact:
-- Email: support@sabehimporters.com
-- Phone: +251 91 234 5678
+Proprietary software for Sabeh Importers.
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ for Ethiopian businesses</p>
-  <p>© 2026 Sabeh Importers</p>
+  <p>Built for Ethiopian businesses</p>
+  <p>&copy; 2026 Sabeh Importers</p>
 </div>
