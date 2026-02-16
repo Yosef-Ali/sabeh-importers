@@ -1,12 +1,8 @@
-import Link from "next/link";
-export const dynamic = "force-dynamic";
-import { Button } from "@/components/ui/button";
-import { PricingTierCard, PRICING_TIERS } from "@/components/marketplace/listing-wizard/pricing-tier-card";
-import { Check, Zap, TrendingUp, Award } from "lucide-react";
-
+import { getActivePlans } from "@/lib/actions/plans";
 import { getSystemSettings } from "@/lib/actions/settings";
-import { subscribeToPlan } from "@/lib/actions/subscription";
-import { toast } from "sonner";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Check, Zap, TrendingUp, Award } from "lucide-react";
 
 export const metadata = {
   title: "Pricing Plans | Sabeh Importers",
@@ -15,7 +11,11 @@ export const metadata = {
 };
 
 export default async function PricingPage() {
-  const settings = await getSystemSettings();
+  const [settings, dbPlans] = await Promise.all([
+    getSystemSettings(),
+    getActivePlans(),
+  ]);
+
   const isFreeMode = settings.isFreeSubscriptionMode;
 
   return (
@@ -35,7 +35,10 @@ export default async function PricingPage() {
               Boost Your Listings
             </h1>
             <p className="text-lg md:text-xl text-white/80 font-mono leading-relaxed max-w-2xl mx-auto">
-              Choose the plan that fits your selling needs. {isFreeMode ? "Start for free today!" : "From free basic listings to premium features."}
+              Choose the plan that fits your selling needs.{" "}
+              {isFreeMode
+                ? "Start for free today!"
+                : "From free basic listings to premium features."}
             </p>
           </div>
         </div>
@@ -43,21 +46,93 @@ export default async function PricingPage() {
 
       {/* Pricing Tiers */}
       <section className="container py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {PRICING_TIERS.map((tier) => (
-            <PricingTierCard
-              key={tier.id}
-              tier={tier}
-              selected={false}
-              onSelect={async () => {
-                "use server";
-                // This needs to be handled by a client wrapper or form action.
-                // Since PricingTierCard is a client component, we'll pass the action or handle it there.
-              }} 
-              language="en"
-              isFreeMode={isFreeMode}
-            />
-          ))}
+        <div
+          className={`grid grid-cols-1 gap-8 max-w-6xl mx-auto ${
+            dbPlans.length === 1
+              ? "md:grid-cols-1 max-w-md"
+              : dbPlans.length === 2
+                ? "md:grid-cols-2 max-w-3xl"
+                : "md:grid-cols-3"
+          }`}
+        >
+          {dbPlans.map((plan, index) => {
+            const isHighlighted = index === dbPlans.length - 1 && dbPlans.length > 1;
+            return (
+              <div
+                key={plan.id}
+                className={`rounded-card border-2 p-8 shadow-card flex flex-col h-full hover:shadow-card-hover transition-all ${
+                  isHighlighted
+                    ? "bg-primary text-white border-primary"
+                    : "bg-white dark:bg-card border-primary/10"
+                }`}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    {plan.sortOrder != null && (
+                      <span
+                        className={`text-xs font-mono ${isHighlighted ? "text-white/60" : "text-muted-foreground"}`}
+                      >
+                        ደረጃ {plan.sortOrder + 1}
+                      </span>
+                    )}
+                    <h3
+                      className={`text-2xl font-display font-bold ${isHighlighted ? "text-white" : "text-primary"}`}
+                    >
+                      {plan.nameAmharic || plan.name}
+                    </h3>
+                  </div>
+                  <div className="text-right">
+                    <div
+                      className={`text-3xl font-bold ${isHighlighted ? "text-accent" : "text-primary"}`}
+                    >
+                      {isFreeMode ? "0" : Number(plan.price).toLocaleString()}{" "}
+                      <span
+                        className={`text-sm font-mono ${isHighlighted ? "text-white/60" : "text-muted-foreground"}`}
+                      >
+                        ብር
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {plan.description && (
+                  <p
+                    className={`text-sm mb-6 min-h-[40px] ${isHighlighted ? "text-white/70" : "text-muted-foreground"}`}
+                  >
+                    {plan.description}
+                  </p>
+                )}
+
+                <div className="space-y-4 mb-8 flex-grow">
+                  {plan.features?.map((feature, idx) => (
+                    <div key={idx} className="flex items-start gap-3">
+                      <div
+                        className={`mt-1 rounded-full p-0.5 ${isHighlighted ? "bg-accent/30" : "bg-green-100 dark:bg-green-900/30"}`}
+                      >
+                        <Check
+                          className={`h-3.5 w-3.5 ${isHighlighted ? "text-accent" : "text-green-600 dark:text-green-400"}`}
+                        />
+                      </div>
+                      <span
+                        className={`text-sm font-mono ${isHighlighted ? "text-white/90" : "text-foreground/80"}`}
+                      >
+                        {feature}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <Link href="/dashboard/marketplace/create" className="w-full">
+                  <Button
+                    className="w-full font-bold shadow-hard"
+                    variant={isHighlighted ? "accent" : "outline"}
+                  >
+                    {plan.slug === "free" ? "ይጀምሩ" : "ይህንን ይምረጡ"}
+                  </Button>
+                </Link>
+              </div>
+            );
+          })}
         </div>
 
         {/* CTA Below Tiers */}
@@ -77,100 +152,136 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      {/* Features Comparison */}
-      <section className="bg-muted/30 py-16 md:py-24 border-y-2 border-primary/10">
-        <div className="container">
-          <div className="mx-auto max-w-5xl">
-            <div className="mb-12 text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-primary mb-4 tracking-tight">
-                Compare Features
-              </h2>
-              <p className="text-muted-foreground font-mono text-sm">
-                See what's included in each plan
-              </p>
-            </div>
+      {/* Features Comparison - Dynamic from DB */}
+      {dbPlans.length > 1 && (
+        <section className="bg-muted/30 py-16 md:py-24 border-y-2 border-primary/10">
+          <div className="container">
+            <div className="mx-auto max-w-5xl">
+              <div className="mb-12 text-center">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-primary mb-4 tracking-tight">
+                  Compare Features
+                </h2>
+                <p className="text-muted-foreground font-mono text-sm">
+                  See what&apos;s included in each plan
+                </p>
+              </div>
 
-            <div className="bg-white rounded-card border-2 border-primary/10 shadow-card overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b-2 border-primary/10">
-                      <th className="px-6 py-4 text-left text-sm font-mono font-bold text-primary uppercase tracking-wide">
-                        Feature
-                      </th>
-                      <th className="px-6 py-4 text-center text-sm font-mono font-bold text-primary uppercase tracking-wide">
-                        Deckhand
-                      </th>
-                      <th className="px-6 py-4 text-center text-sm font-mono font-bold text-accent uppercase tracking-wide bg-accent/5">
-                        Officer
-                      </th>
-                      <th className="px-6 py-4 text-center text-sm font-mono font-bold text-primary uppercase tracking-wide">
-                        Captain
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    <ComparisonRow
-                      feature="Listing Duration"
-                      deckhand="30 days"
-                      officer="60 days"
-                      captain="Unlimited"
-                    />
-                    <ComparisonRow
-                      feature="Number of Photos"
-                      deckhand="5"
-                      officer="10"
-                      captain="Unlimited"
-                    />
-                    <ComparisonRow
-                      feature="Featured Badge"
-                      deckhand={false}
-                      officer={true}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Priority in Search"
-                      deckhand={false}
-                      officer={true}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Homepage Placement"
-                      deckhand={false}
-                      officer={false}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Analytics Dashboard"
-                      deckhand={false}
-                      officer={false}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Email Notifications"
-                      deckhand={false}
-                      officer={true}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Priority Support"
-                      deckhand={false}
-                      officer={false}
-                      captain={true}
-                    />
-                    <ComparisonRow
-                      feature="Verification Badge"
-                      deckhand={false}
-                      officer={false}
-                      captain={true}
-                    />
-                  </tbody>
-                </table>
+              <div className="bg-white rounded-card border-2 border-primary/10 shadow-card overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b-2 border-primary/10">
+                        <th className="px-6 py-4 text-left text-sm font-mono font-bold text-primary uppercase tracking-wide">
+                          Feature
+                        </th>
+                        {dbPlans.map((plan, i) => (
+                          <th
+                            key={plan.id}
+                            className={`px-6 py-4 text-center text-sm font-mono font-bold uppercase tracking-wide ${
+                              i === dbPlans.length - 1
+                                ? "text-accent bg-accent/5"
+                                : "text-primary"
+                            }`}
+                          >
+                            {plan.nameAmharic || plan.name}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-foreground">
+                          Listing Duration
+                        </td>
+                        {dbPlans.map((plan, i) => (
+                          <td
+                            key={plan.id}
+                            className={`px-6 py-4 text-center ${i === dbPlans.length - 1 ? "bg-accent/5" : ""}`}
+                          >
+                            <span
+                              className={`text-sm font-mono ${i === dbPlans.length - 1 ? "text-accent font-bold" : "text-foreground"}`}
+                            >
+                              {plan.durationDays} days
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-foreground">
+                          Active Listings
+                        </td>
+                        {dbPlans.map((plan, i) => (
+                          <td
+                            key={plan.id}
+                            className={`px-6 py-4 text-center ${i === dbPlans.length - 1 ? "bg-accent/5" : ""}`}
+                          >
+                            <span
+                              className={`text-sm font-mono ${i === dbPlans.length - 1 ? "text-accent font-bold" : "text-foreground"}`}
+                            >
+                              {plan.maxActiveListings}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-foreground">
+                          Promote Listings
+                        </td>
+                        {dbPlans.map((plan, i) => (
+                          <td
+                            key={plan.id}
+                            className={`px-6 py-4 text-center ${i === dbPlans.length - 1 ? "bg-accent/5" : ""}`}
+                          >
+                            <FeatureValue
+                              value={plan.canPromote}
+                              highlight={i === dbPlans.length - 1}
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-foreground">
+                          Feature Listings
+                        </td>
+                        {dbPlans.map((plan, i) => (
+                          <td
+                            key={plan.id}
+                            className={`px-6 py-4 text-center ${i === dbPlans.length - 1 ? "bg-accent/5" : ""}`}
+                          >
+                            <FeatureValue
+                              value={plan.canFeature}
+                              highlight={i === dbPlans.length - 1}
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-foreground">
+                          Price
+                        </td>
+                        {dbPlans.map((plan, i) => (
+                          <td
+                            key={plan.id}
+                            className={`px-6 py-4 text-center ${i === dbPlans.length - 1 ? "bg-accent/5" : ""}`}
+                          >
+                            <span
+                              className={`text-sm font-mono ${i === dbPlans.length - 1 ? "text-accent font-bold" : "text-foreground"}`}
+                            >
+                              {isFreeMode
+                                ? "Free"
+                                : `${Number(plan.price).toLocaleString()} ${plan.currency}`}
+                            </span>
+                          </td>
+                        ))}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Benefits Section */}
       <section className="container py-16 md:py-24">
@@ -231,10 +342,6 @@ export default async function PricingPage() {
                 question="Can I get a refund?"
                 answer="We offer refunds within 24 hours of purchase if your listing hasn't gained significant views yet."
               />
-              <FAQItem
-                question="Is there a monthly subscription?"
-                answer="The Captain plan is a monthly subscription with unlimited active listings. Other plans are per-listing fees."
-              />
             </div>
           </div>
         </div>
@@ -247,8 +354,8 @@ export default async function PricingPage() {
             Ready to Start Selling?
           </h2>
           <p className="text-white/80 font-mono text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of sellers already reaching buyers on Sabeh
-            Importers marketplace.
+            Join thousands of sellers already reaching buyers on Sabeh Importers
+            marketplace.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard/marketplace/create">
@@ -277,35 +384,6 @@ export default async function PricingPage() {
 }
 
 // Helper Components
-
-function ComparisonRow({
-  feature,
-  deckhand,
-  officer,
-  captain,
-}: {
-  feature: string;
-  deckhand: string | boolean;
-  officer: string | boolean;
-  captain: string | boolean;
-}) {
-  return (
-    <tr>
-      <td className="px-6 py-4 text-sm font-medium text-foreground">
-        {feature}
-      </td>
-      <td className="px-6 py-4 text-center">
-        <FeatureValue value={deckhand} />
-      </td>
-      <td className="px-6 py-4 text-center bg-accent/5">
-        <FeatureValue value={officer} highlight />
-      </td>
-      <td className="px-6 py-4 text-center">
-        <FeatureValue value={captain} />
-      </td>
-    </tr>
-  );
-}
 
 function FeatureValue({
   value,

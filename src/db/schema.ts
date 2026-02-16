@@ -255,6 +255,8 @@ export const plans = pgTable('plans', {
   canFeature: boolean('can_feature').default(false).notNull(),
   isActive: boolean('is_active').default(true).notNull(),
   sortOrder: integer('sort_order').default(0),
+  description: text('description'),
+  features: json('features').$type<string[]>().default([]),
   ...timestamps,
 });
 

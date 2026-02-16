@@ -1,82 +1,118 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { plans, subscriptions } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { plans } from "@/db/schema";
+import { eq, asc } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export async function getPlans() {
-  return db.query.plans.findMany({
-    where: eq(plans.isActive, true),
-    orderBy: (t, { asc }) => [asc(t.sortOrder)],
-  });
+  const allPlans = await db.select().from(plans).orderBy(asc(plans.sortOrder), asc(plans.price));
+  return allPlans as unknown as (typeof plans.$inferSelect & { features: string[] })[];
 }
 
-export async function getUserActivePlan(userId: string) {
-  const sub = await db.query.subscriptions.findFirst({
-    where: and(
-      eq(subscriptions.userId, userId),
-      eq(subscriptions.status, "ACTIVE")
-    ),
-    with: { plan: true },
-    orderBy: (t, { desc }) => [desc(t.createdAt)],
-  });
-
-  return sub ?? null;
+export async function getActivePlans() {
+  const activePlans = await db
+    .select()
+    .from(plans)
+    .where(eq(plans.isActive, true))
+    .orderBy(asc(plans.sortOrder), asc(plans.price));
+  return activePlans as unknown as (typeof plans.$inferSelect & { features: string[] })[];
 }
 
-// Seed default plans (run once / idempotent)
+export async function updatePlan(id: string, data: Partial<typeof plans.$inferInsert>) {
+  await db.update(plans).set(data).where(eq(plans.id, id));
+  revalidatePath("/admin/plans");
+  revalidatePath("/pricing"); // Assuming a public pricing page exists
+  return { success: true };
+}
+
+export async function createPlan(data: typeof plans.$inferInsert) {
+  await db.insert(plans).values(data);
+  revalidatePath("/admin/plans");
+  revalidatePath("/pricing");
+  return { success: true };
+}
+
+export async function deletePlan(id: string) {
+  await db.update(plans).set({ isActive: false }).where(eq(plans.id, id));
+  revalidatePath("/admin/plans");
+  revalidatePath("/pricing");
+  return { success: true };
+}
+
 export async function seedDefaultPlans() {
-  const defaults = [
+  const SEED_PLANS = [
     {
-      id: "plan_free",
-      name: "Deckhand",
-      nameAmharic: "ዴክሃንድ",
+      name: "Free",
+      nameAmharic: "ነጻ (FREE)",
       slug: "free",
       price: "0",
       currency: "ETB" as const,
       durationDays: 30,
-      maxActiveListings: 3,
+      maxActiveListings: 1,
       canPromote: false,
       canFeature: false,
-      isActive: true,
       sortOrder: 0,
+      description: "For individuals starting out.",
+      features: ["መደበኛ ፍለጋ", "ለ30 ቀናት የሚቆይ", "የባለሙያ ማረጋገጫ የለውም"],
     },
     {
-      id: "plan_pro",
-      name: "Navigator",
-      nameAmharic: "ናቪጌተር",
-      slug: "pro",
-      price: "299",
+      name: "Standard",
+      nameAmharic: "መደበኛ",
+      slug: "standard",
+      price: "500",
       currency: "ETB" as const,
-      durationDays: 30,
-      maxActiveListings: 20,
+      durationDays: 60,
+      maxActiveListings: 5,
       canPromote: true,
-      canFeature: false,
-      isActive: true,
+      canFeature: true,
       sortOrder: 1,
+      description: "For serious sellers.",
+      features: ["ቅድሚያ የሚሰጠው", "ለ60 ቀናት የሚቆይ", "የተረጋገጠ አቅራቢ (BADGE)"],
     },
     {
-      id: "plan_business",
-      name: "Captain",
-      nameAmharic: "ካፒቴን",
-      slug: "business",
-      price: "799",
+      name: "Premium",
+      nameAmharic: "ፕሪሚያም",
+      slug: "premium",
+      price: "2000",
       currency: "ETB" as const,
-      durationDays: 30,
+      durationDays: 90,
       maxActiveListings: 100,
       canPromote: true,
       canFeature: true,
-      isActive: true,
       sortOrder: 2,
+      description: "For businesses and power sellers.",
+      features: [
+        "ሁሉም ጥቅማጥቅሞች",
+        "ያልተገደበ ዝርዝር",
+        "የመጀመሪያ ደረጃ ድጋፍ",
+        "ወርቃማ ባጅ (GOLD BADGE)",
+        "ያልተገደበ ጊዜ",
+        "ከፊት ገጹ ላይ የሚቀመጥ",
+        "የሎጂስቲክስ ድጋፍ",
+        "ፕሮፌሽናል ፎቶግራፍ",
+      ],
     },
   ];
 
-  for (const plan of defaults) {
-    await db
-      .insert(plans)
-      .values(plan)
-      .onConflictDoNothing();
+  let created = 0;
+  let updated = 0;
+
+  for (const plan of SEED_PLANS) {
+    const existing = await db.query.plans.findFirst({
+      where: eq(plans.slug, plan.slug),
+    });
+
+    if (existing) {
+      await db.update(plans).set(plan).where(eq(plans.slug, plan.slug));
+      updated++;
+    } else {
+      await db.insert(plans).values(plan);
+      created++;
+    }
   }
 
-  return { success: true };
+  revalidatePath("/admin/plans");
+  revalidatePath("/pricing");
+  return { success: true, created, updated };
 }

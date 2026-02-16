@@ -15,6 +15,7 @@ import {
   Star,
   ChevronLeft,
   Menu,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,11 @@ const navItems = [
     title: "Reports",
     href: "/admin/reports",
     icon: <Flag className="h-[18px] w-[18px]" />,
+  },
+  {
+    title: "Plans",
+    href: "/admin/plans",
+    icon: <CreditCard className="h-[18px] w-[18px]" />,
   },
 ];
 
@@ -138,7 +144,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background antialiased">
       {/* Desktop Sidebar */}
       <aside
         className={cn(
