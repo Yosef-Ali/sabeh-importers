@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { UploadDropzone } from "@/utils/uploadthing";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { CheckCircle2, Clock, XCircle, AlertCircle, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { submitVerificationDocument } from "@/lib/actions/verification-methods";
