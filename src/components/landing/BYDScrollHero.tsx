@@ -198,7 +198,7 @@ export function BYDScrollHero({ containerHeight = "400vh" }: BYDScrollHeroProps)
               className="relative text-center"
             >
               {/* Amharic Name - Primary */}
-              <div className="font-amharic text-5xl font-bold tracking-wide text-amber-400 md:text-7xl">
+              <div className="font-amharic text-5xl font-bold tracking-wide text-gold md:text-7xl">
                 ሳቤህ
               </div>
               <div className="mt-1 text-xl font-light tracking-[0.3em] text-white/80 md:text-2xl">
@@ -206,7 +206,7 @@ export function BYDScrollHero({ containerHeight = "400vh" }: BYDScrollHeroProps)
               </div>
               
               {/* Divider */}
-              <div className="mx-auto my-6 h-px w-32 bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+              <div className="mx-auto my-6 h-px w-32 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
               
               {/* Loading Product */}
               <div className="text-sm tracking-widest text-gray-500">
@@ -218,7 +218,7 @@ export function BYDScrollHero({ containerHeight = "400vh" }: BYDScrollHeroProps)
             <div className="mt-8">
               <div className="h-0.5 w-48 overflow-hidden rounded-full bg-white/10">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500"
+                  className="h-full bg-gradient-to-r from-gold-dark via-gold to-gold-dark"
                   initial={{ width: 0 }}
                   animate={{ width: `${loadingProgress}%` }}
                 />
@@ -302,8 +302,8 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
               transition={{ delay: 0.2 }}
               className="mb-8 flex items-center gap-3"
             >
-              <div className="h-px w-12 bg-amber-400" />
-              <span className="text-xs font-medium tracking-[0.25em] text-amber-400/80">
+              <div className="h-px w-12 bg-gold" />
+              <span className="text-xs font-medium tracking-[0.25em] text-gold/80">
                 ETHIOPIA&apos;S PREMIER IMPORTER
               </span>
             </motion.div>
@@ -323,7 +323,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                   ሳቤህ
                 </h1>
                 {/* Gold accent line */}
-                <div className="absolute -bottom-2 left-0 h-1 w-24 bg-gradient-to-r from-amber-400 to-amber-600 md:w-32" />
+                <div className="absolute -bottom-2 left-0 h-1 w-24 bg-gradient-to-r from-gold to-gold-dark md:w-32" />
               </motion.div>
 
               {/* English Name - Secondary but Bold */}
@@ -346,7 +346,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                 className="mt-6 max-w-xl text-base font-light leading-relaxed text-white/60 md:mt-8 md:text-lg"
               >
                 Bringing the world&apos;s finest electric vehicles to Ethiopia. 
-                <span className="font-amharic text-amber-400/80"> የዓለምን ምርጥ የኤሌክትሪክ መኪናዎች ወደ ኢትዮጵያ እናመጣለን።</span>
+                <span className="font-amharic text-gold/80"> የዓለምን ምርጥ የኤሌክትሪክ መኪናዎች ወደ ኢትዮጵያ እናመጣለን።</span>
               </motion.p>
             </div>
 
@@ -364,7 +364,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                 href="https://wa.me/251912345678?text=Hello%20Sabeh%20Importers!%20I'm%20interested%20in%20your%20electric%20vehicles."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-none border border-amber-400 bg-amber-400 px-8 py-4 text-sm font-semibold tracking-wider text-black transition-all hover:bg-amber-300"
+                className="group relative inline-flex items-center justify-center gap-3 overflow-hidden rounded-none border border-gold bg-gold px-8 py-4 text-sm font-semibold tracking-wider text-black transition-all hover:bg-gold-light"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>CONTACT US</span>
@@ -376,7 +376,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                 href="tel:+251912345678"
                 className="group inline-flex items-center justify-center gap-3 border border-white/20 bg-transparent px-8 py-4 text-sm font-medium tracking-wider text-white transition-all hover:border-white/40 hover:bg-white/5"
               >
-                <Phone className="h-4 w-4 text-amber-400" />
+                <Phone className="h-4 w-4 text-gold" />
                 <span>+251 91 234 5678</span>
               </a>
             </motion.div>
@@ -405,7 +405,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                       onClick={() => onTabClick(index)}
                       className={`group relative flex items-center gap-2 border px-4 py-2 text-xs font-medium tracking-wide transition-all ${
                         activeTab === index
-                          ? "border-amber-400/50 bg-amber-400/10 text-white"
+                          ? "border-gold/50 bg-gold/10 text-white"
                           : "border-white/10 bg-white/5 text-white/50 hover:border-white/20 hover:text-white/80"
                       }`}
                     >
@@ -420,7 +420,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                       {/* Auto-switch progress */}
                       {activeTab === index && isAutoSwitching && (
                         <motion.div
-                          className="absolute bottom-0 left-0 h-0.5 bg-amber-400"
+                          className="absolute bottom-0 left-0 h-0.5 bg-gold"
                           initial={{ width: "0%" }}
                           animate={{ width: "100%" }}
                           transition={{ duration: AUTO_SWITCH_INTERVAL / 1000, ease: "linear" }}
@@ -432,7 +432,7 @@ function SabehHeroCTA({ scrollProgress, isLoading, config, activeTab, isAutoSwit
                   
                   {/* Auto indicator */}
                   {isAutoSwitching && (
-                    <div className="ml-2 flex items-center gap-1 text-[10px] text-amber-400/60">
+                    <div className="ml-2 flex items-center gap-1 text-[10px] text-gold/60">
                       <span className="animate-pulse">●</span>
                       <span className="tracking-wider">AUTO</span>
                     </div>
@@ -471,7 +471,7 @@ function FeatureCallout({ scrollProgress, config }: FeatureCalloutProps) {
       >
         {/* Sabeh Brand Header */}
         <div className="mb-6 flex items-center gap-3">
-          <div className="font-amharic text-lg font-bold text-amber-400">ሳቤህ</div>
+          <div className="font-amharic text-lg font-bold text-gold">ሳቤህ</div>
           <div className="h-px flex-1 bg-white/10" />
           <div className="text-xs tracking-widest text-white/40">EXCLUSIVE</div>
         </div>
@@ -480,7 +480,7 @@ function FeatureCallout({ scrollProgress, config }: FeatureCalloutProps) {
         <h3 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
           {config.name}
         </h3>
-        <p className="mt-1 font-amharic text-sm text-amber-400/60">
+        <p className="mt-1 font-amharic text-sm text-gold/60">
           {config.nameAmharic}
         </p>
         <p className="mt-4 text-sm leading-relaxed text-white/60">
@@ -509,7 +509,7 @@ function FeatureCallout({ scrollProgress, config }: FeatureCalloutProps) {
             href={`https://wa.me/251912345678?text=Hi%20Sabeh!%20I'm%20interested%20in%20the%20${encodeURIComponent(config.name)}.`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 bg-amber-400 px-4 py-3 text-xs font-semibold tracking-wider text-black transition-colors hover:bg-amber-300"
+            className="flex flex-1 items-center justify-center gap-2 bg-gold px-4 py-3 text-xs font-semibold tracking-wider text-black transition-colors hover:bg-gold-light"
           >
             <MessageCircle className="h-4 w-4" />
             INQUIRE
@@ -551,13 +551,13 @@ function FinalCTA({ scrollProgress }: FinalCTAProps) {
       <div className="relative z-10 max-w-3xl text-center">
         {/* Ethiopian decorative element */}
         <div className="mb-8 flex items-center justify-center gap-4">
-          <div className="h-px w-16 bg-gradient-to-r from-transparent to-amber-400/50" />
+          <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/50" />
           <div className="text-2xl">🇪🇹</div>
-          <div className="h-px w-16 bg-gradient-to-l from-transparent to-amber-400/50" />
+          <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/50" />
         </div>
 
         {/* Main Message */}
-        <h2 className="font-amharic text-4xl font-bold text-amber-400 md:text-6xl lg:text-7xl">
+        <h2 className="font-amharic text-4xl font-bold text-gold md:text-6xl lg:text-7xl">
           ሳቤህ ኢምፖርተርስ
         </h2>
         <p className="mt-4 text-xl font-extralight tracking-[0.3em] text-white/80 md:text-2xl">
@@ -575,7 +575,7 @@ function FinalCTA({ scrollProgress }: FinalCTAProps) {
             href="https://wa.me/251912345678?text=Hello%20Sabeh%20Importers!%20I%20want%20to%20learn%20more%20about%20your%20electric%20vehicles."
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-3 bg-amber-400 px-10 py-4 text-sm font-bold tracking-wider text-black transition-all hover:bg-amber-300"
+            className="group flex items-center gap-3 bg-gold px-10 py-4 text-sm font-bold tracking-wider text-black transition-all hover:bg-gold-light"
           >
             <MessageCircle className="h-5 w-5" />
             START YOUR JOURNEY
@@ -583,9 +583,9 @@ function FinalCTA({ scrollProgress }: FinalCTAProps) {
           </a>
           <a
             href="tel:+251912345678"
-            className="flex items-center gap-3 border border-white/20 px-10 py-4 text-sm font-medium tracking-wider text-white transition-all hover:border-amber-400/50 hover:bg-white/5"
+            className="flex items-center gap-3 border border-white/20 px-10 py-4 text-sm font-medium tracking-wider text-white transition-all hover:border-gold/50 hover:bg-white/5"
           >
-            <Phone className="h-5 w-5 text-amber-400" />
+            <Phone className="h-5 w-5 text-gold" />
             +251 91 234 5678
           </a>
         </div>
@@ -593,17 +593,17 @@ function FinalCTA({ scrollProgress }: FinalCTAProps) {
         {/* Trust Elements */}
         <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-xs tracking-wider text-white/30">
           <div className="flex items-center gap-2">
-            <Shield className="h-4 w-4 text-amber-400/50" />
+            <Shield className="h-4 w-4 text-gold/50" />
             <span>AUTHORIZED DEALER</span>
           </div>
           <div className="hidden h-4 w-px bg-white/10 sm:block" />
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-amber-400/50" />
+            <Zap className="h-4 w-4 text-gold/50" />
             <span>FULL WARRANTY</span>
           </div>
           <div className="hidden h-4 w-px bg-white/10 sm:block" />
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-amber-400/50" />
+            <Calendar className="h-4 w-4 text-gold/50" />
             <span>FREE TEST DRIVE</span>
           </div>
         </div>
@@ -640,8 +640,8 @@ function ScrollIndicator({ scrollProgress }: ScrollIndicatorProps) {
           SCROLL TO EXPLORE
         </span>
         <div className="flex flex-col items-center gap-1">
-          <div className="h-8 w-px bg-gradient-to-b from-amber-400/50 to-transparent" />
-          <ChevronDown className="h-4 w-4 text-amber-400/50" />
+          <div className="h-8 w-px bg-gradient-to-b from-gold/50 to-transparent" />
+          <ChevronDown className="h-4 w-4 text-gold/50" />
         </div>
       </motion.div>
     </motion.div>

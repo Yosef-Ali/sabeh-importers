@@ -144,7 +144,7 @@ export function Navbar() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-3 border-b border-white/5 py-4 text-sm font-medium tracking-wider text-white/70 transition-all hover:text-white"
                   >
-                    <div className="h-1 w-1 rounded-full bg-amber-400/50" />
+                    <div className="h-1 w-1 rounded-full bg-gold/50" />
                     {item.label.toUpperCase()}
                   </Link>
                 </motion.div>
@@ -155,7 +155,7 @@ export function Navbar() {
                 <Link 
                   href="/dashboard"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center bg-amber-400 py-3 text-xs font-semibold tracking-wider text-black transition-all hover:bg-amber-300"
+                  className="flex items-center justify-center bg-gold py-3 text-xs font-semibold tracking-wider text-black transition-all hover:bg-gold-light"
                 >
                   ACCESS DASHBOARD
                 </Link>
@@ -163,14 +163,14 @@ export function Navbar() {
                   href="tel:+251912345678"
                   className="flex items-center justify-center gap-2 border border-white/10 py-3 text-xs tracking-wider text-white transition-all hover:bg-white/5"
                 >
-                  <Phone className="h-4 w-4 text-amber-400" />
+                  <Phone className="h-4 w-4 text-gold" />
                   +251 91 234 5678
                 </a>
               </div>
               
               {/* Brand Footer */}
               <div className="mt-8 flex items-center justify-center gap-2 text-xs text-white/30">
-                <span className="font-amharic text-amber-400/50">ሳቤህ</span>
+                <span className="font-amharic text-gold/50">ሳቤህ</span>
                 <span>•</span>
                 <span className="tracking-wider">ETHIOPIA&apos;S PREMIER IMPORTER</span>
               </div>
