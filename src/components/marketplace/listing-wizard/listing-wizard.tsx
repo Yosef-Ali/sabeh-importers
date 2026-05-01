@@ -155,7 +155,7 @@ export function ListingWizard({
         {/* Draft Save Indicator */}
         {isDraftSaving && (
           <div className="mb-4 text-center">
-            <span className="inline-flex items-center gap-2 text-xs text-muted-foreground font-mono bg-muted px-3 py-1 rounded-button">
+            <span className="inline-flex items-center gap-2 text-xs text-muted-foreground font-mono bg-muted px-3 py-1 rounded-none">
               <Save className="h-3 w-3" />
               {language === "am" ? "ረቂቅ ተቀምጧል" : "Draft saved"}
             </span>
@@ -163,7 +163,7 @@ export function ListingWizard({
         )}
 
         {/* Step Content */}
-        <div className="bg-white rounded-card border-2 border-primary/10 shadow-card p-6 md:p-8 mb-6">
+        <div className="bg-white rounded-none border-2 border-primary/10 shadow-card p-6 md:p-8 mb-6">
           {/* Render current step's child component */}
           {children[currentStep - 1]?.({
             formData,

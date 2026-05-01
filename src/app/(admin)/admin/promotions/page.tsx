@@ -26,7 +26,7 @@ export default async function AdminPromotionsPage() {
         </div>
         <Link
           href="/admin/listings"
-          className="rounded-button bg-primary text-primary-foreground px-5 py-2.5 text-sm font-display font-bold hover:bg-primary/90 transition-colors"
+          className="rounded-none bg-primary text-primary-foreground px-5 py-2.5 text-sm font-display font-bold hover:bg-primary/90 transition-colors"
         >
           Promote a Listing
         </Link>
@@ -34,8 +34,8 @@ export default async function AdminPromotionsPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-blue-500/10 rounded-button flex items-center justify-center shadow-sm">
+        <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
+          <div className="w-12 h-12 bg-blue-500/10 rounded-none flex items-center justify-center shadow-sm">
             <TrendingUp className="h-6 w-6 text-blue-600" />
           </div>
           <div>
@@ -43,8 +43,8 @@ export default async function AdminPromotionsPage() {
             <p className="text-2xl font-display font-bold text-primary">{stats.promoted}</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-accent/10 rounded-button flex items-center justify-center shadow-sm">
+        <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
+          <div className="w-12 h-12 bg-accent/10 rounded-none flex items-center justify-center shadow-sm">
             <Star className="h-6 w-6 text-accent" />
           </div>
           <div>
@@ -52,8 +52,8 @@ export default async function AdminPromotionsPage() {
             <p className="text-2xl font-display font-bold text-primary">{stats.featured}</p>
           </div>
         </div>
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
-          <div className="w-12 h-12 bg-amber-500/10 rounded-button flex items-center justify-center shadow-sm">
+        <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 p-5 shadow-card hover:shadow-card-hover transition-all flex items-center gap-4">
+          <div className="w-12 h-12 bg-amber-500/10 rounded-none flex items-center justify-center shadow-sm">
             <Clock className="h-6 w-6 text-amber-600" />
           </div>
           <div>
@@ -64,7 +64,7 @@ export default async function AdminPromotionsPage() {
       </div>
 
       {promoted.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center bg-white dark:bg-card rounded-card border-2 border-dashed border-primary/20 p-12 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center bg-white dark:bg-card rounded-none border-2 border-dashed border-primary/20 p-12 text-center">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted border border-accent/20">
             <Star className="h-10 w-10 text-accent/60" />
           </div>
@@ -74,7 +74,7 @@ export default async function AdminPromotionsPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 overflow-hidden shadow-card">
+        <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 overflow-hidden shadow-card">
           <div className="px-5 py-3 bg-primary/5 border-b-2 border-primary/10">
             <p className="text-xs font-mono font-bold text-primary uppercase tracking-wider">
               {promoted.length} promoted listing{promoted.length !== 1 && "s"}

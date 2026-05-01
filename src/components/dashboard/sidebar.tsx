@@ -22,7 +22,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuthStore } from "@/store/auth";
 import { logoutAction } from "@/lib/actions/auth";
 
-// ── Nav structure: 3 sections, 6 items total ──────────────────────────────────
 interface NavItem {
   title: string;
   titleAmharic: string;
@@ -101,15 +100,19 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
 
   return (
     <div className="flex h-full flex-col">
+
       {/* ── Logo ── */}
-      <div className="flex h-16 items-center border-b px-4 flex-shrink-0">
+      <div className="flex h-16 items-center border-b border-border px-4 flex-shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
+          {/* Logo icon: rounded-none */}
           <div className="flex h-8 w-8 items-center justify-center rounded-none bg-[#0A192F] border border-accent/30 flex-shrink-0">
             <Image src="/Sabeh_Logo_Icon.svg" alt="Sabeh" width={28} height={28} />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col min-w-0">
-              <span className="text-base font-semibold leading-tight">Sabeh</span>
+              <span className="font-display text-base font-bold uppercase tracking-tight leading-tight text-foreground">
+                Sabeh
+              </span>
               <span className="text-[10px] text-muted-foreground font-amharic leading-tight">
                 ሳቤህ ኢምፖርተርስ
               </span>
@@ -118,18 +121,19 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         </Link>
       </div>
 
-      {/* ── Post a Listing CTA ── */}
+      {/* ── Post a Listing CTA ──
+           Was: bg-primary rounded-none (navy, no shadow)
+           Now: bg-accent text-primary rounded-none shadow-hard hover:translate */}
       <div className={cn("px-3 pt-4 pb-2 flex-shrink-0", isCollapsed && "px-2")}>
         <Link href="/marketplace/create">
           <Button
-            size="sm"
             className={cn(
-              "w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold gap-2 transition-all",
+              "w-full rounded-none bg-accent text-primary font-display font-bold uppercase tracking-widest text-[10px] shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all gap-2",
               isCollapsed && "px-0 justify-center"
             )}
           >
             <Plus className="h-4 w-4 flex-shrink-0" />
-            {!isCollapsed && <span>Post a Listing</span>}
+            {!isCollapsed && <span>Post Listing</span>}
           </Button>
         </Link>
       </div>
@@ -138,9 +142,9 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-5">
         {navSections.map((section) => (
           <div key={section.label}>
-            {/* Section label */}
+            {/* Section label: Space Mono */}
             {!isCollapsed && (
-              <p className="px-3 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <p className="px-3 mb-1.5 text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-muted-foreground/60">
                 {section.label}
               </p>
             )}
@@ -157,10 +161,11 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      // rounded-none + border-l-2 active indicator (was rounded-lg)
+                      "flex items-center gap-3 rounded-none px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest border-l-2 transition-all",
                       isActive
-                        ? "bg-primary/10 text-primary font-semibold"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        ? "bg-accent/10 text-primary border-accent"
+                        : "text-muted-foreground border-transparent hover:bg-muted hover:text-foreground hover:border-border",
                       isCollapsed && "justify-center px-2"
                     )}
                   >
@@ -171,7 +176,8 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                       <>
                         <span className="flex-1 truncate">{item.title}</span>
                         {item.badge && (
-                          <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground px-1">
+                          // Badge: rounded-none bg-accent text-primary (was rounded-full bg-primary)
+                          <span className="flex h-5 min-w-[20px] items-center justify-center rounded-none bg-accent text-[9px] font-mono font-bold text-primary px-1">
                             {item.badge}
                           </span>
                         )}
@@ -182,7 +188,6 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
               })}
             </div>
 
-            {/* Divider between sections */}
             {!isCollapsed && (
               <div className="mt-3 border-t border-border/40" />
             )}
@@ -191,11 +196,11 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
       </nav>
 
       {/* ── Bottom: Settings + Logout ── */}
-      <div className="flex-shrink-0 border-t px-3 py-3 space-y-0.5">
+      <div className="flex-shrink-0 border-t border-border px-3 py-3 space-y-0.5">
         <Link
           href="/dashboard/settings"
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors",
+            "flex items-center gap-3 rounded-none px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-transparent transition-all hover:bg-muted hover:text-foreground hover:border-border",
             isCollapsed && "justify-center px-2"
           )}
         >
@@ -206,7 +211,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
         <button
           onClick={handleLogout}
           className={cn(
-            "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors",
+            "flex w-full items-center gap-3 rounded-none px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-transparent transition-all hover:bg-destructive/10 hover:text-destructive hover:border-destructive",
             isCollapsed && "justify-center px-2"
           )}
         >
@@ -221,20 +226,18 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
 export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
   return (
     <>
-      {/* Desktop Sidebar */}
+      {/* ── Desktop Sidebar ── */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 hidden h-screen border-r bg-card transition-all duration-300 lg:block",
+          "fixed left-0 top-0 z-40 hidden h-screen border-r border-border bg-card transition-all duration-300 lg:block",
           isCollapsed ? "w-[68px]" : "w-[240px]"
         )}
       >
         <SidebarContent isCollapsed={isCollapsed} />
 
-        {/* Collapse toggle */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute -right-3 top-[72px] z-50 h-6 w-6 rounded-full border bg-background shadow-sm hover:shadow-md"
+        {/* Collapse toggle — rounded-none border-gold bg-navy (was rounded-full) */}
+        <button
+          className="absolute -right-3 top-[72px] z-50 h-6 w-6 rounded-none border border-accent bg-[#0A192F] shadow-hard text-accent flex items-center justify-center transition-colors hover:bg-accent hover:text-primary"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           <ChevronLeft
@@ -243,21 +246,22 @@ export function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
               isCollapsed && "rotate-180"
             )}
           />
-        </Button>
+        </button>
       </aside>
 
-      {/* Mobile Sidebar */}
+      {/* ── Mobile Sidebar ── */}
       <Sheet>
         <SheetTrigger asChild>
+          {/* Hamburger: rounded-none (was no explicit radius but Button defaults fixed) */}
           <Button
             variant="ghost"
             size="icon"
-            className="fixed left-4 top-4 z-50 lg:hidden h-9 w-9"
+            className="fixed left-4 top-4 z-50 lg:hidden h-9 w-9 rounded-none"
           >
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[240px] p-0">
+        <SheetContent side="left" className="w-[240px] p-0 rounded-none">
           <SidebarContent isCollapsed={false} />
         </SheetContent>
       </Sheet>

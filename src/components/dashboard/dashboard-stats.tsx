@@ -58,11 +58,11 @@ export function DashboardStats({
         return (
           <div
             key={card.key}
-            className="bg-white rounded-card border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all"
+            className="bg-white rounded-none border-2 border-primary/10 p-6 shadow-card hover:shadow-card-hover transition-all"
           >
             <div className="flex items-center justify-between mb-4">
               <div
-                className={`w-12 h-12 ${card.bgClass} rounded-button flex items-center justify-center`}
+                className={`w-12 h-12 ${card.bgClass} rounded-none flex items-center justify-center`}
               >
                 <Icon className={`h-6 w-6 ${card.textClass}`} />
               </div>

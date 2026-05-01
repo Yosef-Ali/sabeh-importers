@@ -19,11 +19,12 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-jakarta)", "var(--font-inter)", "ui-sans-serif", "system-ui"],
-        ui: ["var(--font-jakarta)", "var(--font-inter)", "ui-sans-serif", "system-ui"],
-        display: ["var(--font-rajdhani)", "sans-serif"],
-        headline: ["var(--font-bebas-neue)", "sans-serif"],
-        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        sans: ["var(--font-dm-sans)", "var(--font-jakarta)", "ui-sans-serif", "system-ui"],
+        ui: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui"],
+        body: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui"],
+        display: ["var(--font-space-grotesk)", "sans-serif"],
+        headline: ["var(--font-space-grotesk)", "sans-serif"],
+        mono: ["var(--font-space-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
         amharic: ["var(--font-noto-ethiopic)", "sans-serif"],
       },
       colors: {
@@ -82,15 +83,14 @@ const config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        // Marketplace-specific variants
-        card: "8px",
-        button: "4px",
         none: "0px",
       },
       boxShadow: {
-        hard: "4px 4px 0px rgba(0, 0, 0, 0.1)",
+        hard: "4px 4px 0px #0A192F",
         "hard-navy": "4px 4px 0px #0A192F",
         "hard-yellow": "4px 4px 0px #FFD700",
+        "hard-gold": "4px 4px 0px #FFD700",
+        "hard-red": "4px 4px 0px #7f1d1d",
         // Marketplace card shadows
         card: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
         "card-hover": "0 20px 25px -5px rgb(0 0 0 / 0.1)",

@@ -28,7 +28,7 @@ export default async function AdminDashboardPage() {
         <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-500/10 rounded-button flex items-center justify-center text-primary">
+              <div className="w-12 h-12 bg-blue-500/10 rounded-none flex items-center justify-center text-primary">
                 <Users className="h-6 w-6 text-blue-600" />
               </div>
               <div className="text-right">
@@ -44,7 +44,7 @@ export default async function AdminDashboardPage() {
         <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-green-500/10 rounded-button flex items-center justify-center text-primary">
+              <div className="w-12 h-12 bg-green-500/10 rounded-none flex items-center justify-center text-primary">
                 <CheckCircle2 className="h-6 w-6 text-green-600" />
               </div>
               <div className="text-right">
@@ -60,7 +60,7 @@ export default async function AdminDashboardPage() {
         <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-amber-500/10 rounded-button flex items-center justify-center text-primary">
+              <div className="w-12 h-12 bg-amber-500/10 rounded-none flex items-center justify-center text-primary">
                 <Package className="h-6 w-6 text-amber-600" />
               </div>
               <div className="text-right">
@@ -76,7 +76,7 @@ export default async function AdminDashboardPage() {
         <Card className="border-2 border-primary/5 shadow-sm hover:shadow-card transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-              <div className="w-12 h-12 bg-red-500/10 rounded-button flex items-center justify-center text-primary">
+              <div className="w-12 h-12 bg-red-500/10 rounded-none flex items-center justify-center text-primary">
                 <AlertCircle className="h-6 w-6 text-red-600" />
               </div>
               <div className="text-right">
@@ -99,7 +99,7 @@ export default async function AdminDashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <a
               href="/admin/listings"
-              className="flex flex-col items-center justify-center rounded-card border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
+              className="flex flex-col items-center justify-center rounded-none border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
             >
               <Package className="h-8 w-8 text-muted-foreground group-hover:text-accent transition-colors mb-2" />
               <p className="font-display font-semibold text-primary text-sm">Review Listings</p>
@@ -108,7 +108,7 @@ export default async function AdminDashboardPage() {
 
             <a
               href="/admin/users"
-              className="flex flex-col items-center justify-center rounded-card border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
+              className="flex flex-col items-center justify-center rounded-none border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
             >
               <Users className="h-8 w-8 text-muted-foreground group-hover:text-accent transition-colors mb-2" />
               <p className="font-display font-semibold text-primary text-sm">Manage Users</p>
@@ -117,7 +117,7 @@ export default async function AdminDashboardPage() {
 
             <a
               href="/admin/verifications"
-              className="flex flex-col items-center justify-center rounded-card border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
+              className="flex flex-col items-center justify-center rounded-none border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
             >
               <BadgeCheck className="h-8 w-8 text-muted-foreground group-hover:text-accent transition-colors mb-2" />
               <p className="font-display font-semibold text-primary text-sm">Verifications</p>
@@ -126,7 +126,7 @@ export default async function AdminDashboardPage() {
 
             <a
               href="/admin/promotions"
-              className="flex flex-col items-center justify-center rounded-card border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
+              className="flex flex-col items-center justify-center rounded-none border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
             >
               <Star className="h-8 w-8 text-muted-foreground group-hover:text-accent transition-colors mb-2" />
               <p className="font-display font-semibold text-primary text-sm">Promotions</p>
@@ -135,7 +135,7 @@ export default async function AdminDashboardPage() {
 
             <a
               href="/admin/reports"
-              className="flex flex-col items-center justify-center rounded-card border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
+              className="flex flex-col items-center justify-center rounded-none border-2 border-dashed border-primary/20 p-6 text-center hover:border-accent hover:bg-accent/5 transition-colors group"
             >
               <AlertCircle className="h-8 w-8 text-muted-foreground group-hover:text-accent transition-colors mb-2" />
               <p className="font-display font-semibold text-primary text-sm">Reports</p>

@@ -34,7 +34,7 @@ export function Step2Visibility({
         <h3 className="text-xl font-display font-bold text-primary mb-4">
           {language === "am" ? "የዝርዝር ቅድመ እይታ" : "Listing Preview"}
         </h3>
-        <div className="bg-white rounded-card border-2 border-primary/10 overflow-hidden shadow-card">
+        <div className="bg-white rounded-none border-2 border-primary/10 overflow-hidden shadow-card">
           <div className="relative h-48 bg-muted">
             {formData.images && formData.images.length > 0 ? (
               <img
@@ -48,7 +48,7 @@ export function Step2Visibility({
               </div>
             )}
             {selectedTier !== "deckhand" && (
-              <div className="absolute top-3 left-3 bg-accent text-primary text-xs font-bold px-3 py-1 rounded-button shadow-hard flex items-center gap-1">
+              <div className="absolute top-3 left-3 bg-accent text-primary text-xs font-bold px-3 py-1 rounded-none shadow-hard flex items-center gap-1">
                 <BadgeCheck className="h-3 w-3" />
                 {language === "am" ? "ተለይቷል" : "FEATURED"}
               </div>
@@ -113,7 +113,7 @@ export function Step2Visibility({
 
       {/* Payment Notice */}
       {selectedTier !== "deckhand" && (
-        <div className="bg-accent/10 border-l-4 border-accent p-4 rounded-button">
+        <div className="bg-accent/10 border-l-4 border-accent p-4 rounded-none">
           <h4 className="font-display font-bold text-primary mb-2">
             {language === "am" ? "ክፍያ" : "Payment"}
           </h4>
@@ -141,7 +141,7 @@ export function Step2Visibility({
         </h3>
 
         {/* Publish Now Toggle */}
-        <div className="flex items-center justify-between p-4 bg-muted rounded-card border border-border">
+        <div className="flex items-center justify-between p-4 bg-muted rounded-none border border-border">
           <div>
             <Label htmlFor="publishNow" className="font-display font-semibold">
               {language === "am" ? "አሁን አትም" : "Publish Immediately"}
@@ -162,7 +162,7 @@ export function Step2Visibility({
         </div>
 
         {formData.publishNow === false && (
-          <div className="bg-muted/50 border border-border p-4 rounded-card">
+          <div className="bg-muted/50 border border-border p-4 rounded-none">
             <p className="text-sm font-mono text-muted-foreground">
               {language === "am"
                 ? "ዝርዝርዎ እንደ ረቂቅ ይቀመጣል። ዝግጁ ሲሆኑ ከዳሽቦርድዎ ማተም ይችላሉ።"
@@ -173,7 +173,7 @@ export function Step2Visibility({
       </div>
 
       {/* Summary */}
-      <div className="bg-primary/5 rounded-card p-6 border-2 border-primary/10">
+      <div className="bg-primary/5 rounded-none p-6 border-2 border-primary/10">
         <h3 className="text-lg font-display font-bold text-primary mb-4">
           {language === "am" ? "ማጠቃለያ" : "Summary"}
         </h3>

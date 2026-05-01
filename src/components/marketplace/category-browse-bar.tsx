@@ -15,20 +15,19 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
-// Icon mapping for categories
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  motors: Car,
-  property: Home,
-  electronics: Smartphone,
-  "business-for-sale": Briefcase,
-  services: Wrench,
-  "fashion-beauty": Shirt,
-  "furniture-home": Sofa,
-  "industrial-equipment": Factory,
-  "food-agriculture": Package,
-  energy: Zap,
-  "tools-machinery": Hammer,
-  retail: ShoppingBag,
+  motors:                  Car,
+  property:                Home,
+  electronics:             Smartphone,
+  "business-for-sale":     Briefcase,
+  services:                Wrench,
+  "fashion-beauty":        Shirt,
+  "furniture-home":        Sofa,
+  "industrial-equipment":  Factory,
+  "food-agriculture":      Package,
+  energy:                  Zap,
+  "tools-machinery":       Hammer,
+  retail:                  ShoppingBag,
 };
 
 interface Category {
@@ -55,21 +54,23 @@ export function CategoryBrowseBar({
     <div className="category-nav dark:bg-background">
       <div className="container">
         <div className="flex items-center gap-1 overflow-x-auto hide-scrollbar py-3">
-          {/* All Categories Link */}
+
+          {/* All Categories */}
           <Link
             href="/search"
             className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-button text-sm font-display font-medium whitespace-nowrap transition-all",
+              // rounded-none replaces rounded-none, Space Grotesk bold uppercase
+              "flex items-center gap-2 px-4 py-2 rounded-none font-display font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-all border border-transparent",
               !activeSlug
-                ? "bg-primary text-primary-foreground shadow-hard"
-                : "text-foreground hover:bg-muted"
+                ? "bg-accent text-primary shadow-hard-navy border-primary"
+                : "text-foreground hover:bg-muted hover:border-border"
             )}
           >
             <ShoppingBag className="h-4 w-4" />
             {language === "am" ? "ሁሉም ምድቦች" : "All Categories"}
           </Link>
 
-          {/* Category Links */}
+          {/* Category pills */}
           {categories.map((category) => {
             const Icon = ICON_MAP[category.slug] || Package;
             const isActive = activeSlug === category.slug;
@@ -79,10 +80,11 @@ export function CategoryBrowseBar({
                 key={category.id}
                 href={`/search?categoryId=${category.id}`}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-button text-sm font-display font-medium whitespace-nowrap transition-all",
+                  // rounded-none replaces rounded-none
+                  "flex items-center gap-2 px-4 py-2 rounded-none font-display font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-all border border-transparent",
                   isActive
-                    ? "bg-accent text-primary shadow-hard-navy"
-                    : "text-foreground hover:bg-muted"
+                    ? "bg-accent text-primary shadow-hard-navy border-primary"
+                    : "text-foreground hover:bg-muted hover:border-border"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -90,13 +92,14 @@ export function CategoryBrowseBar({
                   ? category.nameAmharic
                   : category.name}
                 {category.listingCount ? (
-                  <span className="ml-1 text-xs text-muted-foreground">
+                  <span className="ml-1 text-[10px] font-mono text-muted-foreground">
                     ({category.listingCount})
                   </span>
                 ) : null}
               </Link>
             );
           })}
+
         </div>
       </div>
     </div>

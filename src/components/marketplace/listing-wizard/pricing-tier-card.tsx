@@ -91,7 +91,7 @@ export function PricingTierCard({
     <div
       onClick={handleSelect}
       className={cn(
-        "relative bg-white rounded-card border-2 p-6 cursor-pointer transition-all shadow-card hover:shadow-card-hover",
+        "relative bg-white rounded-none border-2 p-6 cursor-pointer transition-all shadow-card hover:shadow-card-hover",
         selected ? "border-accent shadow-hard-navy" : TIER_COLORS[tier.id],
         tier.recommended && "ring-2 ring-accent ring-offset-4",
         isPending && "opacity-70 pointer-events-none"
@@ -99,7 +99,7 @@ export function PricingTierCard({
     >
       {/* Recommended Badge */}
       {tier.recommended && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-primary px-4 py-1 rounded-button text-xs font-bold font-mono shadow-hard">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-primary px-4 py-1 rounded-none text-xs font-bold font-mono shadow-hard">
           {language === "am" ? "የተመከረ" : "RECOMMENDED"}
         </div>
       )}
@@ -114,7 +114,7 @@ export function PricingTierCard({
       {/* Icon */}
       <div
         className={cn(
-          "w-14 h-14 rounded-button flex items-center justify-center mb-4",
+          "w-14 h-14 rounded-none flex items-center justify-center mb-4",
           tier.id === "captain" && "bg-primary",
           tier.id === "officer" && "bg-accent",
           tier.id === "deckhand" && "bg-muted"

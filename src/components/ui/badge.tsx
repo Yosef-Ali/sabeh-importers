@@ -3,24 +3,37 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+// Badge: rounded-none, Space Mono bold uppercase tracking-widest
+// No rounded-full — that was the core system violation
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-none border px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A192F]",
   {
     variants: {
       variant: {
+        // Navy bg, gold-ish foreground
         default:
           "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        // Secondary: muted surface
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // Destructive: red
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-        outline: "text-foreground",
+        // Outline: transparent, inherits text
+        outline:
+          "border-border text-foreground",
+        // Success: verified green
         success:
-          "border-transparent bg-green-500 text-white hover:bg-green-500/80",
+          "border-transparent bg-[#10B981] text-white hover:bg-[#10B981]/80",
+        // Warning: amber — used for pending states
         warning:
-          "border-transparent bg-yellow-500 text-white hover:bg-yellow-500/80",
+          "border-[#fcd34d] bg-[#fffbeb] text-[#92400e] hover:bg-[#fef3c7]",
+        // Info: blue
         info:
           "border-transparent bg-blue-500 text-white hover:bg-blue-500/80",
+        // Gold accent badge — industrial highlight
+        gold:
+          "border-transparent bg-[#FFD700] text-[#0A192F] hover:bg-[#FFD700]/80",
       },
     },
     defaultVariants: {

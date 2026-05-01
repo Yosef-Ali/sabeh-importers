@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
 import { ListingSheet } from "@/components/marketplace/listing-sheet";
 
 interface Listing {
@@ -34,9 +33,7 @@ interface Listing {
   images?: string[] | null;
   viewCount?: number | null;
   createdAt: Date | null;
-  category?: {
-    name: string;
-  } | null;
+  category?: { name: string } | null;
   description?: string | null;
   negotiable?: boolean | null;
   condition?: "NEW" | "LIKE_NEW" | "USED_GOOD" | "USED_FAIR" | "FOR_PARTS" | null;
@@ -53,30 +50,26 @@ interface ListingsTableProps {
   categories: { id: string; name: string }[];
 }
 
+// Status configs — colours preserved, shapes fixed to rounded-none
 const STATUS_CONFIG = {
   ACTIVE: {
-    label: "Active",
-    labelAm: "ንቁ",
+    label: "Active",       labelAm: "ንቁ",
     color: "bg-green-100 text-green-700 border-green-200",
   },
   PENDING_REVIEW: {
-    label: "Pending",
-    labelAm: "በመጠባበቅ ላይ",
+    label: "Pending",      labelAm: "በመጠባበቅ ላይ",
     color: "bg-yellow-100 text-yellow-700 border-yellow-200",
   },
   EXPIRED: {
-    label: "Expired",
-    labelAm: "ጊዜው አልፏል",
+    label: "Expired",      labelAm: "ጊዜው አልፏል",
     color: "bg-gray-100 text-gray-700 border-gray-200",
   },
   SOLD: {
-    label: "Sold",
-    labelAm: "ተሽጧል",
+    label: "Sold",         labelAm: "ተሽጧል",
     color: "bg-blue-100 text-blue-700 border-blue-200",
   },
   DELETED: {
-    label: "Deleted",
-    labelAm: "ተሰርዟል",
+    label: "Deleted",      labelAm: "ተሰርዟል",
     color: "bg-red-100 text-red-700 border-red-200",
   },
 };
@@ -87,10 +80,10 @@ export function ListingsTable({
   onDelete,
   categories,
 }: ListingsTableProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [editingListing, setEditingListing] = useState<Listing | undefined>(undefined);
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [deletingId,      setDeletingId]      = useState<string | null>(null);
+  const [deleteTargetId,  setDeleteTargetId]  = useState<string | null>(null);
+  const [editingListing,  setEditingListing]  = useState<Listing | undefined>(undefined);
+  const [isSheetOpen,     setIsSheetOpen]     = useState(false);
 
   const handleEdit = (listing: Listing) => {
     setEditingListing(listing);
@@ -99,12 +92,9 @@ export function ListingsTable({
 
   const confirmDelete = async () => {
     if (!deleteTargetId) return;
-
     try {
       setDeletingId(deleteTargetId);
-      if (onDelete) {
-        await onDelete(deleteTargetId);
-      }
+      if (onDelete) await onDelete(deleteTargetId);
     } catch (error) {
       console.error("Error deleting listing:", error);
     } finally {
@@ -113,20 +103,23 @@ export function ListingsTable({
     }
   };
 
+  // ── Empty state ──
   if (listings.length === 0) {
     return (
-      <div className="bg-white rounded-card border-2 border-dashed border-primary/20 p-12 text-center">
+      // rounded-none (was rounded-none)
+      <div className="bg-white rounded-none border border-dashed border-primary/20 p-12 text-center shadow-hard">
         <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-lg font-display font-bold text-primary mb-2">
+        <h3 className="font-display font-bold text-lg uppercase text-primary mb-2">
           {language === "am" ? "ምንም ዝርዝሮች የሉም" : "No Listings Yet"}
         </h3>
-        <p className="text-muted-foreground font-mono text-sm mb-6">
+        <p className="text-muted-foreground font-mono text-xs uppercase tracking-widest mb-6">
           {language === "am"
             ? "የእርስዎን የመጀመሪያ ዝርዝር ያትሙ"
             : "Create your first listing to get started"}
         </p>
         <Link href="/dashboard/marketplace/create">
-          <Button variant="accent" size="lg" className="font-display font-bold">
+          {/* Button inherits rounded-none shadow-hard from updated button.tsx */}
+          <Button size="lg" className="font-display font-bold">
             {language === "am" ? "ዝርዝር ፍጠር" : "Create Listing"}
           </Button>
         </Link>
@@ -136,42 +129,40 @@ export function ListingsTable({
 
   return (
     <>
-      {/* Desktop Table View */}
-      <div className="hidden md:block bg-white rounded-card border-2 border-primary/10 overflow-hidden shadow-card">
+      {/* ── Desktop Table View ── */}
+      {/* Table wrapper: rounded-none shadow-hard (was rounded-none shadow-card) */}
+      <div className="hidden md:block bg-white rounded-none border border-border overflow-hidden shadow-hard">
         <table className="w-full">
           <thead className="bg-primary/5 border-b-2 border-primary/10">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "ዝርዝር" : "Listing"}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "ዋጋ" : "Price"}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "ሁኔታ" : "Status"}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "እይታዎች" : "Views"}
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "ቀን" : "Date"}
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-mono font-bold text-primary uppercase tracking-wider">
-                {language === "am" ? "ድርጊቶች" : "Actions"}
-              </th>
+              {[
+                language === "am" ? "ዝርዝር"    : "Listing",
+                language === "am" ? "ዋጋ"       : "Price",
+                language === "am" ? "ሁኔታ"      : "Status",
+                language === "am" ? "እይታዎች"   : "Views",
+                language === "am" ? "ቀን"        : "Date",
+                language === "am" ? "ድርጊቶች"   : "Actions",
+              ].map((heading) => (
+                <th
+                  key={heading}
+                  className="px-4 py-3 text-left font-mono text-[9px] font-bold text-primary uppercase tracking-[0.15em]"
+                >
+                  {heading}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {listings.map((listing) => {
-              const statusConfig =
-                STATUS_CONFIG[listing.status] || STATUS_CONFIG.ACTIVE;
-
+              const statusConfig = STATUS_CONFIG[listing.status] || STATUS_CONFIG.ACTIVE;
               return (
                 <tr key={listing.id} className="hover:bg-muted/30 transition-colors">
+
+                  {/* Listing title + thumbnail */}
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
-                      {/* Thumbnail */}
-                      <div className="relative w-16 h-16 bg-muted rounded-card overflow-hidden flex-shrink-0 border border-border">
+                      {/* Thumbnail: rounded-none (was rounded-none) */}
+                      <div className="relative w-16 h-16 bg-muted rounded-none overflow-hidden flex-shrink-0 border border-border">
                         {listing.images && listing.images.length > 0 ? (
                           <Image
                             src={listing.images[0]}
@@ -186,68 +177,71 @@ export function ListingsTable({
                           </div>
                         )}
                       </div>
-                      {/* Title & Category */}
                       <div className="min-w-0">
                         <Link
                           href={`/listings/${listing.id}`}
-                          className="font-medium text-foreground hover:text-accent transition-colors line-clamp-1 font-display"
+                          className="font-display font-bold text-sm uppercase tracking-tight text-foreground hover:text-accent transition-colors line-clamp-1"
                         >
                           {listing.title}
                         </Link>
                         {listing.category && (
-                          <div className="text-xs text-muted-foreground font-mono mt-1">
+                          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
                             {listing.category.name}
                           </div>
                         )}
                       </div>
                     </div>
                   </td>
+
+                  {/* Price */}
                   <td className="px-4 py-4">
-                    <div className="font-bold text-primary font-display">
+                    <div className="font-display font-bold text-primary">
                       {listing.currency || "ETB"}{" "}
                       {parseFloat(listing.price).toLocaleString()}
                     </div>
                   </td>
+
+                  {/* Status pill: rounded-none font-mono uppercase (was rounded-none) */}
                   <td className="px-4 py-4">
                     <span
                       className={cn(
-                        "inline-flex items-center px-2.5 py-1 rounded-button text-xs font-mono font-bold border",
+                        "inline-flex items-center px-2.5 py-1 rounded-none font-mono text-[9px] font-bold uppercase tracking-widest border",
                         statusConfig.color
                       )}
                     >
-                      {language === "am"
-                        ? statusConfig.labelAm
-                        : statusConfig.label}
+                      {language === "am" ? statusConfig.labelAm : statusConfig.label}
                     </span>
                   </td>
+
+                  {/* Views */}
                   <td className="px-4 py-4">
-                    <div className="flex items-center gap-1 text-muted-foreground font-mono text-sm">
+                    <div className="flex items-center gap-1 font-mono text-xs text-muted-foreground">
                       <Eye className="h-4 w-4" />
                       {listing.viewCount || 0}
                     </div>
                   </td>
+
+                  {/* Date */}
                   <td className="px-4 py-4">
-                    <div className="text-sm text-muted-foreground font-mono">
+                    <div className="font-mono text-xs text-muted-foreground">
                       {listing.createdAt
                         ? new Date(listing.createdAt).toLocaleDateString()
                         : "N/A"}
                     </div>
                   </td>
+
+                  {/* Actions — icon buttons: rounded-none (was rounded via ghost Button) */}
                   <td className="px-4 py-4">
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-1">
                       <Link href={`/listings/${listing.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-none hover:border hover:border-border">
                           <Eye className="h-4 w-4" />
                         </Button>
                       </Link>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 rounded-none hover:border hover:border-border"
                         onClick={() => handleEdit(listing)}
                       >
                         <Edit className="h-4 w-4" />
@@ -255,7 +249,7 @@ export function ListingsTable({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        className="h-8 w-8 p-0 rounded-none text-destructive hover:text-destructive hover:border hover:border-destructive/30"
                         onClick={() => setDeleteTargetId(listing.id)}
                         disabled={deletingId === listing.id}
                       >
@@ -263,6 +257,7 @@ export function ListingsTable({
                       </Button>
                     </div>
                   </td>
+
                 </tr>
               );
             })}
@@ -270,20 +265,17 @@ export function ListingsTable({
         </table>
       </div>
 
-      {/* Mobile Card View */}
+      {/* ── Mobile Card View ── */}
       <div className="md:hidden space-y-4">
         {listings.map((listing) => {
-          const statusConfig =
-            STATUS_CONFIG[listing.status] || STATUS_CONFIG.ACTIVE;
-
+          const statusConfig = STATUS_CONFIG[listing.status] || STATUS_CONFIG.ACTIVE;
           return (
-            <div
-              key={listing.id}
-              className="bg-white rounded-card border-2 border-primary/10 p-4 shadow-card"
-            >
+            // Mobile card: rounded-none shadow-hard (was rounded-none shadow-card)
+            <div key={listing.id} className="bg-white rounded-none border border-border p-4 shadow-hard">
               <div className="flex items-start gap-3 mb-3">
-                {/* Thumbnail */}
-                <div className="relative w-20 h-20 bg-muted rounded-card overflow-hidden flex-shrink-0 border border-border">
+
+                {/* Thumbnail: rounded-none (was rounded-none) */}
+                <div className="relative w-20 h-20 bg-muted rounded-none overflow-hidden flex-shrink-0 border border-border">
                   {listing.images && listing.images.length > 0 ? (
                     <Image
                       src={listing.images[0]}
@@ -303,48 +295,50 @@ export function ListingsTable({
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/listings/${listing.id}`}
-                    className="font-medium text-foreground hover:text-accent transition-colors line-clamp-2 font-display mb-1"
+                    className="font-display font-bold uppercase tracking-tight text-sm text-foreground hover:text-accent transition-colors line-clamp-2 mb-1 block"
                   >
                     {listing.title}
                   </Link>
-                  <div className="text-lg font-bold text-primary font-display mb-1">
+                  <div className="font-display font-bold text-lg text-primary mb-1">
                     {listing.currency || "ETB"}{" "}
                     {parseFloat(listing.price).toLocaleString()}
                   </div>
+                  {/* Status pill: rounded-none (was rounded-none) */}
                   <span
                     className={cn(
-                      "inline-flex items-center px-2 py-0.5 rounded-button text-xs font-mono font-bold border",
+                      "inline-flex items-center px-2 py-0.5 rounded-none font-mono text-[9px] font-bold uppercase tracking-widest border",
                       statusConfig.color
                     )}
                   >
-                    {language === "am"
-                      ? statusConfig.labelAm
-                      : statusConfig.label}
+                    {language === "am" ? statusConfig.labelAm : statusConfig.label}
                   </span>
                 </div>
 
-                {/* Actions Menu */}
+                {/* Actions dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-none">
                       <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem asChild>
+                  <DropdownMenuContent align="end" className="rounded-none border-border">
+                    <DropdownMenuItem asChild className="rounded-none font-body text-sm">
                       <Link href={`/listings/${listing.id}`}>
                         <Eye className="mr-2 h-4 w-4" />
                         {language === "am" ? "እይ" : "View"}
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleEdit(listing)}>
+                    <DropdownMenuItem
+                      className="rounded-none font-body text-sm"
+                      onClick={() => handleEdit(listing)}
+                    >
                       <Edit className="mr-2 h-4 w-4" />
                       {language === "am" ? "አርትዕ" : "Edit"}
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      className="rounded-none font-body text-sm text-destructive"
                       onClick={() => setDeleteTargetId(listing.id)}
                       disabled={deletingId === listing.id}
-                      className="text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       {language === "am" ? "ሰርዝ" : "Delete"}
@@ -354,7 +348,7 @@ export function ListingsTable({
               </div>
 
               {/* Meta Info */}
-              <div className="flex items-center gap-4 text-xs text-muted-foreground font-mono border-t border-border pt-3">
+              <div className="flex items-center gap-4 font-mono text-[10px] text-muted-foreground uppercase tracking-widest border-t border-border pt-3">
                 <div className="flex items-center gap-1">
                   <Eye className="h-3 w-3" />
                   {listing.viewCount || 0}
@@ -371,6 +365,7 @@ export function ListingsTable({
         })}
       </div>
 
+      {/* ── Edit Sheet ── */}
       <ListingSheet
         open={isSheetOpen}
         onOpenChange={(open) => {
@@ -382,28 +377,37 @@ export function ListingsTable({
         language={language}
       />
 
-      <AlertDialog open={!!deleteTargetId} onOpenChange={(open) => { if (!open) setDeleteTargetId(null); }}>
-        <AlertDialogContent>
+      {/* ── Delete Confirm Dialog ── */}
+      <AlertDialog
+        open={!!deleteTargetId}
+        onOpenChange={(open) => { if (!open) setDeleteTargetId(null); }}
+      >
+        <AlertDialogContent className="rounded-none border-border shadow-hard">
           <AlertDialogHeader>
-            <AlertDialogTitle>
+            <AlertDialogTitle className="font-display font-bold uppercase">
               {language === "am" ? "ዝርዝር ሰርዝ" : "Delete Listing"}
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="font-body">
               {language === "am"
                 ? "እርግጠኛ ነዎት ይህን ዝርዝር መሰረዝ ይፈልጋሉ? ይህ ተግባር ሊቀለበስ አይችልም።"
                 : "Are you sure you want to delete this listing? This action cannot be undone."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={!!deletingId}>
+            <AlertDialogCancel
+              disabled={!!deletingId}
+              className="rounded-none font-display font-bold uppercase text-xs"
+            >
               {language === "am" ? "ሰርዝ" : "Cancel"}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               disabled={!!deletingId}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="rounded-none bg-destructive text-destructive-foreground font-display font-bold uppercase text-xs shadow-[4px_4px_0px_#7f1d1d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
             >
-              {deletingId ? "..." : language === "am" ? "አዎ፣ ሰርዝ" : "Yes, Delete"}
+              {deletingId
+                ? "..."
+                : language === "am" ? "አዎ፣ ሰርዝ" : "Yes, Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

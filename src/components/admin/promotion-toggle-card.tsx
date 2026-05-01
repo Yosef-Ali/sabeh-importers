@@ -114,7 +114,7 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
         <button
           onClick={togglePromoted}
           disabled={loading}
-          className={`flex items-center gap-1.5 rounded-button px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
+          className={`flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
             ${promoted
               ? "bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
               : "bg-primary/5 text-muted-foreground border-primary/10 hover:bg-primary/10"
@@ -128,7 +128,7 @@ export function PromotionToggleCard({ listing }: PromotionToggleCardProps) {
         <button
           onClick={toggleFeatured}
           disabled={loading}
-          className={`flex items-center gap-1.5 rounded-button px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
+          className={`flex items-center gap-1.5 rounded-none px-3 py-1.5 text-xs font-mono font-bold border transition-colors disabled:opacity-50
             ${featured
               ? "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200"
               : "bg-primary/5 text-muted-foreground border-primary/10 hover:bg-primary/10"

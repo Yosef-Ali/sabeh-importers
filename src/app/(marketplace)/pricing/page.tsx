@@ -28,7 +28,7 @@ export default async function PricingPage() {
         <div className="container relative z-10">
           <div className="mx-auto max-w-3xl text-center">
             {isFreeMode && (
-              <div className="mb-6 inline-flex items-center gap-2 rounded-button border-2 border-accent bg-accent/20 px-4 py-2 text-sm font-bold font-mono text-accent uppercase tracking-widest shadow-hard animate-pulse">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-none border-2 border-accent bg-accent/20 px-4 py-2 text-sm font-bold font-mono text-accent uppercase tracking-widest shadow-hard animate-pulse">
                 <Zap className="h-4 w-4" />
                 Limited Time Offer: All Plans Free!
               </div>
@@ -62,7 +62,7 @@ export default async function PricingPage() {
             return (
               <div
                 key={plan.id}
-                className={`rounded-card border-2 p-8 shadow-card flex flex-col h-full hover:shadow-card-hover transition-all ${
+                className={`rounded-none border-2 p-8 shadow-card flex flex-col h-full hover:shadow-card-hover transition-all ${
                   isHighlighted
                     ? "bg-primary text-white border-primary"
                     : "bg-white dark:bg-card border-primary/10"
@@ -168,7 +168,7 @@ export default async function PricingPage() {
                 </p>
               </div>
 
-              <div className="bg-white rounded-card border-2 border-primary/10 shadow-card overflow-hidden">
+              <div className="bg-white rounded-none border-2 border-primary/10 shadow-card overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
@@ -351,7 +351,7 @@ export default async function PricingPage() {
 
       {/* Final CTA */}
       <section className="container py-16 md:py-24">
-        <div className="mx-auto max-w-4xl text-center bg-primary rounded-card p-12 md:p-16 shadow-hard-navy">
+        <div className="mx-auto max-w-4xl text-center bg-primary rounded-none p-12 md:p-16 shadow-hard-navy">
           <h2 className="text-3xl md:text-4xl font-display font-bold text-white mb-4 tracking-tight">
             Ready to Start Selling?
           </h2>
@@ -426,8 +426,8 @@ function BenefitCard({
   description: string;
 }) {
   return (
-    <div className="bg-white rounded-card border-2 border-primary/10 p-8 shadow-card hover:shadow-card-hover transition-all">
-      <div className="w-14 h-14 bg-accent/10 rounded-button flex items-center justify-center mb-6 text-accent">
+    <div className="bg-white rounded-none border-2 border-primary/10 p-8 shadow-card hover:shadow-card-hover transition-all">
+      <div className="w-14 h-14 bg-accent/10 rounded-none flex items-center justify-center mb-6 text-accent">
         {icon}
       </div>
       <h3 className="text-xl font-display font-bold text-primary mb-3">
@@ -448,7 +448,7 @@ function FAQItem({
   answer: string;
 }) {
   return (
-    <div className="bg-white rounded-card border-2 border-primary/10 p-6 shadow-card">
+    <div className="bg-white rounded-none border-2 border-primary/10 p-6 shadow-card">
       <h3 className="text-lg font-display font-bold text-primary mb-3">
         {question}
       </h3>

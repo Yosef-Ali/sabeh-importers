@@ -5,28 +5,40 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  // Base: rounded-none, Space Grotesk bold uppercase, no blurry ring, translate transition
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none font-display font-bold uppercase tracking-wider transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0A192F] disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        // Primary CTA: gold bg, navy text, hard shadow, hover translate
+        default:
+          "bg-[#FFD700] text-[#0A192F] shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none",
+        // Destructive: red bg, hard shadow
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground shadow-[4px_4px_0px_#7f1d1d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none",
+        // Outline: transparent, navy border
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-foreground bg-transparent text-foreground hover:bg-foreground/5",
+        // Secondary: navy bg, gold text, hard gold shadow
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        accent: "bg-accent text-accent-foreground hover:bg-accent/90 shadow-hard-navy",
+          "bg-primary text-primary-foreground shadow-hard-navy hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none",
+        // Ghost: no bg, no border, no shadow
+        ghost:
+          "hover:bg-accent/10 hover:text-foreground text-muted-foreground",
+        // Link: text only
+        link:
+          "text-primary underline-offset-4 hover:underline shadow-none",
+        // Accent: gold bg, navy text, hard navy shadow (same as default — semantic alias)
+        accent:
+          "bg-[#FFD700] text-[#0A192F] shadow-hard-navy hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none",
       },
       size: {
-        xs: "h-7 rounded-md px-2 text-xs",
-        sm: "h-9 rounded-md px-3",
-        default: "h-10 px-4 py-2",
-        lg: "h-11 rounded-md px-8",
-        xl: "h-12 rounded-md px-10 text-base",
-        icon: "h-10 w-10",
+        xs:      "h-7 px-2 text-[10px]",
+        sm:      "h-9 px-3 text-xs",
+        default: "h-10 px-4 py-2 text-sm",
+        lg:      "h-11 px-8 text-sm",
+        xl:      "h-12 px-10 text-base",
+        icon:    "h-10 w-10",
       },
     },
     defaultVariants: {

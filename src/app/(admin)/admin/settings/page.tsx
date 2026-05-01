@@ -21,7 +21,7 @@ export default async function AdminSettingsPage() {
       </div>
 
       <div className="grid gap-6">
-        <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card">
+        <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 p-6 shadow-card">
           <h2 className="text-xl font-display font-bold text-primary mb-4 border-b pb-2">Subscription & Payments</h2>
           
           <SettingsToggle

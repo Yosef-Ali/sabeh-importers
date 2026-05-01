@@ -84,7 +84,7 @@ export default async function DashboardPage() {
                 <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Total Listings</p>
                 <p className="text-3xl font-display font-bold mt-1 tabular-nums text-primary">{stats.total}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-primary/5 text-primary">
+              <div className="flex h-12 w-12 items-center justify-center rounded-none bg-primary/5 text-primary">
                 <Package className="h-6 w-6" />
               </div>
             </div>
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
                 <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Active</p>
                 <p className="text-3xl font-display font-bold mt-1 tabular-nums text-green-600">{stats.active}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-green-500/10 text-green-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-none bg-green-500/10 text-green-600">
                 <CheckCircle2 className="h-6 w-6" />
               </div>
             </div>
@@ -112,7 +112,7 @@ export default async function DashboardPage() {
                 <p className="text-xs font-mono font-bold text-muted-foreground uppercase tracking-wider">Total Views</p>
                 <p className="text-3xl font-display font-bold mt-1 tabular-nums text-primary">{stats.totalViews.toLocaleString()}</p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-button bg-blue-500/10 text-blue-600">
+              <div className="flex h-12 w-12 items-center justify-center rounded-none bg-blue-500/10 text-blue-600">
                 <Eye className="h-6 w-6" />
               </div>
             </div>
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
                   {unreadCount}
                 </p>
               </div>
-              <div className={cn("flex h-12 w-12 items-center justify-center rounded-button", unreadCount > 0 ? "bg-accent/10 text-accent" : "bg-primary/5 text-primary")}>
+              <div className={cn("flex h-12 w-12 items-center justify-center rounded-none", unreadCount > 0 ? "bg-accent/10 text-accent" : "bg-primary/5 text-primary")}>
                 <MessageCircle className="h-6 w-6" />
               </div>
             </div>

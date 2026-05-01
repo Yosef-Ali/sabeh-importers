@@ -197,7 +197,7 @@ export function Step1Details({
       </div>
 
       {/* Negotiable Toggle */}
-      <div className="flex items-center justify-between p-4 bg-muted rounded-card border border-border">
+      <div className="flex items-center justify-between p-4 bg-muted rounded-none border border-border">
         <div>
           <Label htmlFor="negotiable" className="font-display font-semibold">
             {language === "am" ? "ዋጋው ተደራሽ ነው?" : "Price Negotiable?"}
@@ -301,7 +301,7 @@ export function Step1Details({
       </div>
 
       {/* Help Text */}
-      <div className="bg-accent/10 border-l-4 border-accent p-4 rounded-button">
+      <div className="bg-accent/10 border-l-4 border-accent p-4 rounded-none">
         <p className="text-sm font-mono text-foreground">
           <strong>
             {language === "am" ? "ጠቃሚ ምክር:" : "Pro Tip:"}

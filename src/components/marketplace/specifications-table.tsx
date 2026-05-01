@@ -85,7 +85,7 @@ export function SpecificationsTable({
         {language === "am" ? "ዝርዝር መግለጫዎች" : "Specifications"}
       </h2>
 
-      <div className="bg-card rounded-card border border-border shadow-card overflow-hidden">
+      <div className="bg-card rounded-none border border-border shadow-card overflow-hidden">
         {/* Desktop: 3-column grid */}
         <div className="hidden md:grid md:grid-cols-3 divide-x divide-border">
           {attributeList.map((attr, index) => (

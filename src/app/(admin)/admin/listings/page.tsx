@@ -22,7 +22,7 @@ export default async function AdminListingsPage() {
       </div>
 
       {pendingListings.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center bg-white dark:bg-card rounded-card border-2 border-dashed border-primary/20 p-12 text-center">
+        <div className="flex min-h-[400px] flex-col items-center justify-center bg-white dark:bg-card rounded-none border-2 border-dashed border-primary/20 p-12 text-center">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted border border-accent/20">
             <Package className="h-10 w-10 text-accent/60" />
           </div>

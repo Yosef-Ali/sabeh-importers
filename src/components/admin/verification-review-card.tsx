@@ -11,15 +11,20 @@ interface VerificationReviewCardProps {
 }
 
 export function VerificationReviewCard({ verification }: VerificationReviewCardProps) {
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [showDoc, setShowDoc] = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [done,     setDone]     = useState(false);
+  const [notes,    setNotes]    = useState("");
+  const [showDoc,  setShowDoc]  = useState(false);
 
   async function handleDecision(decision: "VERIFIED" | "REJECTED") {
     setLoading(true);
     try {
-      await reviewVerification(verification.id, decision, "admin", notes || undefined);
+      await reviewVerification(
+        verification.id,
+        decision,
+        "admin",
+        notes || undefined
+      );
       setDone(true);
       if (decision === "VERIFIED") {
         toast.success(`${verification.user?.name}'s verification has been approved.`);
@@ -33,41 +38,53 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
     }
   }
 
+  // Decision result — rounded-none (was rounded-none)
   if (done) {
     return (
-      <div className="rounded-card border-2 border-green-200 bg-green-50 p-5 text-sm text-green-700 font-display font-medium">
+      <div className="rounded-none border border-green-200 bg-green-50 p-5 font-mono text-xs font-bold uppercase tracking-widest text-green-700">
         Verification decision recorded.
       </div>
     );
   }
 
-  const docUrl = verification.documentUrl as string | null;
+  const docUrl  = verification.documentUrl as string | null;
   const isImage = docUrl && /\.(jpg|jpeg|png|webp|gif)$/i.test(docUrl);
 
   return (
-    <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card space-y-5">
-      {/* User info */}
+    // Card: rounded-none shadow-hard (was rounded-none shadow-card)
+    <div className="bg-white dark:bg-card rounded-none border border-border p-6 shadow-hard space-y-5">
+
+      {/* ── User info ── */}
       <div className="flex items-center gap-4">
-        <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-display font-bold text-sm">
+        {/* Avatar: rounded-none border-gold (was rounded-full) */}
+        <div className="h-10 w-10 rounded-none bg-[#0A192F] border border-accent/50 flex items-center justify-center text-white font-display font-bold text-sm flex-shrink-0">
           {verification.user?.name?.[0]?.toUpperCase() ?? "?"}
         </div>
         <div>
-          <p className="font-display font-bold text-primary">{verification.user?.name}</p>
-          <p className="text-xs text-muted-foreground font-mono">{verification.user?.email} · {verification.user?.role}</p>
+          <p className="font-display font-bold uppercase tracking-tight text-primary">
+            {verification.user?.name}
+          </p>
+          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+            {verification.user?.email} · {verification.user?.role}
+          </p>
         </div>
-        <span className="ml-auto text-xs font-mono uppercase text-muted-foreground bg-primary/5 border-2 border-primary/10 px-2 py-1 rounded-button">
+        {/* Type badge: rounded-none (was rounded-none) */}
+        <span className="ml-auto font-mono text-[9px] font-bold uppercase tracking-widest text-muted-foreground bg-primary/5 border border-border px-2 py-1 rounded-none">
           {verification.type.replace("_", " ")}
         </span>
       </div>
 
-      {/* Document viewer — admin-only, toggle to show */}
+      {/* ── Document viewer ── */}
       {docUrl ? (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-amber-200">
-            <p className="text-xs font-bold text-amber-800 uppercase tracking-wide">Confidential Document</p>
+        // Doc box: rounded-none shadow-hard-yellow (was rounded-lg)
+        <div className="rounded-none border border-[#FFD700] bg-amber-50 overflow-hidden" style={{ boxShadow: "4px 4px 0px #FFD700" }}>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[#FFD700]/50">
+            <p className="font-mono text-[9px] font-bold text-amber-800 uppercase tracking-widest">
+              Confidential Document
+            </p>
             <button
               onClick={() => setShowDoc(!showDoc)}
-              className="flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-900 transition-colors"
+              className="flex items-center gap-1.5 font-mono text-[9px] font-bold text-amber-700 hover:text-amber-900 uppercase tracking-widest transition-colors"
             >
               {showDoc ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
               {showDoc ? "Hide" : "View Document"}
@@ -76,7 +93,8 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
           {showDoc && (
             <div className="p-4">
               {isImage ? (
-                <div className="relative aspect-[3/2] max-w-md rounded overflow-hidden">
+                // Image viewer: rounded-none (was rounded)
+                <div className="relative aspect-[3/2] max-w-md rounded-none overflow-hidden">
                   <Image
                     src={docUrl}
                     alt="Verification document"
@@ -86,11 +104,12 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
                   />
                 </div>
               ) : (
+                // Open doc button: rounded-none (was rounded-none)
                 <a
                   href={docUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-button bg-primary text-primary-foreground px-4 py-2 text-sm font-display font-bold hover:bg-primary/90 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-none bg-[#0A192F] text-white px-4 py-2 font-display text-xs font-bold uppercase tracking-wider hover:bg-[#0A192F]/90 transition-colors"
                 >
                   Open Document
                 </a>
@@ -99,29 +118,34 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
           )}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground font-mono italic">No document uploaded.</p>
+        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest italic">
+          No document uploaded.
+        </p>
       )}
 
-      {/* Submitted at */}
-      <p className="text-xs text-muted-foreground font-mono">
+      {/* ── Submitted at ── */}
+      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
         Submitted {new Date(verification.createdAt).toLocaleString()}
       </p>
 
-      {/* Admin notes */}
+      {/* ── Admin notes input — rounded-none focus shadow-hard (was rounded-none rounded-8px) ── */}
       <input
         type="text"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Admin notes (optional)…"
-        className="w-full rounded-card border-2 border-primary/10 bg-white dark:bg-card text-foreground px-4 py-2.5 text-sm font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+        className="w-full rounded-none border border-border bg-white dark:bg-card text-foreground px-4 py-2.5 font-mono text-xs uppercase tracking-widest placeholder:text-muted-foreground placeholder:normal-case placeholder:tracking-normal focus:outline-none focus:border-foreground focus:shadow-hard transition-all duration-150"
+        style={{ boxShadow: "none" }}
+        onFocus={(e) => { e.currentTarget.style.boxShadow = "4px 4px 0px #0A192F"; }}
+        onBlur={(e)  => { e.currentTarget.style.boxShadow = "none"; }}
       />
 
-      {/* Decision buttons */}
+      {/* ── Decision buttons — rounded-none throughout ── */}
       <div className="flex gap-3">
         <button
           onClick={() => handleDecision("VERIFIED")}
           disabled={loading}
-          className="flex items-center gap-2 rounded-button bg-green-600 text-white px-5 py-2 text-sm font-display font-bold hover:bg-green-700 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 rounded-none bg-green-600 text-white px-5 py-2 font-display text-xs font-bold uppercase tracking-wider shadow-[4px_4px_0px_#14532d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all disabled:opacity-50"
         >
           <ShieldCheck className="h-4 w-4" />
           {loading ? "…" : "Approve"}
@@ -129,7 +153,7 @@ export function VerificationReviewCard({ verification }: VerificationReviewCardP
         <button
           onClick={() => handleDecision("REJECTED")}
           disabled={loading}
-          className="flex items-center gap-2 rounded-button bg-red-50 text-red-600 border-2 border-red-200 px-5 py-2 text-sm font-display font-bold hover:bg-red-100 transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 rounded-none bg-transparent text-destructive border border-destructive px-5 py-2 font-display text-xs font-bold uppercase tracking-wider hover:bg-red-50 transition-colors disabled:opacity-50"
         >
           <ShieldX className="h-4 w-4" />
           {loading ? "…" : "Reject"}

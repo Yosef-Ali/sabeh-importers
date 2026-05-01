@@ -51,16 +51,18 @@ export function SellerCard({
   return (
     <div
       className={cn(
-        "bg-card rounded-card border border-border shadow-card p-6 space-y-6",
+        // rounded-none, shadow-hard (was rounded-none shadow-card)
+        "bg-card rounded-none border border-border shadow-hard p-6 space-y-6",
         "sticky top-24",
         className
       )}
     >
-      {/* Seller Profile */}
+      {/* ── Seller Profile ── */}
       <div className="space-y-4">
         <div className="flex items-start gap-4">
-          {/* Avatar */}
-          <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-border bg-muted flex-shrink-0">
+
+          {/* Avatar — rounded-none (was rounded-full) */}
+          <div className="relative w-16 h-16 rounded-none overflow-hidden border-2 border-border bg-muted flex-shrink-0">
             {seller.avatar ? (
               <Image
                 src={seller.avatar}
@@ -69,13 +71,15 @@ export function SellerCard({
                 className="object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-navy text-white font-display font-bold text-xl">
+              <div className="w-full h-full flex items-center justify-center bg-[#0A192F] text-white font-display font-bold text-xl">
                 {seller.name.charAt(0).toUpperCase()}
               </div>
             )}
+
+            {/* Verified badge — rounded-none (was rounded-full) */}
             {seller.verified && (
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gold rounded-full flex items-center justify-center border-2 border-card shadow-hard">
-                <CheckCircle className="h-4 w-4 text-navy" />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#FFD700] rounded-none flex items-center justify-center border-2 border-card shadow-hard">
+                <CheckCircle className="h-4 w-4 text-[#0A192F]" />
               </div>
             )}
           </div>
@@ -84,7 +88,7 @@ export function SellerCard({
           <div className="flex-1 min-w-0">
             <Link
               href={`/users/${seller.id}`}
-              className="font-display font-bold text-lg text-foreground hover:text-gold transition-colors line-clamp-1"
+              className="font-display font-bold text-lg text-foreground hover:text-accent transition-colors line-clamp-1 uppercase tracking-tight"
             >
               {seller.name}
             </Link>
@@ -92,8 +96,8 @@ export function SellerCard({
             {/* Rating */}
             {seller.rating && (
               <div className="flex items-center gap-1 mt-1">
-                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-bold text-sm text-foreground">
+                <Star className="h-4 w-4 fill-[#FFD700] text-[#FFD700]" />
+                <span className="font-display font-bold text-sm text-foreground">
                   {seller.rating.toFixed(1)}
                 </span>
                 {seller.totalRatings && (
@@ -106,7 +110,7 @@ export function SellerCard({
 
             {/* Member Since */}
             {memberSinceDate && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono mt-1">
+              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono uppercase tracking-widest mt-1">
                 <Calendar className="h-3 w-3" />
                 {language === "am" ? "አባል ከ" : "Member since"} {memberSinceDate}
               </div>
@@ -114,7 +118,7 @@ export function SellerCard({
 
             {/* Location */}
             {seller.location && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono mt-1">
+              <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono uppercase tracking-widest mt-1">
                 <MapPin className="h-3 w-3" />
                 {seller.location}
               </div>
@@ -122,50 +126,50 @@ export function SellerCard({
           </div>
         </div>
 
-        {/* Total Listings */}
+        {/* Total Listings box — rounded-none + border (was rounded-none) */}
         {seller.totalListings !== undefined && (
-          <div className="bg-muted/50 rounded-button p-3 text-center">
+          <div className="bg-muted/50 rounded-none border border-border p-3 text-center">
             <div className="text-2xl font-display font-bold text-primary">
               {seller.totalListings}
             </div>
-            <div className="text-xs font-mono text-muted-foreground uppercase tracking-wide">
+            <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
               {language === "am" ? "ጠቅላላ ዝርዝሮች" : "Total Listings"}
             </div>
           </div>
         )}
       </div>
 
-      {/* Contact Actions */}
+      {/* ── Contact Actions ── */}
       <div className="space-y-3">
-        <h3 className="text-sm font-display font-bold text-foreground uppercase tracking-wide">
+        <h3 className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
           {language === "am" ? "አግኝ" : "Contact Seller"}
         </h3>
 
-        {/* Chat Button */}
+        {/* Primary: Message — gold bg, navy text, shadow-hard */}
         <Button
           variant="accent"
           size="lg"
-          className="w-full font-display font-bold shadow-hard-navy"
+          className="w-full font-display font-bold"
         >
           <MessageSquare className="mr-2 h-5 w-5" />
           {language === "am" ? "መልዕክት ላክ" : "Send Message"}
         </Button>
 
-        {/* Call Button */}
+        {/* Secondary: Call — outline */}
         <Button
           variant="outline"
           size="lg"
-          className="w-full font-display font-semibold"
+          className="w-full font-display font-semibold rounded-none"
         >
           <Phone className="mr-2 h-5 w-5" />
           {language === "am" ? "ደውል" : "Call Now"}
         </Button>
 
-        {/* WhatsApp Button */}
+        {/* WhatsApp — outline with green text */}
         <Button
           variant="outline"
           size="lg"
-          className="w-full font-display font-semibold text-green-600 hover:bg-green-50"
+          className="w-full font-display font-semibold text-green-600 hover:bg-green-50 rounded-none border-green-200"
         >
           <svg
             className="mr-2 h-5 w-5"
@@ -178,46 +182,34 @@ export function SellerCard({
           {language === "am" ? "ዋትሳፕ" : "WhatsApp"}
         </Button>
 
-        {/* Make Offer Button */}
+        {/* Make Offer — ghost */}
         <Button
           variant="ghost"
           size="lg"
-          className="w-full font-display font-semibold"
+          className="w-full font-display font-semibold rounded-none"
         >
           {language === "am" ? "ቀረጻ አቅርብ" : "Make an Offer"}
         </Button>
       </div>
 
-      {/* Additional Actions */}
+      {/* ── Additional Actions ── */}
       <div className="flex items-center gap-2 pt-4 border-t border-border">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex-1 text-xs font-mono"
-        >
+        <Button variant="ghost" size="sm" className="flex-1 text-[10px] font-mono uppercase tracking-widest rounded-none">
           <Heart className="mr-1.5 h-4 w-4" />
           {language === "am" ? "አስቀምጥ" : "Save"}
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex-1 text-xs font-mono"
-        >
+        <Button variant="ghost" size="sm" className="flex-1 text-[10px] font-mono uppercase tracking-widest rounded-none">
           <Share2 className="mr-1.5 h-4 w-4" />
           {language === "am" ? "አጋራ" : "Share"}
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex-1 text-xs font-mono text-destructive hover:text-destructive"
-        >
+        <Button variant="ghost" size="sm" className="flex-1 text-[10px] font-mono uppercase tracking-widest rounded-none text-destructive hover:text-destructive">
           <Flag className="mr-1.5 h-4 w-4" />
           {language === "am" ? "ሪፖርት" : "Report"}
         </Button>
       </div>
 
-      {/* Safety Notice */}
-      <div className="bg-accent/10 border-l-4 border-accent p-3 rounded-button">
+      {/* ── Safety Notice — rounded-none (was rounded-none) ── */}
+      <div className="bg-accent/10 border-l-4 border-accent p-3 rounded-none">
         <p className="text-xs font-mono text-foreground leading-relaxed">
           {language === "am" ? (
             <>

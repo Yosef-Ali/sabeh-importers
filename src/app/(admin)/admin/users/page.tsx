@@ -35,18 +35,18 @@ export default async function AdminUsersPage({
           name="search"
           defaultValue={search}
           placeholder="Search by name or email…"
-          className="flex-1 rounded-card border-2 border-primary/10 bg-white dark:bg-card px-4 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent max-w-sm"
+          className="flex-1 rounded-none border-2 border-primary/10 bg-white dark:bg-card px-4 py-2.5 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent max-w-sm"
         />
         <button
           type="submit"
-          className="rounded-button bg-primary text-primary-foreground px-5 py-2.5 text-sm font-display font-bold hover:bg-primary/90 transition-colors"
+          className="rounded-none bg-primary text-primary-foreground px-5 py-2.5 text-sm font-display font-bold hover:bg-primary/90 transition-colors"
         >
           Search
         </button>
       </form>
 
       {/* Table */}
-      <div className="overflow-hidden bg-white dark:bg-card rounded-card border-2 border-primary/10 shadow-card">
+      <div className="overflow-hidden bg-white dark:bg-card rounded-none border-2 border-primary/10 shadow-card">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-primary/5 border-b-2 border-primary/10">
@@ -81,7 +81,7 @@ export default async function AdminUsersPage({
                   </div>
                 </td>
                 <td className="px-4 py-4">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-button text-xs font-mono font-bold border
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-none text-xs font-mono font-bold border
                     ${user.role === "ADMIN" ? "bg-red-100 text-red-700 border-red-200" :
                       user.role === "SELLER" ? "bg-blue-100 text-blue-700 border-blue-200" :
                       user.role === "MANAGER" ? "bg-purple-100 text-purple-700 border-purple-200" :
@@ -98,7 +98,7 @@ export default async function AdminUsersPage({
                   />
                 </td>
                 <td className="px-4 py-4">
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-button text-xs font-mono font-bold border
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-none text-xs font-mono font-bold border
                     ${user.verificationStatus === "VERIFIED" ? "bg-green-100 text-green-700 border-green-200" :
                       user.verificationStatus === "PENDING" ? "bg-yellow-100 text-yellow-700 border-yellow-200" :
                       "bg-gray-100 text-gray-700 border-gray-200"}`}>
@@ -107,7 +107,7 @@ export default async function AdminUsersPage({
                   </span>
                 </td>
                 <td className="px-4 py-4">
-                  <span className={`inline-flex px-2.5 py-1 rounded-button text-xs font-mono font-bold border
+                  <span className={`inline-flex px-2.5 py-1 rounded-none text-xs font-mono font-bold border
                     ${user.isActive ? "bg-green-100 text-green-700 border-green-200" : "bg-red-100 text-red-700 border-red-200"}`}>
                     {user.isActive ? "Active" : "Banned"}
                   </span>
@@ -136,7 +136,7 @@ export default async function AdminUsersPage({
             {page > 1 && (
               <a
                 href={`?page=${page - 1}${search ? `&search=${search}` : ""}`}
-                className="rounded-button border-2 border-primary/10 bg-white dark:bg-card px-4 py-2 font-display font-medium hover:bg-muted transition-colors"
+                className="rounded-none border-2 border-primary/10 bg-white dark:bg-card px-4 py-2 font-display font-medium hover:bg-muted transition-colors"
               >
                 Previous
               </a>
@@ -144,7 +144,7 @@ export default async function AdminUsersPage({
             {page < totalPages && (
               <a
                 href={`?page=${page + 1}${search ? `&search=${search}` : ""}`}
-                className="rounded-button bg-primary text-primary-foreground px-4 py-2 font-display font-medium hover:bg-primary/90 transition-colors"
+                className="rounded-none bg-primary text-primary-foreground px-4 py-2 font-display font-medium hover:bg-primary/90 transition-colors"
               >
                 Next
               </a>

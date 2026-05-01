@@ -51,7 +51,7 @@ export function QuickSearchWidget({ language = "en" }: QuickSearchWidgetProps) {
   return (
     <form
       onSubmit={handleSearch}
-      className="w-full max-w-4xl mx-auto bg-white rounded-button shadow-hard-navy border-2 border-primary overflow-hidden"
+      className="w-full max-w-4xl mx-auto bg-white rounded-none shadow-hard-navy border-2 border-primary overflow-hidden"
     >
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] divide-y md:divide-y-0 md:divide-x-2 divide-primary/10">
         {/* Search Input */}
@@ -93,7 +93,7 @@ export function QuickSearchWidget({ language = "en" }: QuickSearchWidgetProps) {
             type="submit"
             size="lg"
             variant="accent"
-            className="w-full md:w-auto h-12 px-8 font-display font-semibold text-base rounded-button"
+            className="w-full md:w-auto h-12 px-8 font-display font-semibold text-base rounded-none"
           >
             <Search className="mr-2 h-5 w-5" />
             {language === "am" ? "ፈልግ" : "Search"}

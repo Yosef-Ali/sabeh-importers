@@ -34,7 +34,7 @@ export function ReportCard({ report }: ReportCardProps) {
   }
 
   return (
-    <div className="bg-white dark:bg-card rounded-card border-2 border-primary/10 p-6 shadow-card space-y-4">
+    <div className="bg-white dark:bg-card rounded-none border-2 border-primary/10 p-6 shadow-card space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">
           <p className="font-display font-bold text-primary">
@@ -59,14 +59,14 @@ export function ReportCard({ report }: ReportCardProps) {
             Submitted {new Date(report.createdAt).toLocaleString()}
           </p>
         </div>
-        <span className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-button text-xs font-mono font-bold border bg-red-100 text-red-700 border-red-200 uppercase">
+        <span className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-mono font-bold border bg-red-100 text-red-700 border-red-200 uppercase">
           <Flag className="h-3 w-3" />
           {report.status}
         </span>
       </div>
 
       {report.reason && (
-        <div className="rounded-card bg-primary/5 border-2 border-primary/10 p-4 text-sm text-foreground">
+        <div className="rounded-none bg-primary/5 border-2 border-primary/10 p-4 text-sm text-foreground">
           <p className="text-xs font-mono font-bold text-primary uppercase tracking-wider mb-1">Reason</p>
           {report.reason}
         </div>
@@ -82,20 +82,20 @@ export function ReportCard({ report }: ReportCardProps) {
           onChange={(e) => setResolution(e.target.value)}
           placeholder="Resolution note (required)…"
           rows={2}
-          className="w-full rounded-card border-2 border-primary/10 bg-white dark:bg-card text-foreground placeholder:text-muted-foreground px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+          className="w-full rounded-none border-2 border-primary/10 bg-white dark:bg-card text-foreground placeholder:text-muted-foreground px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-accent resize-none"
         />
         <div className="flex gap-3">
           <button
             onClick={() => handleResolve("RESOLVED")}
             disabled={loading}
-            className="rounded-button bg-primary text-primary-foreground px-5 py-2 text-sm font-display font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
+            className="rounded-none bg-primary text-primary-foreground px-5 py-2 text-sm font-display font-bold hover:bg-primary/90 transition-colors disabled:opacity-50"
           >
             {loading ? "…" : "Mark Resolved"}
           </button>
           <button
             onClick={() => handleResolve("DISMISSED")}
             disabled={loading}
-            className="rounded-button border-2 border-primary/10 bg-white dark:bg-card px-5 py-2 text-sm font-display font-bold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
+            className="rounded-none border-2 border-primary/10 bg-white dark:bg-card px-5 py-2 text-sm font-display font-bold text-muted-foreground hover:bg-muted transition-colors disabled:opacity-50"
           >
             Dismiss
           </button>
