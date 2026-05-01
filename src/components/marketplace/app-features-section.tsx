@@ -7,16 +7,16 @@ import { Smartphone, Route, ShieldCheck, Map } from "lucide-react";
 export function AppFeaturesSection() {
   return (
     <section className="bg-navy overflow-hidden relative">
-      <div className="absolute inset-0 opacity-10 pointer-events-none" 
-        style={{ 
-          backgroundImage: "radial-gradient(#FFD700 1px, transparent 1px)", 
-          backgroundSize: "32px 32px" 
+      <div className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{
+          backgroundImage: "radial-gradient(#FFD700 1px, transparent 1px)",
+          backgroundSize: "32px 32px"
         }}
       ></div>
 
       <div className="max-w-[1440px] mx-auto px-6 py-24 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* Text Content */}
           <div className="space-y-8">
             <div className="inline-block border border-gold/30 bg-gold/10 px-4 py-1 rounded-full">
@@ -24,13 +24,13 @@ export function AppFeaturesSection() {
                 የሞባይል መተግበሪያ / Mobile App
               </span>
             </div>
-            
+
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-bold leading-none uppercase">
               ንግድዎን <span className="text-gold">በየትኛውም ቦታ</span> ተቆጣጠሩ።
-              <br/> 
+              <br/>
               <span className="text-2xl md:text-3xl text-gray-400 mt-2 block normal-case font-light">Trade Anywhere, Monitor Everything.</span>
             </h2>
-            
+
             <p className="text-lg text-gray-300 max-w-xl leading-relaxed">
               የሳቤህ ባለስልጣን የሞባይል መተግበሪያ ሙሉ የንግድ ስርዓቱን በእጅዎ ያደርጋል። ንብረቶችን ይከታተሉ፣ ግብይቶችን ይፈጽሙ እና መረጃዎችን በቅጽበት ያግኙ።
             </p>
@@ -45,7 +45,7 @@ export function AppFeaturesSection() {
                   <p className="text-gray-400 text-sm">የንብረትዎን እንቅስቃሴ በጂፒኤስ ይከታተሉ።</p>
                 </div>
               </div>
-              
+
               <div className="flex gap-4">
                 <div className="h-12 w-12 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shrink-0">
                   <ShieldCheck className="text-gold h-6 w-6" />
@@ -106,10 +106,6 @@ export function AppFeaturesSection() {
                    </div>
                 </div>
              </div>
-             
-             {/* Decorative Elements around phone */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl -z-10"></div>
-             <div className="absolute bottom-10 -right-10 w-40 h-40 bg-navy-light rounded-2xl rotate-12 -z-10 border border-white/5"></div>
           </div>
 
         </div>
