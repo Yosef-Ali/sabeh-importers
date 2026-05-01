@@ -9,7 +9,7 @@ export function AppFeaturesSection() {
     <section className="bg-navy overflow-hidden relative">
       <div className="absolute inset-0 opacity-10 pointer-events-none" 
         style={{ 
-          backgroundImage: "radial-gradient(#FCDD09 1px, transparent 1px)", 
+          backgroundImage: "radial-gradient(#FFD700 1px, transparent 1px)", 
           backgroundSize: "32px 32px" 
         }}
       ></div>

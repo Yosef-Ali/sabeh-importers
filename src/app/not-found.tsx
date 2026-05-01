@@ -13,16 +13,16 @@ export default function NotFound() {
         className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            "linear-gradient(#FCDD09 1px, transparent 1px), linear-gradient(90deg, #FCDD09 1px, transparent 1px)",
+            "linear-gradient(#FFD700 1px, transparent 1px), linear-gradient(90deg, #FFD700 1px, transparent 1px)",
           backgroundSize: "40px 40px",
         }}
       />
 
       {/* Corner markers */}
-      <div className="absolute top-6 left-6 w-8 h-8 border-l-2 border-t-2 border-[#FCDD09]/30" />
-      <div className="absolute top-6 right-6 w-8 h-8 border-r-2 border-t-2 border-[#FCDD09]/30" />
-      <div className="absolute bottom-6 left-6 w-8 h-8 border-l-2 border-b-2 border-[#FCDD09]/30" />
-      <div className="absolute bottom-6 right-6 w-8 h-8 border-r-2 border-b-2 border-[#FCDD09]/30" />
+      <div className="absolute top-6 left-6 w-8 h-8 border-l-2 border-t-2 border-[#FFD700]/30" />
+      <div className="absolute top-6 right-6 w-8 h-8 border-r-2 border-t-2 border-[#FFD700]/30" />
+      <div className="absolute bottom-6 left-6 w-8 h-8 border-l-2 border-b-2 border-[#FFD700]/30" />
+      <div className="absolute bottom-6 right-6 w-8 h-8 border-r-2 border-b-2 border-[#FFD700]/30" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-lg">
@@ -30,12 +30,12 @@ export default function NotFound() {
         <div className="mb-10 flex justify-center">
           <Link href="/">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center bg-[#0A192F] border border-[#FCDD09]/40">
+              <div className="flex h-10 w-10 items-center justify-center bg-[#0A192F] border border-[#FFD700]/40">
                 <Image src="/Sabeh_Logo_Icon.svg" alt="Sabeh" width={36} height={36} />
               </div>
               <div className="text-left">
                 <p className="text-sm font-bold text-white leading-tight">Sabeh Market</p>
-                <p className="text-[10px] text-[#FCDD09]/60 font-amharic leading-tight">ሳቤህ ኢምፖርተርስ</p>
+                <p className="text-[10px] text-[#FFD700]/60 font-amharic leading-tight">ሳቤህ ኢምፖርተርስ</p>
               </div>
             </div>
           </Link>
@@ -44,20 +44,20 @@ export default function NotFound() {
         {/* 404 number */}
         <div className="relative mb-2">
           <span
-            className="select-none text-[160px] font-black leading-none text-[#FCDD09]/8 tracking-tighter"
+            className="select-none text-[160px] font-black leading-none text-[#FFD700]/8 tracking-tighter"
             aria-hidden="true"
           >
             404
           </span>
-          <span className="absolute inset-0 flex items-center justify-center font-mono text-[80px] font-black leading-none tracking-tighter text-[#FCDD09]">
+          <span className="absolute inset-0 flex items-center justify-center font-mono text-[80px] font-black leading-none tracking-tighter text-[#FFD700]">
             404
           </span>
         </div>
 
         {/* Status line */}
-        <div className="mb-4 inline-flex items-center gap-2 border border-[#FCDD09]/20 bg-[#FCDD09]/5 px-4 py-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#FCDD09] animate-pulse" />
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#FCDD09]">
+        <div className="mb-4 inline-flex items-center gap-2 border border-[#FFD700]/20 bg-[#FFD700]/5 px-4 py-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#FFD700] animate-pulse" />
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#FFD700]">
             Signal Lost — Page Not Found
           </span>
         </div>
@@ -73,7 +73,7 @@ export default function NotFound() {
         {/* Actions */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link href="/">
-            <Button className="bg-[#FCDD09] text-[#0A192F] hover:bg-[#FCDD09]/90 font-bold uppercase tracking-widest text-xs px-6 rounded-none h-11">
+            <Button className="bg-[#FFD700] text-[#0A192F] hover:bg-[#FFD700]/90 font-bold uppercase tracking-widest text-xs px-6 rounded-none h-11">
               <Home className="mr-2 h-4 w-4" />
               Go to Market
             </Button>
@@ -93,7 +93,7 @@ export default function NotFound() {
         <div className="mt-10">
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 hover:text-[#FCDD09] transition-colors"
+            className="inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-white/30 hover:text-[#FFD700] transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Go Back

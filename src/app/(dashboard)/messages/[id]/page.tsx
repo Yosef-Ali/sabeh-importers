@@ -46,20 +46,20 @@ export default async function ConversationPage({ params }: ConversationPageProps
       <div className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4 shadow-sm">
         <div className="flex items-center gap-4">
           <Link href="/messages">
-            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-[#1a2d4a]">
+            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-[#0A192F]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
 
           {/* User Info */}
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#1a2d4a] to-[#2d4a6f] flex items-center justify-center text-xl font-bold text-white shadow-sm">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#0A192F] to-[#2d4a6f] flex items-center justify-center text-xl font-bold text-white shadow-sm">
               {otherUser?.name?.[0] || "U"}
             </div>
             <div>
-              <p className="font-bold text-[#1a2d4a]">{otherUser?.name || "Unknown User"}</p>
+              <p className="font-bold text-[#0A192F]">{otherUser?.name || "Unknown User"}</p>
               {isCurrentUserBuyer && (
-                <Badge variant="outline" className="text-xs border-[#FCDD09]/30 text-[#1a2d4a]">
+                <Badge variant="outline" className="text-xs border-[#FFD700]/30 text-[#0A192F]">
                   Seller
                 </Badge>
               )}
@@ -70,7 +70,7 @@ export default async function ConversationPage({ params }: ConversationPageProps
         {/* Actions */}
         <div className="flex items-center gap-2">
           {conversation.listing.seller?.phone && isCurrentUserBuyer && (
-            <Button variant="outline" size="sm" className="border-[#FCDD09] text-[#1a2d4a] hover:bg-[#FCDD09]/10">
+            <Button variant="outline" size="sm" className="border-[#FFD700] text-[#0A192F] hover:bg-[#FFD700]/10">
               <Phone className="h-4 w-4 mr-2" />
               Call Seller
             </Button>
@@ -97,7 +97,7 @@ export default async function ConversationPage({ params }: ConversationPageProps
           <div className="flex-1 min-w-0">
             <Link
               href={`/listings/${conversation.listingId}`}
-              className="font-semibold text-[#1a2d4a] hover:text-[#FCDD09] transition-colors line-clamp-1"
+              className="font-semibold text-[#0A192F] hover:text-[#FFD700] transition-colors line-clamp-1"
             >
               {conversation.listing.title}
             </Link>

@@ -25,16 +25,16 @@ export default async function ListingNotFound() {
           className="absolute inset-0 opacity-[0.04]"
           style={{
             backgroundImage:
-              "linear-gradient(#FCDD09 1px, transparent 1px), linear-gradient(90deg, #FCDD09 1px, transparent 1px)",
+              "linear-gradient(#FFD700 1px, transparent 1px), linear-gradient(90deg, #FFD700 1px, transparent 1px)",
             backgroundSize: "40px 40px",
           }}
         />
 
         <div className="relative max-w-[1440px] mx-auto px-8 py-20 flex flex-col items-center text-center">
           {/* Badge */}
-          <div className="mb-6 inline-flex items-center gap-2 rounded-none border border-[#FCDD09]/30 bg-[#FCDD09]/10 px-4 py-1.5">
-            <AlertTriangle className="h-3.5 w-3.5 text-[#FCDD09]" />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#FCDD09]">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-none border border-[#FFD700]/30 bg-[#FFD700]/10 px-4 py-1.5">
+            <AlertTriangle className="h-3.5 w-3.5 text-[#FFD700]" />
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#FFD700]">
               Listing Not Found
             </span>
           </div>
@@ -42,12 +42,12 @@ export default async function ListingNotFound() {
           {/* 404 */}
           <div className="relative mb-4">
             <span
-              className="select-none text-[160px] font-black leading-none text-[#FCDD09]/10 tracking-tighter"
+              className="select-none text-[160px] font-black leading-none text-[#FFD700]/10 tracking-tighter"
               aria-hidden="true"
             >
               404
             </span>
-            <span className="absolute inset-0 flex items-center justify-center font-mono text-[80px] font-black leading-none tracking-tighter text-[#FCDD09]">
+            <span className="absolute inset-0 flex items-center justify-center font-mono text-[80px] font-black leading-none tracking-tighter text-[#FFD700]">
               404
             </span>
           </div>
@@ -63,7 +63,7 @@ export default async function ListingNotFound() {
           {/* Actions */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link href="/">
-              <Button className="bg-[#FCDD09] text-[#0A192F] hover:bg-[#FCDD09]/90 font-bold uppercase tracking-widest text-xs px-6 rounded-none h-11">
+              <Button className="bg-[#FFD700] text-[#0A192F] hover:bg-[#FFD700]/90 font-bold uppercase tracking-widest text-xs px-6 rounded-none h-11">
                 <Home className="mr-2 h-4 w-4" />
                 Back to Market
               </Button>
@@ -141,7 +141,7 @@ export default async function ListingNotFound() {
                     )}
                     {/* Category badge */}
                     <div className="absolute top-2 left-2 bg-[#0A192F]/80 px-2 py-0.5">
-                      <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-[#FCDD09]">
+                      <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-[#FFD700]">
                         {item.category?.name || "Other"}
                       </span>
                     </div>

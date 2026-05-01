@@ -24,8 +24,8 @@ export default async function SavedSearchesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1a2d4a] flex items-center gap-3">
-            <Bell className="h-8 w-8 text-[#FCDD09]" />
+          <h1 className="text-3xl font-bold tracking-tight text-[#0A192F] flex items-center gap-3">
+            <Bell className="h-8 w-8 text-[#FFD700]" />
             Saved Searches
           </h1>
           <p className="text-muted-foreground mt-2">
@@ -33,7 +33,7 @@ export default async function SavedSearchesPage() {
           </p>
         </div>
         <Link href="/search">
-          <Button className="bg-[#FCDD09] hover:bg-[#e5c908] text-[#1a2d4a] font-bold">
+          <Button className="bg-[#FFD700] hover:bg-[#e5c908] text-[#0A192F] font-bold">
             <Search className="h-4 w-4 mr-2" />
             New Search
           </Button>
@@ -43,15 +43,15 @@ export default async function SavedSearchesPage() {
       {/* Saved Searches */}
       {savedSearches.length === 0 ? (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white p-12 text-center">
-          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#faf8f5] border border-[#FCDD09]/20">
-            <Bell className="h-10 w-10 text-[#FCDD09]/60" />
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#faf8f5] border border-[#FFD700]/20">
+            <Bell className="h-10 w-10 text-[#FFD700]/60" />
           </div>
-          <h3 className="text-xl font-bold text-[#1a2d4a] mb-2">No saved searches yet</h3>
+          <h3 className="text-xl font-bold text-[#0A192F] mb-2">No saved searches yet</h3>
           <p className="text-gray-600 max-w-sm mb-6">
             Save your searches to get notified when new listings match your criteria.
           </p>
           <Link href="/search">
-            <Button className="bg-[#FCDD09] hover:bg-[#e5c908] text-[#1a2d4a] font-bold">
+            <Button className="bg-[#FFD700] hover:bg-[#e5c908] text-[#0A192F] font-bold">
               <Search className="h-4 w-4 mr-2" />
               Browse Listings
             </Button>

@@ -10,11 +10,11 @@ export default function MarketplacePage() {
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[#1a2d4a]">Sabeh Market</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-[#0A192F]">Sabeh Market</h1>
           <p className="text-muted-foreground">Buy and sell items within the community.</p>
         </div>
         <Link href="/marketplace/create">
-          <Button className="bg-[#1a2d4a] hover:bg-[#2d4a6f] text-white">
+          <Button className="bg-[#0A192F] hover:bg-[#2d4a6f] text-white">
             <PlusCircle className="mr-2 h-4 w-4" />
             Post Ad
           </Button>
