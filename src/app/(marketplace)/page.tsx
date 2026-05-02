@@ -131,8 +131,10 @@ export default async function MarketplacePage() {
       {/* ──── 7. TRUST FEATURES ──── */}
       <FeaturesSection />
 
-      {/* ──── 8. PRICING TIERS ──── */}
-      <PricingTiers isFreeMode={isFreeMode} />
+      {/* ──── 8. PRICING TIERS (anchor target for navbar /#pricing link) ──── */}
+      <section id="pricing" className="scroll-mt-24">
+        <PricingTiers isFreeMode={isFreeMode} />
+      </section>
 
       {/* ──── 9. MOBILE APP (Secondary CTA) ──── */}
       <AppFeaturesSection />
