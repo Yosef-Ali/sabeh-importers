@@ -111,7 +111,7 @@ function RegisterForm() {
       <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
         <div className="w-full max-w-md">
           <LogoBlock />
-          <Card className="border-border shadow-sm">
+          <Card>
             <CardHeader className="text-center pb-2">
               <CardTitle className="font-display text-xl">Create your account</CardTitle>
               <CardDescription>How will you be using Sabeh?</CardDescription>
@@ -155,7 +155,7 @@ function RegisterForm() {
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
       <div className="w-full max-w-md">
         <LogoBlock />
-        <Card className="border-border shadow-sm">
+        <Card>
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
               <button
@@ -180,7 +180,7 @@ function RegisterForm() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 p-4 text-sm text-red-700 dark:text-red-400">
+                <div className="flex items-start gap-3 rounded-none border-l-4 border-destructive bg-destructive/10 dark:bg-destructive/20 p-4 font-body text-sm text-destructive">
                   <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   {error}
                 </div>

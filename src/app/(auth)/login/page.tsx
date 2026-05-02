@@ -99,32 +99,35 @@ function LoginForm() {
           <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ ኢምፖርተርስ</p>
         </div>
 
-        <Card className="border-border shadow-sm">
+        <Card>
           <CardHeader className="text-center pb-4">
-            <CardTitle className="font-display text-xl">Welcome Back</CardTitle>
+            <CardTitle className="font-display text-2xl uppercase tracking-tight">Sign In</CardTitle>
             <CardDescription>Sign in to access your dashboard</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 p-4 text-sm text-red-700 dark:text-red-400">
+                <div className="flex items-start gap-3 rounded-none border-l-4 border-destructive bg-destructive/10 dark:bg-destructive/20 p-4 font-body text-sm text-destructive">
                   <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  {error}
+                  <div className="space-y-1">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-widest">Authentication Failed</p>
+                    <p>{error}</p>
+                  </div>
                 </div>
               )}
 
               {emailNotVerified && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-4 space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-bold text-amber-800 dark:text-amber-400">
+                <div className="rounded-none border-l-4 border-[#FCD34D] bg-[#FFFBEB] dark:bg-[#FCD34D]/10 p-4 space-y-2">
+                  <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#92400e] dark:text-[#FCD34D]">
                     <MailCheck className="h-4 w-4 flex-shrink-0" />
-                    Email not yet verified
+                    Verification Pending
                   </div>
-                  <p className="text-xs text-amber-700 dark:text-amber-500 leading-relaxed">
+                  <p className="font-body text-sm text-[#92400e] dark:text-[#FCD34D]/90 leading-relaxed">
                     Check your inbox for the verification email we sent when you registered.
                   </p>
                   <Link
                     href={`/verify-email`}
-                    className="inline-block text-xs font-bold text-amber-800 dark:text-amber-400 underline hover:no-underline"
+                    className="inline-block font-mono text-[10px] font-bold uppercase tracking-widest text-[#92400e] dark:text-[#FCD34D] underline underline-offset-4 hover:no-underline"
                   >
                     Resend verification email →
                   </Link>

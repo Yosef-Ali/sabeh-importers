@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
           <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ ኢምፖርተርስ</p>
         </div>
 
-        <Card className="border-border shadow-sm">
+        <Card>
           {done ? (
             <>
               <CardHeader className="text-center pb-4">
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {error && (
-                    <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-700 dark:text-red-400">
+                    <div className="flex items-start gap-3 rounded-none border-l-4 border-destructive bg-destructive/10 dark:bg-destructive/20 p-3 font-body text-sm text-destructive">
                       <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
                       {error}
                     </div>
