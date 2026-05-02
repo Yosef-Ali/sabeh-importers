@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { forgotPasswordAction } from "@/lib/actions/auth";
+import { SabehLogo } from "@/components/sabeh-logo";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -36,8 +37,8 @@ export default function ForgotPasswordPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <Link href="/">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-navy shadow-hard-navy">
-              <span className="material-symbols-outlined text-gold text-3xl">anchor</span>
+            <div className="mx-auto mb-4 flex justify-center">
+              <SabehLogo size="lg" />
             </div>
           </Link>
           <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">

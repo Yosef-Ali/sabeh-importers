@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Menu, X, Phone } from "lucide-react";
+import { SabehLogo } from "@/components/sabeh-logo";
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,23 +34,18 @@ export function Navbar() {
       {/* Navbar - Always visible, background changes on scroll */}
       <nav
         className={`fixed left-0 right-0 top-0 z-50 px-6 py-4 transition-all duration-500 ease-out ${
-          isScrolled 
-            ? "border-b border-white/10 bg-navy/80 backdrop-blur-md shadow-hard-navy" 
+          isScrolled
+            ? "border-b border-white/10 bg-navy/80 backdrop-blur-md shadow-hard-navy"
             : "bg-transparent"
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          
+
           {/* ============================================ */}
           {/* LOGO - Sabeh Brand */}
           {/* ============================================ */}
           <Link href="/" className="group flex items-center gap-3">
-            {/* Logo Mark */}
-            <div className="flex h-10 items-center border border-accent/30 bg-accent/5 px-4 transition-all group-hover:border-accent/50 group-hover:bg-accent/10">
-              <span className="font-amharic text-lg font-bold text-accent">
-                ሳቤህ
-              </span>
-            </div>
+            <SabehLogo asLink={false} />
             {/* Text */}
             <div className="hidden flex-col md:flex">
               <span className="text-sm font-bold tracking-widest text-white group-hover:text-accent transition-colors">
@@ -81,33 +77,33 @@ export function Navbar() {
           {/* ============================================ */}
           <div className="flex items-center gap-3">
             {/* Phone - Desktop Only */}
-            <a 
+            <a
               href="tel:+251912345678"
               className="hidden items-center gap-2 px-4 py-2 text-xs font-mono tracking-wider text-white/50 transition-all hover:text-accent lg:flex"
             >
               <Phone className="h-3.5 w-3.5" />
               <span>+251 91 234 5678</span>
             </a>
-            
+
             {/* Divider */}
             <div className="hidden h-6 w-px bg-white/10 lg:block" />
-            
+
             {/* Sign In */}
-            <Link 
+            <Link
               href="/login"
               className="border border-white/10 bg-white/5 px-5 py-2.5 text-xs font-bold tracking-widest text-white transition-all hover:border-accent/50 hover:bg-accent/10 hover:text-accent"
             >
               SIGN IN
             </Link>
-            
+
             {/* Dashboard - Primary CTA */}
-            <Link 
+            <Link
               href="/dashboard"
               className="hidden bg-accent px-5 py-2.5 text-xs font-bold tracking-widest text-navy transition-all hover:bg-accent/90 hover:shadow-lg hover:-translate-y-0.5 md:block shadow-md"
             >
               DASHBOARD
             </Link>
-            
+
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -149,17 +145,17 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
-              
+
               {/* Mobile CTA */}
               <div className="mt-6 flex flex-col gap-3">
-                <Link 
+                <Link
                   href="/dashboard"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center justify-center bg-gold py-3 text-xs font-semibold tracking-wider text-black transition-all hover:bg-gold-light"
                 >
                   ACCESS DASHBOARD
                 </Link>
-                <a 
+                <a
                   href="tel:+251912345678"
                   className="flex items-center justify-center gap-2 border border-white/10 py-3 text-xs tracking-wider text-white transition-all hover:bg-white/5"
                 >
@@ -167,7 +163,7 @@ export function Navbar() {
                   +251 91 234 5678
                 </a>
               </div>
-              
+
               {/* Brand Footer */}
               <div className="mt-8 flex items-center justify-center gap-2 text-xs text-white/30">
                 <span className="font-amharic text-gold/50">ሳቤህ</span>

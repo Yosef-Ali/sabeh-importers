@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { SabehLogo } from "@/components/sabeh-logo";
 
 const FOOTER_SECTIONS = [
   {
@@ -60,14 +61,9 @@ export function EnhancedFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-16">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-4 mb-8">
-              <div className="w-12 h-12 bg-gold flex items-center justify-center rounded-none shadow-hard-navy">
-                <span className="material-symbols-outlined text-navy font-bold text-2xl">anchor</span>
-              </div>
-              <span className="text-white text-3xl font-display font-bold tracking-tighter uppercase leading-none">
-                Sabeh <br/>Authority
-              </span>
-            </Link>
+            <div className="mb-8">
+              <SabehLogo size="lg" withWordmark wordmark="SABEH" />
+            </div>
             <p className="text-white/50 mb-8 leading-relaxed font-mono text-xs uppercase tracking-wider">
               Authoritative commerce for the modern seafarer. High-trust trading platform for verified industrial and maritime assets.
             </p>

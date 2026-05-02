@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { loginAction } from "@/lib/actions/auth";
 import { useAuthStore } from "@/store/auth";
+import { SabehLogo } from "@/components/sabeh-logo";
 
 export default function LoginPage() {
   return (
@@ -89,11 +90,9 @@ function LoginForm() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="mb-8 text-center">
-          <Link href="/">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-navy shadow-hard-navy">
-              <span className="material-symbols-outlined text-gold text-3xl">anchor</span>
-            </div>
-          </Link>
+          <div className="mb-4 flex justify-center">
+            <SabehLogo size="lg" />
+          </div>
           <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">
             Sabeh Authority
           </h1>

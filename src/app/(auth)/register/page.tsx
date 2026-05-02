@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { registerAction } from "@/lib/actions/auth";
+import { SabehLogo } from "@/components/sabeh-logo";
 
 export default function RegisterPage() {
   return (
@@ -323,11 +324,9 @@ function RegisterForm() {
 function LogoBlock() {
   return (
     <div className="mb-8 text-center">
-      <Link href="/">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-navy shadow-hard-navy">
-          <span className="material-symbols-outlined text-gold text-3xl">anchor</span>
-        </div>
-      </Link>
+      <div className="mb-4 flex justify-center">
+        <SabehLogo size="lg" />
+      </div>
       <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">
         Sabeh Authority
       </h1>

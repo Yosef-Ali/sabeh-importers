@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Search, ShoppingCart, Star, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +16,9 @@ import {
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SabehLogo } from "@/components/sabeh-logo";
+import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
+import { AiChatAssistant } from "@/components/marketplace/ai-chat-assistant";
 
 // --- Mock Data ---
 const PRODUCTS = [
@@ -88,15 +90,9 @@ export default function ShopPage() {
       {/* ── COMMAND HEADER ── */}
       <header className="sticky top-0 z-50 w-full bg-[#0A192F] border-b border-white/10">
         <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* Logo: gold square w/ navy Amharic per DESIGN.md */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center bg-[#FFD700]">
-              <span className="font-amharic font-bold text-[#0A192F] text-sm">ሳቤህ</span>
-            </div>
-            <span className="hidden font-display font-bold uppercase tracking-tight text-white sm:inline-block">
-              SABEH IMPORTERS
-            </span>
-          </Link>
+          {/* Canonical Sabeh logo (matches homepage navbar) */}
+          <SabehLogo withWordmark wordmark="SABEH IMPORTERS" />
+          <span className="sr-only">Sabeh Importers home</span>
 
           {/* Search Bar (Desktop) */}
           <div className="hidden max-w-md flex-1 px-8 md:block">
@@ -330,24 +326,11 @@ export default function ShopPage() {
         </div>
       </main>
 
-      {/* ── FOOTER ── */}
-      <footer className="bg-[#0A192F] border-t border-white/10 py-12 text-white">
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center bg-[#FFD700]">
-                <span className="font-amharic font-bold text-[#0A192F] text-xs">ሳቤህ</span>
-              </div>
-              <span className="font-display font-bold uppercase tracking-tight">
-                SABEH IMPORTERS
-              </span>
-            </div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 mt-2">
-              © 2026 — Authority Trading. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      {/* ── Canonical Footer (matches homepage) ── */}
+      <EnhancedFooter />
+
+      {/* ── Floating AI Chat Assistant ── */}
+      <AiChatAssistant />
     </div>
   );
 }
