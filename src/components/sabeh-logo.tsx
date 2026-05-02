@@ -3,7 +3,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * Canonical Sabeh Authority logo. Renders the navy square with the
+ * Canonical Sabeh logo. Renders the navy square with the
  * gold-trimmed Sabeh_Logo_Icon.svg inside, optionally with the SABEH
  * wordmark to the right.
  *
@@ -15,7 +15,7 @@ type SabehLogoProps = {
   size?: "sm" | "default" | "lg";
   /** Show "SABEH" wordmark next to the icon. Default: false (icon only). */
   withWordmark?: boolean;
-  /** Override wordmark text (e.g. "SABEH AUTHORITY", "SABEH IMPORTERS"). */
+  /** Override wordmark text (defaults to "SABEH"). */
   wordmark?: string;
   /** Wraps in a Link to "/" when true. Default: true. */
   asLink?: boolean;

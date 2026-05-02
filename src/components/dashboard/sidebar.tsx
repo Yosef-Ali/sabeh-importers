@@ -114,7 +114,7 @@ function SidebarContent({ isCollapsed }: { isCollapsed: boolean }) {
                 Sabeh
               </span>
               <span className="text-[10px] text-muted-foreground font-amharic leading-tight">
-                ሳቤህ ኢምፖርተርስ
+                ሳቤህ
               </span>
             </div>
           )}

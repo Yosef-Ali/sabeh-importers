@@ -84,7 +84,7 @@ export function Testimonials() {
           <div className="flex flex-col items-center gap-4 mb-4">
             <span className="font-mono text-[10px] text-accent tracking-[0.4em] uppercase">Transmission_Log</span>
             <h2 className="text-5xl font-display font-bold text-white uppercase tracking-tighter">
-              Authority Activity Logs
+              Activity Logs
             </h2>
           </div>
           <p className="text-white/40 font-mono text-xs uppercase tracking-widest">

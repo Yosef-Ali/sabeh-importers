@@ -33,7 +33,7 @@ export function FeaturedSellers() {
               <CheckCircle2 className="h-5 w-5 text-primary" />
             </div>
             <h2 className="text-4xl font-display font-bold text-primary uppercase tracking-tighter">
-              Verified Authority Partners
+              Verified Partners
             </h2>
           </div>
           <p className="text-primary/50 font-mono text-xs uppercase tracking-widest pl-14">

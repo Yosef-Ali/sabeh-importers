@@ -13,7 +13,7 @@ export function Footer() {
             <div className="w-10 h-10 bg-accent flex items-center justify-center rounded-none">
               <span className="material-symbols-outlined text-primary font-bold">anchor</span>
             </div>
-            <span className="text-white text-2xl font-display font-bold uppercase tracking-tighter">Sabeh Authority</span>
+            <span className="text-white text-2xl font-display font-bold uppercase tracking-tighter">Sabeh</span>
           </div>
           <div className="space-y-4 mb-10">
             <div className="flex items-baseline gap-4">
@@ -21,7 +21,7 @@ export function Footer() {
               <span className="font-mono text-xl font-bold text-accent">124,592</span>
             </div>
             <div className="flex items-baseline gap-4">
-              <span className="font-mono text-xs text-white/50 uppercase">Authority Status:</span>
+              <span className="font-mono text-xs text-white/50 uppercase">Platform Status:</span>
               <span className="font-mono text-xl font-bold text-accent uppercase">Operational</span>
             </div>
           </div>
@@ -86,7 +86,7 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="max-w-[1440px] mx-auto pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-[10px] font-mono text-white/30 uppercase tracking-[0.2em]">
-        <p>© 2024 Sabeh Maritime Authority. All Rights Reserved. International Waters Registry.</p>
+        <p>© 2024 Sabeh. All rights reserved.</p>
         <div className="flex gap-8 mt-4 md:mt-0">
           <Link href="#" className="hover:text-white transition-colors">Manual</Link>
           <Link href="#" className="hover:text-white transition-colors">Encryption</Link>

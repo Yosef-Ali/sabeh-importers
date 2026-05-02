@@ -29,9 +29,9 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Platform Guide | Sabeh Authority",
+  title: "Platform Guide | Sabeh",
   description:
-    "Complete guide to Sabeh Authority — for buyers, sellers, and administrators. How to create accounts, list assets, manage verifications, promotions, and the full admin panel.",
+    "Complete guide to Sabeh — for buyers, sellers, and administrators. How to create accounts, list assets, manage verifications, promotions, and the full admin panel.",
 };
 
 /* ────────────────────────────── Reusable components ───────────────────────── */
@@ -178,7 +178,7 @@ export default function GuidePage() {
       <div className="bg-navy text-white py-16 px-6">
         <div className="max-w-4xl mx-auto">
           <p className="text-gold font-mono text-xs uppercase tracking-[0.25em] font-bold mb-4">
-            SABEH_AUTHORITY — COMPLETE PLATFORM GUIDE
+            SABEH — COMPLETE PLATFORM GUIDE
           </p>
           <h1 className="text-4xl md:text-5xl font-display font-bold leading-tight">
             How Sabeh Works
@@ -209,12 +209,12 @@ export default function GuidePage() {
         <Section
           id="what-is-sabeh"
           badge={<SectionBadge number="01" label="Overview" />}
-          title="What is Sabeh Authority?"
+          title="What is Sabeh?"
           subtitle="A verified marketplace for high-value industrial and commercial assets in Ethiopia."
         >
           <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed">
             <p>
-              Sabeh Authority is a structured, trust-first marketplace built for buyers and sellers
+              Sabeh is a structured, trust-first marketplace built for buyers and sellers
               of high-value assets — including industrial machinery, marine equipment, vehicles, and
               commercial real estate. Unlike general classifieds, every seller on Sabeh goes through
               an identity and business verification process.
@@ -460,7 +460,7 @@ export default function GuidePage() {
 
           <InfoBox icon={<Lock className="h-5 w-5" />} title="Your documents are confidential" variant="success">
             <p>
-              Sabeh Authority treats all submitted documents with the highest level of security.
+              Sabeh treats all submitted documents with the highest level of security.
               Only Sabeh compliance administrators can view verification documents — they are
               encrypted, never exposed to the public marketplace, and never shared with third
               parties.
@@ -806,7 +806,7 @@ export default function GuidePage() {
         <div className="rounded-2xl bg-navy text-white p-10 text-center space-y-6">
           <h2 className="text-2xl md:text-3xl font-display font-bold">Ready to start?</h2>
           <p className="text-white/70 max-w-md mx-auto">
-            Join verified sellers on Sabeh Authority. Create your account, get verified, and
+            Join verified sellers on Sabeh. Create your account, get verified, and
             reach serious buyers today.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">

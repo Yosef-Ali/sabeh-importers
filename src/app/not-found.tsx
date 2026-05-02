@@ -35,7 +35,7 @@ export default function NotFound() {
               </div>
               <div className="text-left">
                 <p className="text-sm font-bold text-white leading-tight">Sabeh Market</p>
-                <p className="text-[10px] text-[#FFD700]/60 font-amharic leading-tight">ሳቤህ ኢምፖርተርስ</p>
+                <p className="text-[10px] text-[#FFD700]/60 font-amharic leading-tight">ሳቤህ</p>
               </div>
             </div>
           </Link>

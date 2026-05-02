@@ -94,9 +94,9 @@ function LoginForm() {
             <SabehLogo size="lg" />
           </div>
           <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">
-            Sabeh Authority
+            Sabeh
           </h1>
-          <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ ኢምፖርተርስ</p>
+          <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ</p>
         </div>
 
         <Card>
@@ -202,7 +202,7 @@ function LoginForm() {
         </Card>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Sabeh Authority. All rights reserved.
+          © {new Date().getFullYear()} Sabeh. All rights reserved.
         </p>
       </div>
     </div>

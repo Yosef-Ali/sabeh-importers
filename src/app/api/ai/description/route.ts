@@ -31,7 +31,7 @@ ${category ? `Category: ${category}` : ""}
 ${condition ? `Condition: ${conditionLabels[condition] || condition}` : ""}
 ${price ? `Price: ${currency || "ETB"} ${price}` : ""}
 
-By prioritizing Amharic-speaking buyers as well, ensure the tone reflects "Sabeh Authority" (professional, trustworthy, authoritative).
+By prioritizing Amharic-speaking buyers as well, ensure the tone reflects "Sabeh" (professional, trustworthy, authoritative).
 
 Write the description directly without any preamble.`;
 

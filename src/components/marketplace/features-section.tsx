@@ -39,7 +39,7 @@ export function FeaturesSection() {
             </div>
             <h3 className="font-display text-2xl mb-4 font-bold uppercase">Sabeh Verified</h3>
             <p className="text-muted-foreground group-hover:text-background/70 leading-relaxed">
-              Every transaction is monitored by the Authority protocol, neutralizing risk through
+              Every transaction is monitored by the Sabeh protocol, neutralizing risk through
               escrow and physical inspection tiers.
             </p>
           </div>

@@ -46,13 +46,13 @@ export function Navbar() {
           {/* ============================================ */}
           <Link href="/" className="group flex items-center gap-3">
             <SabehLogo asLink={false} />
-            {/* Text */}
+            {/* Wordmark */}
             <div className="hidden flex-col md:flex">
               <span className="text-sm font-bold tracking-widest text-white group-hover:text-accent transition-colors">
-                IMPORTERS
+                SABEH
               </span>
               <span className="font-amharic text-xs text-white/40 group-hover:text-white/60 transition-colors">
-                ኢምፖርተርስ
+                ሳቤህ
               </span>
             </div>
           </Link>

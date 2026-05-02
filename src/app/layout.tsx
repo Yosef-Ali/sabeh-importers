@@ -30,7 +30,7 @@ const notoSansEthiopic = Noto_Sans_Ethiopic({
 });
 
 export const metadata: Metadata = {
-  title: "Sabeh Authority | Global Maritime Standards",
+  title: "Sabeh | Global Maritime Standards",
   description:
     "Authoritative commerce for the modern seafarer. High-trust trading platform for verified industrial and maritime assets.",
   keywords: [

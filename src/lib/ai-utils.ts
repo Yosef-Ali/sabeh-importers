@@ -16,7 +16,7 @@ Provide a JSON response with the following fields:
 4. "altText": A descriptive alt-text.
 5. "suggestedTitle": A compelling title.
 
-Focus on accuracy and Sabeh Authority tone. Return ONLY JSON.`,
+Focus on accuracy and Sabeh tone. Return ONLY JSON.`,
 
   DESCRIPTION_MODERATION: `Review the following marketplace description for safety, accuracy, and professional tone. 
 Keep it compelling but honest. Remove any obvious spam or irrelevant info.

@@ -558,7 +558,7 @@ function FinalCTA({ scrollProgress }: FinalCTAProps) {
 
         {/* Main Message */}
         <h2 className="font-amharic text-4xl font-bold text-gold md:text-6xl lg:text-7xl">
-          ሳቤህ ኢምፖርተርስ
+          ሳቤህ
         </h2>
         <p className="mt-4 text-xl font-extralight tracking-[0.3em] text-white/80 md:text-2xl">
           SABEH IMPORTERS

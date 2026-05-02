@@ -4,7 +4,7 @@ import { getListings } from "@/lib/actions/marketplace";
 // EnhancedFooter is now rendered by (marketplace)/layout.tsx for all marketplace pages
 
 export const metadata = {
-  title: "Sabeh Authority | Maritime Commerce Excellence",
+  title: "Sabeh | Maritime Commerce Excellence",
   description: "Authoritative commerce for the modern seafarer. High-trust trading platform for verified industrial and maritime assets.",
 };
 

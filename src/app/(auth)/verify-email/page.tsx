@@ -166,7 +166,7 @@ function Shell({ children }: { children: React.ReactNode }) {
         </Link>
         {children}
         <p className="pt-4 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Sabeh Authority
+          © {new Date().getFullYear()} Sabeh
         </p>
       </div>
     </div>

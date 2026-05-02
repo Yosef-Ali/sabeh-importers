@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 
 /**
- * Mobile App section — Sabeh Authority command-on-the-move story.
+ * Mobile App section — Sabeh command-on-the-move story.
  *
  * Rewritten 2026-05 (FINDING-009): the previous version hit 4 of 7 hard
  * rejection triggers (4-up icon-grid + decorative blobs + rounded-full
@@ -63,7 +63,7 @@ export function AppFeaturesSection() {
 
             {/* Supporting line — specific, not aspirational */}
             <p className="font-body text-base md:text-lg text-white/70 max-w-xl leading-relaxed">
-              The Sabeh Authority app puts your verified inventory, escrowed
+              The Sabeh app puts your verified inventory, escrowed
               payments, and live status feed in your hand. Built for operators
               who can&apos;t sit at a desk all day.
             </p>

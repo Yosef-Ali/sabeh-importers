@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
  * existing inbound links and bookmarks.
  *
  * History: the original /shop page was an off-brand emerald/slate parallel
- * design system that was rebuilt into Sabeh Authority before being collapsed
+ * design system that was rebuilt into Sabeh before being collapsed
  * into /search.
  */
 export default function ShopPage() {
