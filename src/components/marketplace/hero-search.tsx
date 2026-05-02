@@ -59,7 +59,7 @@ export function HeroSearch() {
           <h1 className="font-amharic font-bold text-5xl md:text-7xl text-white leading-tight">
             የሚፈልጉትን{" "}
             <span className="text-[#FFD700] relative inline-block">
-              ንብረት
+              የንግድ እቃዎች
               {/* Underline accent line — SVG kept minimal, just a straight line */}
               <svg
                 className="absolute w-full h-2 -bottom-1 left-0"
@@ -127,7 +127,7 @@ export function HeroSearch() {
         >
           <button className="h-11 px-8 bg-transparent hover:bg-white/10 text-white border border-white/30 rounded-none font-display font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2">
             <Package className="h-4 w-4" />
-            ንብረት ያስመዝግቡ
+            የንግድ እቃዎች ያስመዝግቡ
           </button>
           <button className="text-accent hover:text-white text-sm font-display font-bold uppercase tracking-wider transition-colors flex items-center gap-2 group">
             ተጨማሪ መረጃ
