@@ -17,6 +17,7 @@ import {
   Menu,
   CreditCard,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -63,6 +64,11 @@ const navItems = [
     title: "AI Generator",
     href: "/admin/ai-generator",
     icon: <Sparkles className="h-[18px] w-[18px]" />,
+  },
+  {
+    title: "Platform Guide",
+    href: "/guide",
+    icon: <BookOpen className="h-[18px] w-[18px]" />,
   },
 ];
 

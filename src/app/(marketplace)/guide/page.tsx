@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
+// EnhancedFooter is now rendered by (marketplace)/layout.tsx
 import {
   ShieldCheck,
   Star,
@@ -833,7 +833,7 @@ export default function GuidePage() {
 
       </div>
 
-      <EnhancedFooter />
+      {/* Footer rendered by (marketplace)/layout.tsx */}
     </div>
   );
 }

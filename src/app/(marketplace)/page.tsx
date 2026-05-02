@@ -1,7 +1,7 @@
 import Link from "next/link";
 export const dynamic = 'force-dynamic';
 import { getListings } from "@/lib/actions/marketplace";
-import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
+// EnhancedFooter is now rendered by (marketplace)/layout.tsx for all marketplace pages
 
 export const metadata = {
   title: "Sabeh Authority | Maritime Commerce Excellence",
@@ -142,8 +142,7 @@ export default async function MarketplacePage() {
       {/* ──── 10. PARTNER LOGOS ──── */}
       <PartnerLogos />
 
-      {/* ──── 11. FOOTER ──── */}
-      <EnhancedFooter />
+      {/* Footer rendered by (marketplace)/layout.tsx — applies to every marketplace page */}
     </div>
   );
 }

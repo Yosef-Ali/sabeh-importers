@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/marketplace/navbar";
+import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
 import { AiChatAssistant } from "@/components/marketplace/ai-chat-assistant";
 
 export default function MarketplaceLayout({
@@ -12,6 +13,7 @@ export default function MarketplaceLayout({
       <main className="flex-1 pt-20">
         {children}
       </main>
+      <EnhancedFooter />
       <AiChatAssistant />
     </div>
   );

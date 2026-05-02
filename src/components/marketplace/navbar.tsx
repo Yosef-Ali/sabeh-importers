@@ -51,12 +51,8 @@ export function Navbar() {
                 {cat.label}
               </Link>
             ))}
-            <Link href="/guide" className="hover:text-accent transition-colors flex items-center gap-1.5">
-              <span className="text-accent/50">05.</span>
-              Guide
-            </Link>
             <Link href="/#pricing" className="hover:text-accent transition-colors flex items-center gap-1.5">
-              <span className="text-accent/50">06.</span>
+              <span className="text-accent/50">05.</span>
               Pricing
             </Link>
           </div>
@@ -144,17 +140,8 @@ export function Navbar() {
 
                   <Separator className="mx-4 bg-border/50" />
 
-                  {/* Guide + Pricing */}
-                  <div className="px-4 mt-4 mb-4 space-y-1">
-                    <SheetClose asChild>
-                      <Link
-                        href="/guide"
-                        className="flex items-center gap-3 rounded-none px-3 py-2.5 font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground border-l-2 border-transparent transition-all hover:bg-primary/5 hover:text-primary hover:border-accent"
-                      >
-                        <span className="material-symbols-outlined text-base text-primary/60">help_outline</span>
-                        <span>Platform Guide</span>
-                      </Link>
-                    </SheetClose>
+                  {/* Pricing */}
+                  <div className="px-4 mt-4 mb-4">
                     <SheetClose asChild>
                       <Link
                         href="/#pricing"
