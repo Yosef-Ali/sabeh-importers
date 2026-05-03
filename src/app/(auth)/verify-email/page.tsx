@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { verifyEmailAction, resendVerificationEmailAction } from "@/lib/actions/auth";
+import { AuthShell } from "@/components/auth/auth-shell";
 
 export default function VerifyEmailPage() {
   return (
@@ -57,118 +58,104 @@ function VerifyEmailContent() {
     if (result.success) setResendDone(true);
   }
 
-  // ── Verifying ───────────────────────────────────────────────────────────────
   if (status === "verifying") {
     return (
-      <Shell>
-        <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-        <h1 className="text-xl font-display font-bold mt-4">Verifying your email…</h1>
-        <p className="text-muted-foreground text-sm">Just a moment, please wait.</p>
-      </Shell>
+      <AuthShell compact>
+        <div className="space-y-3 text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+          <h1 className="text-xl font-display font-bold mt-4">Verifying your email…</h1>
+          <p className="text-muted-foreground text-sm">Just a moment, please wait.</p>
+        </div>
+      </AuthShell>
     );
   }
 
-  // ── Success ─────────────────────────────────────────────────────────────────
   if (status === "success") {
     return (
-      <Shell>
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle2 className="h-8 w-8 text-green-600" />
+      <AuthShell compact>
+        <div className="space-y-3 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-[#10B981]/10 border border-[#10B981]">
+            <CheckCircle2 className="h-8 w-8 text-[#10B981]" />
+          </div>
+          <h1 className="text-xl font-display font-bold mt-4">Email verified!</h1>
+          <p className="text-muted-foreground text-sm">{message}</p>
+          <Link href="/login">
+            <Button className="mt-2 w-full">Sign in to your account</Button>
+          </Link>
         </div>
-        <h1 className="text-xl font-display font-bold mt-4">Email verified!</h1>
-        <p className="text-muted-foreground text-sm">{message}</p>
-        <Link href="/login">
-          <Button className="mt-2 w-full">Sign in to your account</Button>
-        </Link>
-      </Shell>
+      </AuthShell>
     );
   }
 
-  // ── Error ───────────────────────────────────────────────────────────────────
   if (status === "error") {
     return (
-      <Shell>
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-          <XCircle className="h-8 w-8 text-red-600" />
-        </div>
-        <h1 className="text-xl font-display font-bold mt-4">Verification failed</h1>
-        <p className="text-muted-foreground text-sm">{message}</p>
-        <Button variant="outline" className="w-full mt-2" onClick={() => setStatus("resend")}>
-          Resend verification email
-        </Button>
-        <Link href="/login">
-          <Button variant="ghost" className="w-full">Back to sign in</Button>
-        </Link>
-      </Shell>
-    );
-  }
-
-  // ── Resend form ─────────────────────────────────────────────────────────────
-  return (
-    <Shell>
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
-        <MailCheck className="h-8 w-8 text-amber-600" />
-      </div>
-      <h1 className="text-xl font-display font-bold mt-4">Verify your email</h1>
-
-      {resendDone ? (
-        <>
-          <p className="text-muted-foreground text-sm">
-            If that email is registered and unverified, a new link has been sent.
-            Check your inbox (and spam folder).
-          </p>
-          <Link href="/login">
-            <Button className="w-full mt-2">Back to sign in</Button>
-          </Link>
-        </>
-      ) : (
-        <>
-          <p className="text-muted-foreground text-sm">
-            Enter your email address and we&apos;ll send you a new verification link.
-          </p>
-          <form onSubmit={handleResend} className="w-full space-y-3 mt-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="resend-email">Email address</Label>
-              <Input
-                id="resend-email"
-                type="email"
-                placeholder="you@example.com"
-                value={resendEmail}
-                onChange={(e) => setResendEmail(e.target.value)}
-                required
-                autoFocus
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={resendLoading}>
-              {resendLoading
-                ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…</>
-                : "Send verification link"
-              }
-            </Button>
-          </form>
+      <AuthShell compact>
+        <div className="space-y-3 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-destructive/10 border border-destructive">
+            <XCircle className="h-8 w-8 text-destructive" />
+          </div>
+          <h1 className="text-xl font-display font-bold mt-4">Verification failed</h1>
+          <p className="text-muted-foreground text-sm">{message}</p>
+          <Button variant="outline" className="w-full mt-2" onClick={() => setStatus("resend")}>
+            Resend verification email
+          </Button>
           <Link href="/login">
             <Button variant="ghost" className="w-full">Back to sign in</Button>
           </Link>
-        </>
-      )}
-    </Shell>
-  );
-}
+        </div>
+      </AuthShell>
+    );
+  }
 
-function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-sm text-center space-y-3">
-        <Link href="/" className="inline-block mb-4">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-navy">
-            <span className="material-symbols-outlined text-gold text-2xl">anchor</span>
-          </div>
-        </Link>
-        {children}
-        <p className="pt-4 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Sabeh
-        </p>
+    <AuthShell compact>
+      <div className="space-y-3 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-[#FFFBEB] border border-[#FCD34D]">
+          <MailCheck className="h-8 w-8 text-[#92400e]" />
+        </div>
+        <h1 className="text-xl font-display font-bold mt-4">Verify your email</h1>
+
+        {resendDone ? (
+          <>
+            <p className="text-muted-foreground text-sm">
+              If that email is registered and unverified, a new link has been sent.
+              Check your inbox (and spam folder).
+            </p>
+            <Link href="/login">
+              <Button className="w-full mt-2">Back to sign in</Button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <p className="text-muted-foreground text-sm">
+              Enter your email address and we&apos;ll send you a new verification link.
+            </p>
+            <form onSubmit={handleResend} className="w-full space-y-3 mt-2 text-left">
+              <div className="space-y-1.5">
+                <Label htmlFor="resend-email">Email address</Label>
+                <Input
+                  id="resend-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={resendEmail}
+                  onChange={(e) => setResendEmail(e.target.value)}
+                  required
+                  autoFocus
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={resendLoading}>
+                {resendLoading
+                  ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…</>
+                  : "Send verification link"
+                }
+              </Button>
+            </form>
+            <Link href="/login">
+              <Button variant="ghost" className="w-full">Back to sign in</Button>
+            </Link>
+          </>
+        )}
       </div>
-    </div>
+    </AuthShell>
   );
 }

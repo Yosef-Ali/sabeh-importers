@@ -1,10 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Header } from "@/components/dashboard/header";
-import { AiChatAssistant } from "@/components/marketplace/ai-chat-assistant";
 import { cn } from "@/lib/utils";
+
+const AiChatAssistant = dynamic(
+  () => import("@/components/marketplace/ai-chat-assistant").then((m) => m.AiChatAssistant),
+  { ssr: false }
+);
 
 export default function DashboardLayout({
   children,
@@ -26,7 +31,7 @@ export default function DashboardLayout({
       >
         <div className="container mx-auto p-4 lg:p-6">{children}</div>
       </main>
-      
+
       <AiChatAssistant />
     </div>
   );

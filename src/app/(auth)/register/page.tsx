@@ -3,7 +3,7 @@
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, AlertCircle, MailCheck, Store, ShoppingBag, Building } from "lucide-react";
+import { Eye, EyeOff, Loader2, MailCheck, Store, ShoppingBag, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { registerAction } from "@/lib/actions/auth";
-import { SabehLogo } from "@/components/sabeh-logo";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { AlertBanner } from "@/components/ui/alert-banner";
 
 export default function RegisterPage() {
   return (
@@ -83,10 +84,10 @@ function RegisterForm() {
   // ── Success state ────────────────────────────────────────────────────────────
   if (done) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-        <div className="w-full max-w-md text-center space-y-4">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-            <MailCheck className="h-8 w-8 text-green-600" />
+      <AuthShell compact>
+        <div className="text-center space-y-4">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-none bg-[#10B981]/10 border border-[#10B981]">
+            <MailCheck className="h-8 w-8 text-[#10B981]" />
           </div>
           <h1 className="text-2xl font-display font-bold">Check your inbox</h1>
           <p className="text-muted-foreground text-sm">
@@ -101,17 +102,15 @@ function RegisterForm() {
             Back to sign in
           </Button>
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   // ── Step 1: Role selection ────────────────────────────────────────────────────
   if (step === 1) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-        <div className="w-full max-w-md">
-          <LogoBlock />
-          <Card>
+      <AuthShell>
+        <Card>
             <CardHeader className="text-center pb-2">
               <CardTitle className="font-display text-xl">Create your account</CardTitle>
               <CardDescription>How will you be using Sabeh?</CardDescription>
@@ -144,17 +143,13 @@ function RegisterForm() {
               </p>
             </CardFooter>
           </Card>
-          <Footer />
-        </div>
-      </div>
+      </AuthShell>
     );
   }
 
   // ── Step 2: Details form ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md">
-        <LogoBlock />
+    <AuthShell>
         <Card>
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
@@ -179,12 +174,7 @@ function RegisterForm() {
 
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="flex items-start gap-3 rounded-none border-l-4 border-destructive bg-destructive/10 dark:bg-destructive/20 p-4 font-body text-sm text-destructive">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  {error}
-                </div>
-              )}
+              {error && <AlertBanner>{error}</AlertBanner>}
 
               <div className="space-y-2">
                 <Label htmlFor="name">Full name</Label>
@@ -313,35 +303,11 @@ function RegisterForm() {
             </p>
           </CardFooter>
         </Card>
-        <Footer />
-      </div>
-    </div>
+    </AuthShell>
   );
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
-
-function LogoBlock() {
-  return (
-    <div className="mb-8 text-center">
-      <div className="mb-4 flex justify-center">
-        <SabehLogo size="lg" />
-      </div>
-      <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">
-        Sabeh
-      </h1>
-      <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ</p>
-    </div>
-  );
-}
-
-function Footer() {
-  return (
-    <p className="mt-6 text-center text-xs text-muted-foreground">
-      © {new Date().getFullYear()} Sabeh. All rights reserved.
-    </p>
-  );
-}
 
 interface RoleCardProps {
   selected: boolean;

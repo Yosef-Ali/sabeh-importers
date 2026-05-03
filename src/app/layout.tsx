@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Space_Grotesk, Space_Mono, DM_Sans, Noto_Sans_Ethiopic } from "next/font/google";
+import { Space_Grotesk, Space_Mono, DM_Sans, Noto_Sans_Ethiopic } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
@@ -17,11 +17,6 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
   weight: ["400", "500", "600", "700"],
-});
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-jakarta",
-  weight: ["300", "400", "500", "600", "700"],
 });
 const notoSansEthiopic = Noto_Sans_Ethiopic({
   subsets: ["ethiopic"],
@@ -62,7 +57,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${spaceMono.variable} ${dmSans.variable} ${plusJakartaSans.variable} ${notoSansEthiopic.variable} font-body antialiased`}
+        className={`${spaceGrotesk.variable} ${spaceMono.variable} ${dmSans.variable} ${notoSansEthiopic.variable} font-body antialiased`}
       >
         <Providers>
           {children}

@@ -1,6 +1,14 @@
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/marketplace/navbar";
 import { EnhancedFooter } from "@/components/homepage/enhanced-footer";
-import { AiChatAssistant } from "@/components/marketplace/ai-chat-assistant";
+
+// Lazy-load: ~376 LOC of client JS + transitive icon imports for a feature
+// most users never open. Keeps the marketplace bundle slim — the chat button
+// hydrates after the rest of the page is interactive.
+const AiChatAssistant = dynamic(
+  () => import("@/components/marketplace/ai-chat-assistant").then((m) => m.AiChatAssistant),
+  { ssr: false }
+);
 
 export default function MarketplaceLayout({
   children,

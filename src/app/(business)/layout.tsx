@@ -19,7 +19,7 @@ export default function BusinessLayout({
     <div className="min-h-screen flex flex-col bg-background font-body antialiased">
       <header className="sticky top-0 z-40 w-full bg-[#0A192F] border-b border-white/10">
         <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-4 sm:px-6 lg:px-8">
-          <SabehLogo withWordmark wordmark="SABEH" />
+          <SabehLogo withWordmark priority />
           <Link
             href="/"
             className="group flex items-center gap-2 text-white/70 hover:text-[#FFD700] font-mono text-[11px] font-bold uppercase tracking-widest transition-colors"

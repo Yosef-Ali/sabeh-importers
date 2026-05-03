@@ -833,7 +833,6 @@ export default function GuidePage() {
 
       </div>
 
-      {/* Footer rendered by (marketplace)/layout.tsx */}
     </div>
   );
 }

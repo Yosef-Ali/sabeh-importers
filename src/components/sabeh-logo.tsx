@@ -3,24 +3,27 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * Canonical Sabeh logo. Renders the navy square with the
- * gold-trimmed Sabeh_Logo_Icon.svg inside, optionally with the SABEH
- * wordmark to the right.
+ * Canonical Sabeh logo. Renders the navy square with the gold-trimmed
+ * Sabeh_Logo_Icon.svg inside, optionally with the SABEH wordmark to the
+ * right. Use this everywhere instead of hand-rolling a "ሳቤህ in gold box"
+ * in each page header/footer/auth screen.
  *
- * Use this everywhere instead of hand-rolling a "ሳቤህ in gold box" in
- * each page header/footer/auth screen.
+ * `priority` is opt-in (defaults false). Set true ONLY on the
+ * above-the-fold instance per page (typically the navbar) — passing it
+ * on every render adds competing <link rel="preload"> hints that steal
+ * bandwidth from the real LCP image.
  */
 type SabehLogoProps = {
   /** sm = 32px, default = 40px, lg = 48px */
   size?: "sm" | "default" | "lg";
-  /** Show "SABEH" wordmark next to the icon. Default: false (icon only). */
+  /** Show the SABEH wordmark next to the icon. Default: false (icon only). */
   withWordmark?: boolean;
-  /** Override wordmark text (defaults to "SABEH"). */
-  wordmark?: string;
   /** Wraps in a Link to "/" when true. Default: true. */
   asLink?: boolean;
-  /** "light" for navy/gold surfaces (white wordmark), "dark" for light surfaces (navy wordmark). Default: "light". */
+  /** "light" for dark surfaces (white wordmark), "dark" for light surfaces (navy wordmark). Default: "light". */
   tone?: "light" | "dark";
+  /** Pass true ONLY for the LCP-eligible instance (typically the navbar). */
+  priority?: boolean;
   className?: string;
 };
 
@@ -33,9 +36,9 @@ const SIZE_MAP = {
 export function SabehLogo({
   size = "default",
   withWordmark = false,
-  wordmark = "SABEH",
   asLink = true,
   tone = "light",
+  priority = false,
   className,
 }: SabehLogoProps) {
   const dims = SIZE_MAP[size];
@@ -45,8 +48,8 @@ export function SabehLogo({
     tone === "light" ? "text-white" : "text-[#0A192F]"
   );
 
-  const inner = (
-    <span className={cn("flex items-center gap-3", className)}>
+  const content = (
+    <>
       <span
         className={cn(
           "flex items-center justify-center bg-[#0A192F] border border-[#FFD700]/30 rounded-none flex-shrink-0",
@@ -58,18 +61,29 @@ export function SabehLogo({
           alt="Sabeh"
           width={dims.icon}
           height={dims.icon}
-          priority
+          priority={priority}
         />
       </span>
-      {withWordmark && <span className={wordmarkClass}>{wordmark}</span>}
-    </span>
+      {withWordmark && <span className={wordmarkClass}>SABEH</span>}
+    </>
   );
 
-  if (!asLink) return inner;
+  // When asLink, drop the inner wrapper-span — the <Link> itself is the flex container.
+  if (asLink) {
+    return (
+      <Link
+        href="/"
+        className={cn("inline-flex items-center gap-3", className)}
+        aria-label="Sabeh home"
+      >
+        {content}
+      </Link>
+    );
+  }
 
   return (
-    <Link href="/" className="inline-flex items-center" aria-label="Sabeh home">
-      {inner}
-    </Link>
+    <span className={cn("inline-flex items-center gap-3", className)}>
+      {content}
+    </span>
   );
 }

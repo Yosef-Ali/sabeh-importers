@@ -3,7 +3,7 @@
 import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Eye, EyeOff, Loader2, AlertCircle, MailCheck } from "lucide-react";
+import { Eye, EyeOff, Loader2, MailCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,18 @@ import {
 } from "@/components/ui/card";
 import { loginAction } from "@/lib/actions/auth";
 import { useAuthStore } from "@/store/auth";
-import { SabehLogo } from "@/components/sabeh-logo";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { AlertBanner } from "@/components/ui/alert-banner";
+
+// Hoisted out of render — recreating an 8-key map per render is pointless.
+const ROLE_DESTINATION: Record<string, string> = {
+  ADMIN: "/admin",
+  MANAGER: "/admin",
+  STAFF: "/admin",
+  SELLER: "/dashboard",
+  BUYER: "/",
+  DISTRIBUTOR: "/dashboard",
+};
 
 export default function LoginPage() {
   return (
@@ -37,11 +48,6 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawCallback = searchParams.get("callbackUrl");
-  // Role-based default destinations — only used when there's no explicit callbackUrl
-  const roleDestination: Record<string, string> = {
-    ADMIN: "/admin", MANAGER: "/admin", STAFF: "/admin",
-    SELLER: "/dashboard", BUYER: "/", DISTRIBUTOR: "/dashboard",
-  };
   const setUser = useAuthStore((s) => s.setUser);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +74,6 @@ function LoginForm() {
       return;
     }
 
-    // Persist user in Zustand (localStorage) so client components can read it
     setUser({
       id: result.user.id,
       name: result.user.name,
@@ -81,130 +86,103 @@ function LoginForm() {
     // Flush the Next.js router cache so server components pick up the new
     // session cookie before we navigate — avoids the stale-cache redirect loop.
     router.refresh();
-    const destination = rawCallback || roleDestination[result.user.role] || "/dashboard";
+    const destination = rawCallback || ROLE_DESTINATION[result.user.role] || "/dashboard";
     router.push(destination);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="mb-4 flex justify-center">
-            <SabehLogo size="lg" />
-          </div>
-          <h1 className="text-2xl font-display font-bold text-foreground tracking-tight">
-            Sabeh
-          </h1>
-          <p className="text-muted-foreground font-amharic text-sm mt-0.5">ሳቤህ</p>
-        </div>
+    <AuthShell>
+      <Card>
+        <CardHeader className="text-center pb-4">
+          <CardTitle className="font-display text-2xl uppercase tracking-tight">Sign In</CardTitle>
+          <CardDescription>Sign in to access your dashboard</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <AlertBanner label="Authentication Failed">{error}</AlertBanner>
+            )}
 
-        <Card>
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="font-display text-2xl uppercase tracking-tight">Sign In</CardTitle>
-            <CardDescription>Sign in to access your dashboard</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {error && (
-                <div className="flex items-start gap-3 rounded-none border-l-4 border-destructive bg-destructive/10 dark:bg-destructive/20 p-4 font-body text-sm text-destructive">
-                  <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                  <div className="space-y-1">
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-widest">Authentication Failed</p>
-                    <p>{error}</p>
-                  </div>
-                </div>
-              )}
+            {emailNotVerified && (
+              <AlertBanner tone="warning" icon={MailCheck} label="Verification Pending">
+                <p className="leading-relaxed">
+                  Check your inbox for the verification email we sent when you registered.
+                </p>
+                <Link
+                  href="/verify-email"
+                  className="inline-block font-mono text-[10px] font-bold uppercase tracking-widest underline underline-offset-4 hover:no-underline mt-2"
+                >
+                  Resend verification email →
+                </Link>
+              </AlertBanner>
+            )}
 
-              {emailNotVerified && (
-                <div className="rounded-none border-l-4 border-[#FCD34D] bg-[#FFFBEB] dark:bg-[#FCD34D]/10 p-4 space-y-2">
-                  <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#92400e] dark:text-[#FCD34D]">
-                    <MailCheck className="h-4 w-4 flex-shrink-0" />
-                    Verification Pending
-                  </div>
-                  <p className="font-body text-sm text-[#92400e] dark:text-[#FCD34D]/90 leading-relaxed">
-                    Check your inbox for the verification email we sent when you registered.
-                  </p>
-                  <Link
-                    href={`/verify-email`}
-                    className="inline-block font-mono text-[10px] font-bold uppercase tracking-widest text-[#92400e] dark:text-[#FCD34D] underline underline-offset-4 hover:no-underline"
-                  >
-                    Resend verification email →
-                  </Link>
-                </div>
-              )}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+                autoComplete="email"
+              />
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
-                  autoComplete="email"
+                  autoComplete="current-password"
                 />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </Button>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    required
-                    autoComplete="current-password"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in…
-                  </>
-                ) : (
-                  "Sign In"
-                )}
-              </Button>
-            </form>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3 pt-2">
-            <p className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-foreground font-semibold hover:underline">
-                Create one
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Sabeh. All rights reserved.
-        </p>
-      </div>
-    </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in…
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-3 pt-2">
+          <p className="text-center text-sm text-muted-foreground">
+            Don&apos;t have an account?{" "}
+            <Link href="/register" className="text-foreground font-semibold hover:underline">
+              Create one
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </AuthShell>
   );
 }

@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-dm-sans)", "var(--font-jakarta)", "ui-sans-serif", "system-ui"],
+        sans: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui"],
         ui: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui"],
         body: ["var(--font-dm-sans)", "ui-sans-serif", "system-ui"],
         display: ["var(--font-space-grotesk)", "sans-serif"],

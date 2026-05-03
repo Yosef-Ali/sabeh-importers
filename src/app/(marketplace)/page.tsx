@@ -142,7 +142,6 @@ export default async function MarketplacePage() {
       {/* ──── 10. PARTNER LOGOS ──── */}
       <PartnerLogos />
 
-      {/* Footer rendered by (marketplace)/layout.tsx — applies to every marketplace page */}
     </div>
   );
 }

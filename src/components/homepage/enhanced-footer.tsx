@@ -62,7 +62,7 @@ export function EnhancedFooter() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="mb-8">
-              <SabehLogo size="lg" withWordmark wordmark="SABEH" />
+              <SabehLogo size="lg" withWordmark />
             </div>
             <p className="text-white/50 mb-8 leading-relaxed font-mono text-xs uppercase tracking-wider">
               Authoritative commerce for the modern seafarer. High-trust trading platform for verified industrial and maritime assets.
@@ -132,7 +132,7 @@ export function EnhancedFooter() {
       <div className="border-t border-white/5 bg-black/20">
         <div className="max-w-[1440px] mx-auto px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-mono text-white/20 uppercase tracking-[0.3em]">
-            <p>© 2024 All Rights Reserved. Unified Registry Protocol.</p>
+            <p>© {new Date().getFullYear()} All Rights Reserved. Unified Registry Protocol.</p>
             <div className="flex gap-8">
               <Link href="/guide" className="hover:text-white transition-colors">
                 Platform_Guide
