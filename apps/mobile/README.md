@@ -17,8 +17,11 @@ Lives at `apps/mobile/` as a sibling to the Next.js web app at the repo root. Fu
 ```bash
 cd apps/mobile
 pnpm install
+pnpm dlx expo install --fix   # auto-aligns Expo packages to SDK 54 canonical versions
 pnpm start
 ```
+
+**About `expo install --fix`:** the `package.json` in this repo targets Expo SDK 54 (matches the current Expo Go on the App Store / Play Store as of May 2026), but the exact patch versions of every `@expo/*` and `react-native-*` package have to match what SDK 54 expects. Running `expo install --fix` once after `pnpm install` resolves any drift — it's the official tool for this and idempotent. If you're already on SDK 54 and aligned, it's a no-op.
 
 `pnpm start` opens the Expo dev server with a QR code in the terminal:
 
