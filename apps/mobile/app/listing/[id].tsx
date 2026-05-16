@@ -1,12 +1,21 @@
 import { useState } from "react";
-import { View, Text, ScrollView, Pressable, Dimensions } from "react-native";
+import { View, Text, ScrollView, Pressable, Dimensions, Alert } from "react-native";
+import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome } from "@expo/vector-icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LISTINGS, formatPrice } from "@/lib/mock-data";
+import { openWhatsApp, openPhoneCall } from "@/lib/contact";
+import { useFavorite } from "@/lib/favorites";
 import { colors, shadows } from "@/lib/theme";
+
+// 1x1 navy blurhash — see components/listing-card.tsx
+const NAVY_BLURHASH = "L00000fQfQfQfQfQfQfQfQfQfQfQ";
+
+// WhatsApp brand green — used sparingly so it doesn't fight the navy/gold palette
+const WHATSAPP_GREEN = "#25D366";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
@@ -29,10 +38,19 @@ export default function ListingDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [activeImg, setActiveImg] = useState(0);
-  const [saved, setSaved] = useState(false);
 
   const listing = LISTINGS.find((l) => l.id === id) ?? LISTINGS[0];
-  const galleryCount = 4;
+  const { saved, toggle: toggleSaved } = useFavorite(listing.id);
+  // Fall back to one empty slot so the gallery always renders something —
+  // a listing with no photos still gets a placeholder + dot indicator.
+  const images = listing.imageUrls?.length ? listing.imageUrls : [undefined];
+
+  // Pre-filled WhatsApp message — keeps the buyer→seller intro consistent
+  // and signals that the inquiry came from Sabeh, not a random number.
+  const whatsappMessage =
+    `Hi ${listing.seller.name}, I'm interested in your "${listing.title}" ` +
+    `(${formatPrice(listing.price, listing.currency)}) on Sabeh. Is it still available?`;
+  const sellerPhone = listing.seller.phone;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -77,12 +95,17 @@ export default function ListingDetailScreen() {
             {listing.title}
           </Text>
           <Pressable
-            onPress={() => setSaved((p) => !p)}
+            accessibilityRole="button"
+            accessibilityLabel={saved ? "Remove from saved" : "Save listing"}
+            accessibilityState={{ selected: saved }}
+            onPress={toggleSaved}
+            hitSlop={8}
             style={{
               width: 36,
               height: 36,
               borderWidth: 1,
               borderColor: saved ? colors.destructive : colors.border,
+              backgroundColor: saved ? "rgba(220,38,38,0.08)" : "transparent",
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -91,6 +114,7 @@ export default function ListingDetailScreen() {
               name="heart"
               size={16}
               color={saved ? colors.destructive : colors.foreground}
+              style={saved ? { /* filled look via color only — feather has no filled heart */ } : undefined}
             />
           </Pressable>
         </View>
@@ -107,37 +131,49 @@ export default function ListingDetailScreen() {
             setActiveImg(i);
           }}
         >
-          {Array.from({ length: galleryCount }).map((_, i) => (
+          {images.map((uri, i) => (
             <View
               key={i}
               style={{
                 width: SCREEN_WIDTH,
                 aspectRatio: 4 / 3,
                 backgroundColor: colors.navy,
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 11, color: "rgba(255,215,0,0.4)", textTransform: "uppercase", letterSpacing: 2 }}>
-                Image {i + 1} / {galleryCount}
-              </Text>
+              {uri ? (
+                <Image
+                  source={{ uri }}
+                  placeholder={NAVY_BLURHASH}
+                  contentFit="cover"
+                  transition={250}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              ) : (
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                  <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 11, color: "rgba(255,215,0,0.4)", textTransform: "uppercase", letterSpacing: 2 }}>
+                    No image
+                  </Text>
+                </View>
+              )}
             </View>
           ))}
         </ScrollView>
 
         {/* Pagination dots */}
-        <View style={{ flexDirection: "row", justifyContent: "center", gap: 6, paddingVertical: 12, backgroundColor: colors.surface }}>
-          {Array.from({ length: galleryCount }).map((_, i) => (
-            <View
-              key={i}
-              style={{
-                width: i === activeImg ? 24 : 6,
-                height: 3,
-                backgroundColor: i === activeImg ? colors.gold : colors.border,
-              }}
-            />
-          ))}
-        </View>
+        {images.length > 1 && (
+          <View style={{ flexDirection: "row", justifyContent: "center", gap: 6, paddingVertical: 12, backgroundColor: colors.surface }}>
+            {images.map((_, i) => (
+              <View
+                key={i}
+                style={{
+                  width: i === activeImg ? 24 : 6,
+                  height: 3,
+                  backgroundColor: i === activeImg ? colors.gold : colors.border,
+                }}
+              />
+            ))}
+          </View>
+        )}
 
         {/* Price + condition */}
         <View style={{ paddingHorizontal: 16, paddingVertical: 16, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border, gap: 8 }}>
@@ -260,15 +296,73 @@ export default function ListingDetailScreen() {
 
       {/* Sticky bottom action bar */}
       <SafeAreaView edges={["bottom"]} style={{ backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.border }}>
-        <View style={{ flexDirection: "row", gap: 12, padding: 12 }}>
-          <View style={{ flex: 1 }}>
-            <Button variant="outline" fullWidth>
-              Make Offer
-            </Button>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Button fullWidth>Contact</Button>
-          </View>
+        <View style={{ flexDirection: "row", gap: 8, padding: 12, alignItems: "stretch" }}>
+          <Button
+            variant="outline"
+            fullWidth
+            onPress={() => {
+              Alert.alert(
+                "Make an Offer",
+                `Send an offer to ${listing.seller.name} for "${listing.title}"?`,
+                [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Send via WhatsApp",
+                    onPress: () =>
+                      sellerPhone &&
+                      openWhatsApp(
+                        sellerPhone,
+                        `Hi ${listing.seller.name}, I'd like to make an offer on your "${listing.title}". What's the lowest you'd accept?`,
+                      ),
+                  },
+                ],
+              );
+            }}
+          >
+            Make Offer
+          </Button>
+
+          {/* WhatsApp CTA — primary contact channel for Ethiopian buyers */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Message ${listing.seller.name} on WhatsApp`}
+            disabled={!sellerPhone}
+            onPress={() => sellerPhone && openWhatsApp(sellerPhone, whatsappMessage)}
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              backgroundColor: WHATSAPP_GREEN,
+              paddingHorizontal: 12,
+              opacity: sellerPhone ? 1 : 0.4,
+              ...shadows.hard,
+            }}
+          >
+            <FontAwesome name="whatsapp" size={18} color={colors.white} />
+            <Text style={{ color: colors.white, fontFamily: "SpaceGrotesk_700Bold", fontSize: 13, textTransform: "uppercase", letterSpacing: 1.2 }}>
+              WhatsApp
+            </Text>
+          </Pressable>
+
+          {/* Tel: fallback — one tap call for buyers who prefer voice */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Call ${listing.seller.name}`}
+            disabled={!sellerPhone}
+            onPress={() => sellerPhone && openPhoneCall(sellerPhone)}
+            style={{
+              width: 48,
+              alignItems: "center",
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: colors.foreground,
+              opacity: sellerPhone ? 1 : 0.4,
+            }}
+          >
+            <Feather name="phone" size={18} color={colors.foreground} />
+          </Pressable>
         </View>
       </SafeAreaView>
     </View>

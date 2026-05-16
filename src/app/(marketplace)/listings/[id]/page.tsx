@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getListingById, getListings, getSellerActiveListingCount } from "@/lib/actions/marketplace";
+import { isInWishlist } from "@/lib/actions/wishlist";
+import { getCurrentUser } from "@/lib/session";
 import { ListingGallery } from "@/components/marketplace/listing-gallery";
 import { ListingInfo } from "@/components/marketplace/listing-info";
 import { ListingCard } from "@/components/marketplace/listing-card";
@@ -17,7 +19,7 @@ interface ListingPageProps {
 export async function generateMetadata({ params }: ListingPageProps) {
   const listing = await getListingById(params.id);
   if (!listing) return { title: "Listing Not Found" };
-  
+
   return {
     title: `${listing.title} | Sabeh Market`,
     description: listing.description.substring(0, 160),
@@ -31,10 +33,13 @@ export default async function ListingPage({ params }: ListingPageProps) {
     notFound();
   }
 
-  // Fetch similar listings and seller stats in parallel
-  const [{ data: similarListings }, sellerTotalListings] = await Promise.all([
+  const currentUser = await getCurrentUser();
+
+  // Fetch similar listings, seller stats, and wishlist state in parallel
+  const [{ data: similarListings }, sellerTotalListings, initialIsInWishlist] = await Promise.all([
     getListings({ categoryId: listing.categoryId, limit: 5 }),
     listing.sellerId ? getSellerActiveListingCount(listing.sellerId) : Promise.resolve(0),
+    currentUser ? isInWishlist(currentUser.id, listing.id) : Promise.resolve(false),
   ]);
 
   // Filter out the current listing from similar
@@ -77,7 +82,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
             />
 
             {/* Listing Info Section */}
-            <ListingInfo listing={listing} />
+            <ListingInfo
+              listing={listing}
+              currentUserId={currentUser?.id}
+              initialIsInWishlist={initialIsInWishlist}
+            />
 
             {/* Specifications Table */}
             {listing.attributes && (

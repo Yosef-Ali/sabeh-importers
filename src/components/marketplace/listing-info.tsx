@@ -3,9 +3,16 @@ import { TopActions, SellerActions } from "./listing-actions";
 
 interface ListingInfoProps {
   listing: any;
+  currentUserId?: string;
+  initialIsInWishlist?: boolean;
 }
 
-export function ListingInfo({ listing }: ListingInfoProps) {
+export function ListingInfo({
+  listing,
+  currentUserId,
+  initialIsInWishlist = false,
+}: ListingInfoProps) {
+  const isOwnListing = !!currentUserId && currentUserId === (listing.sellerId ?? listing.seller?.id);
   const attributes = listing.attributes || {};
   const attributeKeys = Object.keys(attributes);
 
@@ -28,7 +35,11 @@ export function ListingInfo({ listing }: ListingInfoProps) {
               NEGOTIABLE_PROTOCOL: ACTIVE
             </div>
           )}
-          <SellerActions sellerPhone={listing.seller?.phone} />
+          <SellerActions
+            listingId={listing.id}
+            sellerPhone={listing.seller?.phone}
+            isOwnListing={isOwnListing}
+          />
         </div>
       </div>
 
@@ -87,7 +98,12 @@ export function ListingInfo({ listing }: ListingInfoProps) {
 
         <div className="flex items-center justify-between pt-6 border-t border-white/10 text-[10px] font-mono text-white/40 uppercase tracking-widest">
           <span>REGISTRY_ENTRY: {new Date(listing.seller?.createdAt || listing.createdAt).getFullYear()}</span>
-          <TopActions listingId={listing.id} listingTitle={listing.title} />
+          <TopActions
+            listingId={listing.id}
+            listingTitle={listing.title}
+            userId={currentUserId}
+            initialIsInWishlist={initialIsInWishlist}
+          />
         </div>
       </div>
     </div>
