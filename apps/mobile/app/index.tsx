@@ -1,7 +1,8 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { SabehLogo } from "@/components/sabeh-logo";
-import { colors, shadows } from "@/lib/theme";
+import { Button } from "@/components/ui/button";
+import { colors } from "@/lib/theme";
 
 /**
  * Splash / welcome screen. Sabeh logo + Amharic eyebrow + "Get Started" CTA.
@@ -56,31 +57,9 @@ export default function Splash() {
         ሳቤህ ገበያ
       </Text>
 
-      <Pressable
-        onPress={() => router.replace("/(tabs)" as any)}
-        style={({ pressed }) => [
-          {
-            backgroundColor: colors.gold,
-            paddingHorizontal: 48,
-            paddingVertical: 14,
-            transform: [{ translateX: pressed ? 2 : 0 }, { translateY: pressed ? 2 : 0 }],
-            ...(pressed ? {} : shadows.hard),
-          },
-        ]}
-      >
-        <Text
-          style={{
-            color: colors.navy,
-            fontFamily: "SpaceGrotesk_700Bold",
-            fontSize: 13,
-            fontWeight: "700",
-            textTransform: "uppercase",
-            letterSpacing: 1.4,
-          }}
-        >
-          Get Started
-        </Text>
-      </Pressable>
+      <Button size="lg" onPress={() => router.replace("/(tabs)/" as any)}>
+        Get Started
+      </Button>
 
       <Text
         style={{

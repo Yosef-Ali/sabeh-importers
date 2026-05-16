@@ -1,79 +1,96 @@
 import { View, Text, FlatList, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import { CONVERSATIONS } from "@/lib/mock-data";
 import { colors } from "@/lib/theme";
 
-const THREADS = [
-  { id: "t1", who: "Habesha Motors", initial: "H", last: "Still available — when can you visit?", time: "2m", unread: 2 },
-  { id: "t2", who: "Industrial Co", initial: "I", last: "Price negotiable for cash buyers.", time: "1h", unread: 0 },
-  { id: "t3", who: "Selam Auto", initial: "S", last: "Sent the inspection report.", time: "Yesterday", unread: 1 },
-];
+// CONVERSATIONS is static mock data — hoist derived value to avoid recomputing each render
+const TOTAL_UNREAD = CONVERSATIONS.reduce((s, c) => s + c.unreadCount, 0);
 
 /**
- * Messages list — Sabeh Mobile Flow common pattern. Each row: square
- * avatar, name + last message, unread count pill on right.
+ * Messages inbox — mirrors the web /messages page.
+ * Lists buyer-seller conversations; tapping opens the thread.
  */
 export default function MessagesScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.surface }}>
         <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 10, color: colors.gold, textTransform: "uppercase", letterSpacing: 2, marginBottom: 4 }}>
           Inbox
         </Text>
-        <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 28, color: colors.foreground, textTransform: "uppercase", letterSpacing: -0.5 }}>
-          Messages
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+          <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 26, color: colors.foreground, textTransform: "uppercase", letterSpacing: -0.5 }}>
+            Messages
+          </Text>
+          {TOTAL_UNREAD > 0 && (
+            <View style={{ backgroundColor: colors.gold, paddingHorizontal: 8, paddingVertical: 3, marginBottom: 2 }}>
+              <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 10, color: colors.navy }}>
+                {TOTAL_UNREAD} unread
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
 
       <FlatList
-        data={THREADS}
-        keyExtractor={(t) => t.id}
-        ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: colors.border, marginLeft: 80 }} />}
+        data={CONVERSATIONS}
+        keyExtractor={(c) => c.id}
+        style={{ backgroundColor: colors.surface }}
+        ListEmptyComponent={
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: 12, padding: 32, paddingTop: 64 }}>
+            <Feather name="inbox" size={40} color={colors.muted} />
+            <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 16, color: colors.muted, textTransform: "uppercase" }}>
+              No messages yet
+            </Text>
+            <Text style={{ fontFamily: "DMSans_400Regular", fontSize: 13, color: colors.muted, textAlign: "center" }}>
+              When you chat with buyers or sellers, conversations appear here.
+            </Text>
+          </View>
+        }
+        ItemSeparatorComponent={() => (
+          <View style={{ height: 1, backgroundColor: colors.border, marginLeft: 76 }} />
+        )}
         renderItem={({ item }) => (
           <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 12,
-              padding: 16,
-              backgroundColor: colors.surface,
-            }}
+            onPress={() => router.push({ pathname: "/messages/[id]", params: { id: item.id } } as any)}
+            style={{ flexDirection: "row", alignItems: "center", gap: 12, padding: 16, backgroundColor: item.unreadCount > 0 ? "rgba(255,215,0,0.04)" : colors.surface }}
           >
-            <View
-              style={{
-                width: 48,
-                height: 48,
-                backgroundColor: colors.navy,
-                borderWidth: 1,
-                borderColor: colors.gold,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: colors.gold, fontFamily: "SpaceGrotesk_700Bold", fontSize: 18 }}>
-                {item.initial}
+            {/* Avatar */}
+            <View style={{ width: 48, height: 48, backgroundColor: colors.navy, borderWidth: 1, borderColor: item.unreadCount > 0 ? colors.gold : "rgba(10,25,47,0.15)", alignItems: "center", justifyContent: "center" }}>
+              <Text style={{ color: item.unreadCount > 0 ? colors.gold : "rgba(255,215,0,0.4)", fontFamily: "SpaceGrotesk_700Bold", fontSize: 18 }}>
+                {item.otherParty.initial}
               </Text>
             </View>
-            <View style={{ flex: 1, gap: 2 }}>
+
+            {/* Content */}
+            <View style={{ flex: 1, gap: 3 }}>
               <Text style={{ fontFamily: "SpaceGrotesk_700Bold", fontSize: 14, color: colors.foreground, textTransform: "uppercase" }}>
-                {item.who}
+                {item.otherParty.name}
               </Text>
-              <Text
-                style={{ fontFamily: "DMSans_400Regular", fontSize: 13, color: colors.muted }}
-                numberOfLines={1}
-              >
-                {item.last}
+              <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 8, color: colors.gold, textTransform: "uppercase", letterSpacing: 1.2 }} numberOfLines={1}>
+                {item.listingTitle}
+              </Text>
+              <Text style={{ fontFamily: "DMSans_400Regular", fontSize: 13, color: item.unreadCount > 0 ? colors.foreground : colors.muted }} numberOfLines={1}>
+                {item.lastMessage}
               </Text>
             </View>
-            <View style={{ alignItems: "flex-end", gap: 4 }}>
+
+            {/* Right side */}
+            <View style={{ alignItems: "flex-end", gap: 6 }}>
               <Text style={{ fontFamily: "SpaceMono_700Bold", fontSize: 9, color: colors.muted, textTransform: "uppercase", letterSpacing: 1.2 }}>
-                {item.time}
+                {item.lastTime}
               </Text>
-              {item.unread > 0 && (
+              {item.unreadCount > 0 ? (
                 <View style={{ minWidth: 20, height: 20, paddingHorizontal: 6, backgroundColor: colors.gold, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ color: colors.navy, fontFamily: "SpaceMono_700Bold", fontSize: 9, fontWeight: "700" }}>
-                    {item.unread}
+                  <Text style={{ color: colors.navy, fontFamily: "SpaceMono_700Bold", fontSize: 9 }}>
+                    {item.unreadCount}
                   </Text>
                 </View>
+              ) : (
+                <Feather name="chevron-right" size={14} color={colors.muted} />
               )}
             </View>
           </Pressable>

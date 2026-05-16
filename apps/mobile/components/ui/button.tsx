@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Pressable, Text, View, type PressableProps } from "react-native";
 import { colors, shadows } from "@/lib/theme";
 
@@ -6,6 +7,9 @@ import { colors, shadows } from "@/lib/theme";
  * equivalent of the web Button primitive (variants: default / outline /
  * ghost). Uses native StyleSheet for the hard shadow because NativeWind
  * can't express `shadow-color: navy + offset 4,4 + 0 blur` cleanly.
+ *
+ * Uses onPressIn/onPressOut + useState (instead of Pressable's style callback)
+ * to avoid NativeWind's JSX transform swallowing function-style style props.
  */
 type Variant = "default" | "outline" | "ghost";
 type Size = "default" | "lg" | "sm";
@@ -31,37 +35,39 @@ export function Button({
   fullWidth?: boolean;
   disabled?: boolean;
 } & Omit<PressableProps, "children">) {
+  const [pressed, setPressed] = useState(false);
+
   const dims = SIZE_PADDING[size];
   const isPrimary = variant === "default";
   const isOutline = variant === "outline";
 
-  const bg =
-    variant === "default" ? colors.gold : variant === "outline" ? "transparent" : "transparent";
-  const fg = variant === "default" ? colors.navy : colors.foreground;
+  const bg = isPrimary ? colors.gold : "transparent";
+  const fg = isPrimary ? colors.navy : colors.foreground;
   const borderColor = isOutline ? colors.foreground : "transparent";
 
   return (
     <Pressable
       onPress={onPress}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
       disabled={disabled}
-      style={({ pressed }) => [
-        {
-          backgroundColor: bg,
-          paddingHorizontal: dims.px,
-          paddingVertical: dims.py,
-          borderWidth: isOutline ? 1 : 0,
-          borderColor,
-          borderRadius: 0,
-          alignItems: "center",
-          justifyContent: "center",
-          opacity: disabled ? 0.5 : 1,
-          width: fullWidth ? "100%" : undefined,
-          // Hard shadow only on primary; press shifts the button down 2px to
-          // mimic the web's hover translate(2px,2px) shadow-none effect.
-          transform: [{ translateX: pressed && isPrimary ? 2 : 0 }, { translateY: pressed && isPrimary ? 2 : 0 }],
-          ...(isPrimary && !pressed ? shadows.hard : {}),
-        },
-      ]}
+      style={{
+        backgroundColor: bg,
+        paddingHorizontal: dims.px,
+        paddingVertical: dims.py,
+        borderWidth: isOutline ? 1 : 0,
+        borderColor,
+        borderRadius: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: disabled ? 0.5 : 1,
+        width: fullWidth ? "100%" : undefined,
+        transform: [
+          { translateX: pressed && isPrimary ? 2 : 0 },
+          { translateY: pressed && isPrimary ? 2 : 0 },
+        ],
+        ...(isPrimary && !pressed ? shadows.hard : {}),
+      }}
       {...rest}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>

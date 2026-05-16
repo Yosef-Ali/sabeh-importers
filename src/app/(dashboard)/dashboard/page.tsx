@@ -17,18 +17,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import type { ListingStatus } from "@sabeh/shared";
 
 export const metadata = {
   title: "Dashboard | Sabeh Market",
   description: "Your seller dashboard",
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  ACTIVE: "bg-green-100 text-green-700 border-green-200",
+// Typed against the DB enum (via @sabeh/shared) — adding a new
+// listing status to the schema will surface a TS error here until
+// every status has a Tailwind class assigned.
+const STATUS_COLORS: Record<ListingStatus, string> = {
+  ACTIVE:         "bg-green-100 text-green-700 border-green-200",
   PENDING_REVIEW: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  EXPIRED: "bg-gray-100 text-gray-600 border-gray-200",
-  SOLD: "bg-blue-100 text-blue-700 border-blue-200",
-  DRAFT: "bg-purple-100 text-purple-700 border-purple-200",
+  EXPIRED:        "bg-gray-100 text-gray-600 border-gray-200",
+  SOLD:           "bg-blue-100 text-blue-700 border-blue-200",
+  DRAFT:          "bg-purple-100 text-purple-700 border-purple-200",
+  REJECTED:       "bg-red-100 text-red-700 border-red-200",
+  DELETED:        "bg-slate-100 text-slate-500 border-slate-200",
 };
 
 export default async function DashboardPage() {
